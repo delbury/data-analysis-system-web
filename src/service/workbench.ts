@@ -1,5 +1,9 @@
 import http from '/@/plugins/axios';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ResponseList } from '/@types/Server';
+import { WorkbenchTable } from '/@types/db-table-type';
+import { createRESTfulAPI } from './tools';
 
-export const getWorkbenchList = (config?: AxiosRequestConfig) => http.get<any, AxiosResponse<ResponseList>>('/workbench/list', config);
+export default {
+  ...createRESTfulAPI<WorkbenchTable>('workbench'),
+};

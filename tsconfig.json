@@ -23,8 +23,6 @@
     "src/**/*.vue",
     "types/*.d.ts",
     "types/**/*.d.ts",
-    "server/**/*.ts",
-    "server/*.ts",
   ],
   "exclude": ["node_modules", "dist", "public"]
 }

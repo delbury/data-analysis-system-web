@@ -1,5 +1,5 @@
-import * as workbench from './workbench';
+import workbench from './workbench';
 
 export const apis = {
-  ...workbench,
+  workbench,
 };

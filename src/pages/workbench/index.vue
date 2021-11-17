@@ -24,7 +24,7 @@ export default defineComponent({
   name: 'PageWorkbench',
   setup() {
     const columns = getColumns();
-    const table = useTableFetcher(apis.getWorkbenchList);
+    const table = useTableFetcher(apis.workbench.get);
 
     return {
       columns,

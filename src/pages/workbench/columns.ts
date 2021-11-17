@@ -13,11 +13,11 @@ export const getColumns = (): ColumnProps[] => [
   },
   {
     label: '培训开始时间',
-    prop: 'startTime',
+    prop: 'start_time',
   },
   {
     label: '培训结束时间',
-    prop: 'endTime',
+    prop: 'end_time',
   },
   {
     label: '开展单位',
@@ -29,126 +29,130 @@ export const getColumns = (): ColumnProps[] => [
   },
   {
     label: '项目编号',
-    prop: 'projectCode',
+    prop: 'project_code',
   },
   {
     label: '培训项目名称',
-    prop: 'trainProjectName',
+    prop: 'train_project_name',
   },
   {
     label: '培训课程名称',
-    prop: 'trainCourseName',
+    prop: 'train_course_name',
   },
   {
     label: '培训层级',
-    prop: 'trainLevel',
+    prop: 'train_level',
   },
   {
     label: '培训内容',
-    prop: 'trainContent',
+    prop: 'train_content',
   },
   {
     label: '培训方式1',
-    prop: 'trainWay1',
+    prop: 'train_way1',
   },
   {
     label: '培训方式2',
-    prop: 'trainWay2',
+    prop: 'train_way2',
   },
   {
     label: '培训形式',
-    prop: 'trainType',
+    prop: 'train_type',
   },
   {
     label: '培训线别',
-    prop: 'trainClass',
+    prop: 'train_class',
   },
   {
     label: '培训项目负责人',
-    prop: 'maintainerName',
+    prop: 'maintainer_name',
   },
   {
     label: '培训负责人工号',
-    prop: 'maintainerCode',
+    prop: 'maintainer_code',
   },
   {
     label: '培训地点',
-    prop: 'trainPlace',
+    prop: 'train_place',
   },
   {
     label: '培训师',
-    prop: 'trainer',
+    prop: 'trainer_id',
   },
   {
     label: '培训师工号/外部师资编号',
-    prop: 'trainerCode',
+    prop: 'trainer_code',
   },
   {
     label: '培训师星级',
-    prop: 'trainerLevel',
+    prop: 'trainer_level',
   },
   {
     label: '培训师所属单位',
-    prop: 'trainerUnit',
+    prop: 'trainer_unit',
   },
   {
     label: '培训人数（管理和业务技术）',
-    prop: 'trainedCountManage',
+    prop: 'trained_count_manage',
   },
   {
     label: '培训人数（行车关键岗位：司机、行车值班员）',
-    prop: 'trainedCountKey',
+    prop: 'trained_count_key',
   },
   {
     label: '培训人数（生产人员：非行车关键岗位）',
-    prop: 'trainedCountProduct',
+    prop: 'trained_count_product',
   },
   {
     label: '培训人数（未持证人员：新员工、实习生等）',
-    prop: 'trainedCountNew',
+    prop: 'trained_count_new',
   },
   {
     label: '培训人数（工勤）',
-    prop: 'trainedCountWork',
+    prop: 'trained_count_work',
   },
   {
     label: '培训总人数',
-    prop: 'trainedCountTotal',
+    prop: 'trained_count_total',
   },
   {
     label: '理论课时',
-    prop: 'trainHoursTheory',
+    prop: 'train_hours_theory',
   },
   {
     label: '实操课时',
-    prop: 'trainHoursPractice',
+    prop: 'train_hours_practice',
   },
   {
     label: '总课时',
-    prop: 'trainHoursTotal',
+    prop: 'train_hours_total',
   },
   {
     label: '培训效果评估人数',
-    prop: 'trainEffectCount',
+    prop: 'train_effect_count',
   },
   {
     label: '学员评价得分',
-    prop: 'studentEvaluationScore',
+    prop: 'student_evaluation_score',
   },
   {
     label: '项目负责人评价得分',
-    prop: 'maintainerEvaluationScore',
+    prop: 'maintainer_evaluation_score',
   },
   {
     label: '培训效果评价得分（等于学员评价得分*0.7+项目负责人评价得分*0.3）',
-    prop: 'effectEvaluationScore',
+    prop: 'effect_evaluation_score',
   },
   {
     label: '培训课酬',
-    prop: 'coursePay',
+    prop: 'course_pay',
   },
   {
     label: '备注',
     prop: 'remark',
+  },
+  {
+    label: '创建时间',
+    prop: 'created_time',
   },
 ];
