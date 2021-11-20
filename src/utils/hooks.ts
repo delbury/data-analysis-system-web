@@ -1,29 +1,60 @@
-import { ref, reactive, onMounted } from 'vue';
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ResponseList } from '/@types/Server';
+import { reactive, onMounted, watch, toRef, nextTick } from 'vue';
+import { FetcherType } from '/@/service/tools';
 
-export const useTableFetcher = (fetcher: (...arg: any) => Promise<AxiosResponse<ResponseList>>) => {
-  const data = reactive<any>([]);
-  const loadding = ref(false);
-  const wrapperFetcher = async (...arg: any) => {
-    try {
-      loadding.value = true;
-      const res = await fetcher(...arg);
-      data.length = 0;
-      data.push(...res.data.data.list);
-    } finally {
-      loadding.value = false;
-    }
-  };
+// 基本 table 的使用
+interface TableResult {
+  pageNumber: number;
+  pageSize: number;
+  list: any[];
+  total: number;
+  loadding: boolean;
+  refresh: () => Promise<any>;
+}
+// 刷新表格节流
+let willRefresh = false;
+export const useTableFetcher = (fetcher: FetcherType) => {
+  const table = reactive<TableResult>({
+    pageSize: 20,
+    pageNumber: 1,
+    list: [],
+    total: 0,
+    loadding: false,
+    refresh: async (params: {} = {}) => {
+      try {
+        table.loadding = true;
+        const res = await fetcher({
+          params: {
+            pageSize: table.pageSize,
+            pageNumber: table.pageNumber,
+            ...params,
+          },
+        });
+        table.list.length = 0;
+        table.list.push(...res.data.data.list);
+        table.total = res.data.data.total;
+      } finally {
+        table.loadding = false;
+      }
+    },
+  });
 
   // 挂载时请求一次
   onMounted(() => {
-    wrapperFetcher();
+    table.refresh();
   });
 
-  return {
-    data,
-    loadding,
-    fetcher: wrapperFetcher,
-  };
+  const ps = toRef(table, 'pageSize');
+  const pn = toRef(table, 'pageNumber');
+  // 监听页数和每页条数
+  watch([ps, pn], (vals, olds) => {
+    if(!willRefresh) {
+      willRefresh = true;
+      nextTick(() => {
+        table.refresh();
+        willRefresh = false;
+      });
+    }
+  });
+
+  return table;
 };

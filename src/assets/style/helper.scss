@@ -1,0 +1,12 @@
+.cp {
+  cursor: pointer !important;
+  user-select: none !important;
+
+  &:hover {
+    opacity: 0.8 !important;
+  }
+
+  &:active {
+    opacity: 1 !important;
+  }
+}

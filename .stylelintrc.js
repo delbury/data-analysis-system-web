@@ -13,6 +13,8 @@ module.exports = {
     'selector-max-id': null,
     'scss/at-extend-no-missing-placeholder': null,
     'selector-class-pattern': null,
+    'max-nesting-depth': 2,
+    'alpha-value-notation': 'number',
   },
   defaultSeverity: 'warning',
 };

@@ -1,23 +1,21 @@
-import { ElTableColumn } from 'element-plus/es/components/table';
+import { ColumnProps } from '/@/components/CompTable/interface';
+import { walkColumnConfig } from '/@/components/CompTable/util';
 
-type ColumnProps = InstanceType<typeof ElTableColumn>['$props'];
-
-export const getColumns = (): ColumnProps[] => [
-  {
-    label: '序号',
-    type: 'index',
-  },
+export const getColumns = (): ColumnProps[] => walkColumnConfig([
   {
     label: '日期',
     prop: 'date',
+    customType: 'date',
   },
   {
     label: '培训开始时间',
     prop: 'start_time',
+    customType: 'time',
   },
   {
     label: '培训结束时间',
     prop: 'end_time',
+    customType: 'time',
   },
   {
     label: '开展单位',
@@ -92,67 +90,88 @@ export const getColumns = (): ColumnProps[] => [
     prop: 'trainer_unit',
   },
   {
-    label: '培训人数（管理和业务技术）',
-    prop: 'trained_count_manage',
-  },
-  {
-    label: '培训人数（行车关键岗位：司机、行车值班员）',
-    prop: 'trained_count_key',
-  },
-  {
-    label: '培训人数（生产人员：非行车关键岗位）',
-    prop: 'trained_count_product',
-  },
-  {
-    label: '培训人数（未持证人员：新员工、实习生等）',
-    prop: 'trained_count_new',
-  },
-  {
-    label: '培训人数（工勤）',
-    prop: 'trained_count_work',
-  },
-  {
-    label: '培训总人数',
-    prop: 'trained_count_total',
+    label: '培训人数',
+    align: 'center',
+    children: [
+      {
+        label: '培训人数（管理和业务技术）',
+        prop: 'trained_count_manage',
+        customType: 'int',
+      },
+      {
+        label: '培训人数（行车关键岗位：司机、行车值班员）',
+        prop: 'trained_count_key',
+        customType: 'int',
+      },
+      {
+        label: '培训人数（生产人员：非行车关键岗位）',
+        prop: 'trained_count_product',
+        customType: 'int',
+      },
+      {
+        label: '培训人数（未持证人员：新员工、实习生等）',
+        prop: 'trained_count_new',
+        customType: 'int',
+      },
+      {
+        label: '培训人数（工勤）',
+        prop: 'trained_count_work',
+        customType: 'int',
+      },
+      {
+        label: '培训总人数',
+        prop: 'trained_count_total',
+        customType: 'int',
+      },
+    ],
   },
   {
     label: '理论课时',
-    prop: 'train_hours_theory',
+    prop: 'trained_hours_theory',
+    customType: 'float',
   },
   {
     label: '实操课时',
-    prop: 'train_hours_practice',
+    prop: 'trained_hours_practice',
+    customType: 'float',
   },
   {
     label: '总课时',
-    prop: 'train_hours_total',
+    prop: 'trained_hours_total',
+    customType: 'float',
   },
   {
     label: '培训效果评估人数',
     prop: 'train_effect_count',
+    customType: 'int',
   },
   {
     label: '学员评价得分',
     prop: 'student_evaluation_score',
+    customType: 'float',
   },
   {
     label: '项目负责人评价得分',
     prop: 'maintainer_evaluation_score',
+    customType: 'float',
   },
   {
     label: '培训效果评价得分（等于学员评价得分*0.7+项目负责人评价得分*0.3）',
     prop: 'effect_evaluation_score',
+    customType: 'float',
   },
   {
     label: '培训课酬',
     prop: 'course_pay',
+    customType: 'float',
+  },
+  {
+    label: '创建时间',
+    prop: 'created_time',
+    customType: 'datetime',
   },
   {
     label: '备注',
     prop: 'remark',
   },
-  {
-    label: '创建时间',
-    prop: 'created_time',
-  },
-];
+]);

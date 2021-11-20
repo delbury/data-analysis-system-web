@@ -4,16 +4,20 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     redirect: '/workbench',
-  },
-  {
-    path: '/workbench',
-    component: () => import('/@/pages/workbench/index.vue'),
+    component: () => import('/@/pages/layout/index.vue'),
+    children: [
+      {
+        path: '/workbench',
+        component: () => import('/@/pages/workbench/index.vue'),
+      },
+    ],
   },
   {
     path: '/:notfound(.*)',
     redirect: '/',
   },
 ];
+
 
 export default createRouter({
   history: createWebHistory('/'),

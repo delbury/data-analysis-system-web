@@ -12,6 +12,13 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: '@use "./src/assets/style/vars.scss" as *;', // 全局引入变量
+      },
+    },
+  },
   resolve: {
     alias: {
       '/@': path.resolve(__dirname, 'src'),
@@ -23,6 +30,7 @@ export default defineConfig({
     port: 3000,
     strictPort: false,
     open: false, // boolean | string
+    hmr: true,
     proxy: {
       '^/api/.*': {
         target: 'http://127.0.0.1:4000',

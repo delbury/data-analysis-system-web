@@ -26,6 +26,8 @@ import {
   ElDialog,
   ElLoading,
   ElPopconfirm,
+  ElCheckTag,
+  ElPagination,
 } from 'element-plus';
 
 const Coms = [
@@ -54,6 +56,8 @@ const Coms = [
   ElDialog,
   ElLoading,
   ElPopconfirm,
+  ElCheckTag,
+  ElPagination,
 ];
 
 const plugin: Plugin = {
