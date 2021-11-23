@@ -1,3 +1,4 @@
+export * from './TeamGroup';
 export * from './Workbench';
 
-export type TableNames = 'workbench';
+export type TableNames = 'team_group' | 'workbench';

@@ -15,6 +15,7 @@ module.exports = {
     'selector-class-pattern': null,
     'max-nesting-depth': 2,
     'alpha-value-notation': 'number',
+    'color-function-notation': 'legacy',
   },
   defaultSeverity: 'warning',
 };

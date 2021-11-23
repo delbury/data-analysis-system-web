@@ -18,7 +18,7 @@ import {
   ElTableColumn,
   ElInput,
   ElScrollbar,
-  ElMessageBox,
+  // ElMessageBox,
   ElForm,
   ElFormItem,
   ElCalendar,
@@ -28,7 +28,15 @@ import {
   ElPopconfirm,
   ElCheckTag,
   ElPagination,
+  ElTimePicker,
+  ElSpace,
+  ElMenu,
+  ElMenuItem,
+  ElSubMenu,
+  ElContainer,
+  ElAside,
 } from 'element-plus';
+import 'element-plus/dist/index.css'; // messagebox 样式丢失
 
 const Coms = [
   ElButton,
@@ -48,7 +56,7 @@ const Coms = [
   ElTableColumn,
   ElInput,
   ElScrollbar,
-  ElMessageBox,
+  // ElMessageBox,
   ElForm,
   ElFormItem,
   ElCalendar,
@@ -58,6 +66,13 @@ const Coms = [
   ElPopconfirm,
   ElCheckTag,
   ElPagination,
+  ElTimePicker,
+  ElSpace,
+  ElMenu,
+  ElMenuItem,
+  ElSubMenu,
+  ElContainer,
+  ElAside,
 ];
 
 const plugin: Plugin = {

@@ -1,7 +1,8 @@
 <template>
   <el-table-column
-    show-overflow-tooltip
-    v-bind="columnProp"
+    header-align="left"
+    v-bind="{ ...columnProp, ref: void 0 }"
+    :label="(columnProp.label ?? '') + (columnProp.tip ? `（${columnProp.tip}）` : '')"
   >
     <template v-if="children?.length">
       <template

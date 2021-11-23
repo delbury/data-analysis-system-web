@@ -1,4 +1,4 @@
-import { ColumnProps } from './interface';
+import { ColumnProps, FormItemSection } from './interface';
 
 // 处理一些预设配置
 export const walkColumnConfig = (columns: ColumnProps[]): ColumnProps[] => {
@@ -18,8 +18,10 @@ export const walkColumnConfig = (columns: ColumnProps[]): ColumnProps[] => {
           default:
             break;
         }
-      } else {
-        col.minWidth = 100;
+      }
+
+      if(!col.minWidth) {
+        col.minWidth = 20 * Math.min(col.label?.length ?? 6, 6);
       }
     }
 

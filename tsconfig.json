@@ -12,9 +12,10 @@
     "lib": ["esnext", "dom"],
     "baseUrl": ".",
     "paths": {
-      "/@/*": ["./src/*"],
-      "/@types/*": ["./types/*"]
-    }
+      "/@/*": ["src/*"],
+      "/@types/*": ["types/*"]
+    },
+    "types": ["element-plus/global"]
   },
   "include": [
     "src/**/*.ts",

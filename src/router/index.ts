@@ -10,6 +10,21 @@ const routes: RouteRecordRaw[] = [
         path: '/workbench',
         component: () => import('/@/pages/workbench/index.vue'),
       },
+      {
+        path: '/basedata',
+        component: () => import('/@/pages/basedata/index.vue'),
+        redirect: '/basedata/teamgroup',
+        children: [
+          {
+            path: 'teamgroup',
+            component: () => import('/@/pages/basedata/TeamGroup.vue'),
+          },
+        ],
+      },
+      {
+        path: '/auth',
+        component: () => import('/@/pages/auth/index.vue'),
+      },
     ],
   },
   {

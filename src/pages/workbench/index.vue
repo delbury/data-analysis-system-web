@@ -1,6 +1,12 @@
 <template>
   <div class="page">
-    <CompTable v-bind="tableConfig"></CompTable>
+    <CompTable
+      v-bind="tableConfig"
+      :form-init-values="formInitValues"
+      :form-items="formItems"
+      :dialog-props="{ width: '80%' }"
+    >
+    </CompTable>
   </div>
 </template>
 
@@ -8,6 +14,7 @@
 import { defineComponent, reactive } from 'vue';
 import { getColumns } from './columns';
 import { apis } from '/@/service';
+import { FORM_INIT_VALUES, FORM_ITEMS } from './form';
 
 export default defineComponent({
   name: 'PageWorkbench',
@@ -20,6 +27,8 @@ export default defineComponent({
 
     return {
       tableConfig,
+      formInitValues: FORM_INIT_VALUES,
+      formItems: FORM_ITEMS,
     };
   },
 });

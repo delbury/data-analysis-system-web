@@ -30,4 +30,4 @@ export const createRESTfulAPI = <T = any, U = any>(baseUrl: string) => {
   };
 };
 
-export type FetcherType = ReturnType<typeof createRESTfulAPI>['get']
+export type FetchersType = ReturnType<typeof createRESTfulAPI>

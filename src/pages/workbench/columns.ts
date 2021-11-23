@@ -20,10 +20,17 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
   {
     label: '开展单位',
     prop: 'unit',
+    showOverflowTooltip: true,
   },
   {
     label: '组织部门',
     prop: 'dept',
+    showOverflowTooltip: true,
+  },
+  {
+    label: '培训开展班组门',
+    prop: 'group',
+    showOverflowTooltip: true,
   },
   {
     label: '项目编号',
@@ -32,10 +39,12 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
   {
     label: '培训项目名称',
     prop: 'train_project_name',
+    showOverflowTooltip: true,
   },
   {
     label: '培训课程名称',
     prop: 'train_course_name',
+    showOverflowTooltip: true,
   },
   {
     label: '培训层级',
@@ -44,6 +53,7 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
   {
     label: '培训内容',
     prop: 'train_content',
+    showOverflowTooltip: true,
   },
   {
     label: '培训方式1',
@@ -72,6 +82,7 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
   {
     label: '培训地点',
     prop: 'train_place',
+    showOverflowTooltip: true,
   },
   {
     label: '培训师',
@@ -88,35 +99,41 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
   {
     label: '培训师所属单位',
     prop: 'trainer_unit',
+    showOverflowTooltip: true,
   },
   {
     label: '培训人数',
-    align: 'center',
+    headerAlign: 'center',
     children: [
       {
-        label: '培训人数（管理和业务技术）',
+        label: '培训人数',
         prop: 'trained_count_manage',
         customType: 'int',
+        tip: '管理和业务技术',
       },
       {
-        label: '培训人数（行车关键岗位：司机、行车值班员）',
+        label: '培训人数',
         prop: 'trained_count_key',
         customType: 'int',
+        tip: '行车关键岗位：司机、行车值班员',
       },
       {
-        label: '培训人数（生产人员：非行车关键岗位）',
+        label: '培训人数',
         prop: 'trained_count_product',
         customType: 'int',
+        tip: '生产人员：非行车关键岗位',
       },
       {
-        label: '培训人数（未持证人员：新员工、实习生等）',
+        label: '培训人数',
         prop: 'trained_count_new',
         customType: 'int',
+        tip: '未持证人员：新员工、实习生等',
       },
       {
-        label: '培训人数（工勤）',
+        label: '培训人数',
         prop: 'trained_count_work',
         customType: 'int',
+        tip: '工勤',
       },
       {
         label: '培训总人数',
@@ -156,9 +173,10 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
     customType: 'float',
   },
   {
-    label: '培训效果评价得分（等于学员评价得分*0.7+项目负责人评价得分*0.3）',
+    label: '培训效果评价得分',
     prop: 'effect_evaluation_score',
     customType: 'float',
+    tip: '等于学员评价得分*0.7+项目负责人评价得分*0.3',
   },
   {
     label: '培训课酬',
@@ -173,5 +191,7 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
   {
     label: '备注',
     prop: 'remark',
+    minWidth: 120,
+    showOverflowTooltip: true,
   },
 ]);

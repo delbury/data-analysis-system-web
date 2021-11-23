@@ -24,7 +24,7 @@
         <el-table-column
           v-if="rowBtns?.length"
           label="操作"
-          :min-width="rowBtns.length * 55"
+          :width="rowBtns.length * 55"
           fixed="left"
         >
           <template #default="{ row, $index }">
@@ -58,6 +58,20 @@
     </div>
 
     <div class="comp-table__pagination">
+      <!-- 左下角插槽 -->
+      <div class="comp-table__footer">
+        <slot name="footer">
+          <el-button
+            :icon="Plus"
+            type="primary"
+            @click="handleCreate()"
+          >
+            新增
+          </el-button>
+        </slot>
+      </div>
+
+      <!-- 分页器 -->
       <el-pagination
         v-model:page-size="table.pageSize"
         v-model:current-page="table.pageNumber"
@@ -65,21 +79,37 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="table.total"
         :default-page-size="table.pageSize"
-        :page-sizes="[10, 20, 50, 100]"
+        :page-sizes="[10, 20, 50]"
       ></el-pagination>
     </div>
+
+    <!-- 表单弹框 -->
+    <DialogForm
+      v-model="dialog.visible"
+      :title="dialogTitle"
+      :form-init-values="formInitValues"
+      :form-items="formItems"
+      :dialog-props="dialogProps"
+      :status="dialog.status"
+      :confirm-action="confirmAction"
+    ></DialogForm>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, reactive } from 'vue';
+import { defineComponent, ref, PropType, reactive, computed } from 'vue';
 import { useTableFetcher } from '/@/utils/hooks';
-import { ColumnProps } from './interface';
+import { ColumnProps, FormItemSection, DialogStatus } from './interface';
 import CompTableColumn from './CompTableColumn.vue';
+import { ElMessageBox } from 'element-plus';
+import { Plus } from '@element-plus/icons';
+import DialogForm from './DialogForm.vue';
+import { ElDialogProps } from '/@/components/CompDialog/interface';
+import { FetchersType } from '/@/service/tools';
 
 export default defineComponent({
   name: 'CompTable',
-  components: { CompTableColumn },
+  components: { CompTableColumn, Plus, DialogForm },
   props: {
     // 表格列
     columns: {
@@ -89,7 +119,7 @@ export default defineComponent({
     // 表操作 api
     apis: {
       default: null,
-      type: Object as PropType<Record<'get' | 'getById' | 'post' | 'put' | 'delete', (...args: any) => Promise<any>>>,
+      type: Object as PropType<FetchersType>,
     },
     // 是否展示序号列
     showIndexColumn: {
@@ -105,14 +135,86 @@ export default defineComponent({
       ],
       type: Array as PropType<{ label: string; key: string }[] | null>,
     },
+    // 表单初始值
+    formInitValues: {
+      default: () => ({}),
+      type: Object,
+    },
+    // 表单字段
+    formItems: {
+      default: () => [],
+      type: Array as PropType<FormItemSection[]>,
+    },
+    dialogProps: {
+      default: () => ({}),
+      type: Object as PropType<ElDialogProps>,
+    },
   },
-  setup(props) {
-    const table = useTableFetcher(props.apis.get);
-    const handleBtnClick = (key: string, record: any, index: number) => {};
+  emits: ['btn'],
+  setup(props, ctx) {
+    // 表格
+    const table = useTableFetcher(props.apis);
+
+    // 操作按钮点击回调
+    const handleBtnClick = (key: string, record: any, index: number) => {
+      switch(key) {
+        case 'default-detail':
+          break;
+        case 'default-edit':
+          break;
+        case 'default-delete':
+          ElMessageBox.confirm(
+            '确认删除该项？',
+            '提示',
+            { type: 'warning' },
+          ).then(() => table.delete(record.id as string)).catch(() => {});
+          break;
+        default: break;
+      }
+      ctx.emit('btn', { key, record, index });
+    };
+
+    // 弹框
+    const dialog = reactive<{ visible: boolean; status: DialogStatus}>({
+      visible: false,
+      status: 'create',
+    });
+    const dialogTitle = computed(() => {
+      switch(dialog.status) {
+        case 'create':
+          return '新增';
+        case 'edit':
+          return '编辑';
+        case 'detail':
+          return '详情';
+        default:
+          return '';
+      }
+    });
+
+    // 表单框确定
+    const confirmAction = async(status: DialogStatus, data: any) => {
+      try {
+        if(status === 'create') {
+          // 创建
+          await table.create(data);
+        }
+      } catch(e) {
+        return false;
+      }
+    };
 
     return {
       table,
       handleBtnClick,
+      Plus,
+      dialog,
+      dialogTitle,
+      handleCreate: () => {
+        dialog.status = 'create';
+        dialog.visible = true;
+      },
+      confirmAction,
     };
   },
 });
@@ -131,7 +233,8 @@ export default defineComponent({
 
   .comp-table__pagination {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
     padding: 20px;
   }
 }
