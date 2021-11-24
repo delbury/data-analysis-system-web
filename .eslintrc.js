@@ -123,6 +123,7 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     'vue/no-unused-components': 'off',
+    'spaced-comment': 'off',
     // 'max-len': ['warn', { code: 100 }],
     // 'vue/max-attributes-per-line': ['warn', {
     //   singleline: {

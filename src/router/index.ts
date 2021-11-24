@@ -19,6 +19,10 @@ const routes: RouteRecordRaw[] = [
             path: 'teamgroup',
             component: () => import('/@/pages/basedata/TeamGroup.vue'),
           },
+          {
+            path: 'staff',
+            component: () => import('/@/pages/basedata/Staff.vue'),
+          },
         ],
       },
       {

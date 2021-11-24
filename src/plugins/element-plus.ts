@@ -35,6 +35,8 @@ import {
   ElSubMenu,
   ElContainer,
   ElAside,
+  ElInputNumber,
+  ElIcon,
 } from 'element-plus';
 import 'element-plus/dist/index.css'; // messagebox 样式丢失
 
@@ -73,6 +75,8 @@ const Coms = [
   ElSubMenu,
   ElContainer,
   ElAside,
+  ElInputNumber,
+  ElIcon,
 ];
 
 const plugin: Plugin = {

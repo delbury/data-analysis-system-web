@@ -9,9 +9,13 @@
     @closed="handleClosed"
   >
     <el-form
+      v-bind="formProps"
       ref="formRef"
+      v-loading="loading"
       :model="form"
       class="comp-table__form"
+      :class="{ readonly: disabled }"
+      :disabled="disabled"
     >
       <template
         v-for="(section, index) in formItems"
@@ -32,6 +36,10 @@
             <el-col :span="item.span ?? 6">
               <el-form-item
                 v-bind="{ ...item, ref: void 0 }"
+                :rules="[
+                  ...(item.rules ?? []),
+                  ...(item.ruleNames ?? []).map(name => defaultFormRules[name]).filter(it => it)
+                ]"
               >
                 <template #label>
                   <el-tooltip
@@ -50,9 +58,10 @@
                   v-model="form[item.prop ?? '']"
                   style="width: 100%;"
                   type="date"
-                  placeholder="请选择日期"
+                  :placeholder="disabled ? '' : '请选择日期'"
+                  clearable
                   :disabled="item.disabled"
-                  :readonly="item.readonly"
+                  v-bind="item.customOption ?? {}"
                 ></el-date-picker>
                 <!-- 时间 -->
                 <el-time-picker
@@ -60,11 +69,36 @@
                   v-model="form[item.prop ?? '']"
                   style="width: 100%;"
                   is-range
-                  start-placeholder="开始时间"
-                  end-placeholder="结束时间"
+                  :start-placeholder="disabled ? '' : '开始时间'"
+                  :end-placeholder="disabled ? '' : '结束时间'"
+                  clearable
                   :disabled="item.disabled"
-                  :readonly="item.readonly"
+                  v-bind="item.customOption ?? {}"
                 ></el-time-picker>
+                <!-- 整数 -->
+                <el-input-number
+                  v-else-if="item.customType === 'int'"
+                  v-model.number="form[item.prop ?? '']"
+                  style="width: 100%;"
+                  clearable
+                  :disabled="item.disabled"
+                  :min="0"
+                  :step="1"
+                  step-strictly
+                  controls-position="right"
+                  v-bind="item.customOption ?? {}"
+                ></el-input-number>
+                <!-- 浮点数 -->
+                <el-input-number
+                  v-else-if="item.customType === 'float'"
+                  v-model.number="form[item.prop ?? '']"
+                  style="width: 100%;"
+                  clearable
+                  :disabled="item.disabled"
+                  :min="0"
+                  :controls="false"
+                  v-bind="item.customOption ?? {}"
+                ></el-input-number>
                 <!-- 长文本 -->
                 <el-input
                   v-else-if="item.customType === 'textarea'"
@@ -72,15 +106,19 @@
                   style="width: 100%;"
                   type="textarea"
                   :autosize="{ minRows: 2 }"
-                  placeholder="请输入"
+                  :placeholder="disabled ? '' : '请输入'"
+                  clearable
+                  :disabled="item.disabled"
+                  v-bind="item.customOption ?? {}"
                 ></el-input>
                 <!-- 文本输入 -->
                 <el-input
                   v-else
                   v-model="form[item.prop ?? '']"
-                  placeholder="请输入"
+                  :placeholder="disabled ? '' : '请输入'"
+                  clearable
                   :disabled="item.disabled"
-                  :readonly="item.readonly"
+                  v-bind="item.customOption ?? {}"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -92,13 +130,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType, ref } from 'vue';
+import { defineComponent, reactive, PropType, ref, computed } from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
-import { DialogStatus, FormItemSection } from './interface';
+import { DialogStatus, FormItemSection, FormInstance, ElFormProps, FormItem } from './interface';
 import { ElDialogProps } from '/@/components/CompDialog/interface';
-import { ElForm } from 'element-plus';
-
-type FormInstance = InstanceType<typeof ElForm>
+import { formRules } from './form-rules';
 
 export default defineComponent({
   props: {
@@ -123,8 +159,12 @@ export default defineComponent({
       default: () => ({}),
       type: Object as PropType<ElDialogProps>,
     },
+    formProps: {
+      default: () => ({}),
+      type: Object as PropType<ElFormProps>,
+    },
     confirmAction: {
-      type: Function as PropType<(status: DialogStatus, data: any) => any>,
+      type: Function as PropType<(status: DialogStatus, data: any, id?: number) => any>,
       default: null,
     },
     // 状态
@@ -132,23 +172,88 @@ export default defineComponent({
       type: String as PropType<DialogStatus>,
       default: 'create',
     },
+    // 请求中
+    loading: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props) {
     const form = reactive(cloneDeep(props.formInitValues));
     const formRef = ref<FormInstance | null>(null);
+    // 编辑时的数据id
+    const dataId = ref<number>();
+    // 是否只读
+    const disabled = computed(() => props.status === 'detail');
+
+    // 表单配置map
+    const formItemsMap = computed(() => {
+      const map: Record<string, FormItem> = {};
+      props.formItems.forEach(item => {
+        item.formItems.forEach(it => {
+          map[it.prop ?? ''] = it;
+        });
+      });
+      return map;
+    });
+    // 表单数据处理
+    const resolveForm = (form: Record<string, any>) => {
+      const temp: Record<string, any> = {};
+      Object.entries(form).forEach(([key, val]) => {
+        const formatter = formItemsMap.value[key]?.valueSubmitHandler;
+        if(formatter) {
+          Object.assign(temp, formatter(val, key, form));
+        } else if(val !== null && val !== void 0 && val !== '') {
+          temp[key] = val;
+        }
+      });
+      return temp;
+    };
+
+    // 设置表单的值
+    const setFormValues = (params: Record<string, any>) => {
+      dataId.value = params.id;
+      Object.keys(form).forEach(key => {
+        const formatter = formItemsMap.value[key]?.valueRebuildHandler;
+        if(formatter) {
+          const temp = formatter(params[key], key, params);
+          Object.entries(temp).forEach(([key, val]) => {
+            if(key in form) {
+              form[key] = val;
+            }
+          });
+
+        } else {
+          form[key] = params[key] ?? '';
+        }
+      });
+    };
 
     return {
+      disabled,
       form,
       formRef,
       formatLabel: (label?: string, tip?: string) => {
         if(!tip) return label;
         return `${label}（${tip.length < 4 ? tip : tip.slice(0, 4) + '...'}）`;
       },
-      submitAction: () => props?.confirmAction(props.status, form),
+      submitAction: async() => {
+        try {
+          if(props.status !== 'detail') {
+            await formRef.value?.validate();
+            return await props?.confirmAction(props.status, resolveForm(form), dataId.value);
+          }
+        } catch(e) {
+          return false;
+        }
+      },
       handleClosed: () => {
         // 弹框关闭重置表单
         formRef.value?.resetFields();
+        dataId.value = void 0;
       },
+      setFormValues,
+      defaultFormRules: formRules,
     };
   },
 });
@@ -162,6 +267,13 @@ export default defineComponent({
 
     :global(.el-form-item) {
       padding-right: 2em;
+    }
+
+    &.readonly {
+      :global(.is-disabled *) {
+        color: var(--el-input-font-color, var(--el-text-color-regular)) !important;
+        // background-color: #fff !important;
+      }
     }
 
     .comp-table__form-section {

@@ -1,4 +1,7 @@
 import { FormItemSection } from '/@/components/CompTable/interface';
+import moment from 'moment';
+
+const DEFAULT_DATE = '1970-01-01';
 
 // 表单初始值
 export const FORM_INIT_VALUES = {
@@ -18,20 +21,20 @@ export const FORM_INIT_VALUES = {
   maintainer_id: '',
   train_place: '',
   trainer_id: '',
-  trained_count_manage: '',
-  trained_count_key: '',
-  trained_count_product: '',
-  trained_count_new: '',
-  trained_count_work: '',
-  trained_count_total: '',
-  trained_hours_theory: '',
-  trained_hours_practice: '',
-  trained_hours_total: '',
-  train_effect_count: '',
-  student_evaluation_score: '',
-  maintainer_evaluation_score: '',
-  effect_evaluation_score: '',
-  course_pay: '',
+  trained_count_manage: 0,
+  trained_count_key: 0,
+  trained_count_product: 0,
+  trained_count_new: 0,
+  trained_count_work: 0,
+  trained_count_total: 0,
+  trained_hours_theory: 0,
+  trained_hours_practice: 0,
+  trained_hours_total: 0,
+  train_effect_count: 0,
+  student_evaluation_score: 0,
+  maintainer_evaluation_score: 0,
+  effect_evaluation_score: 0,
+  course_pay: 0,
   remark: '',
 };
 
@@ -44,21 +47,44 @@ export const FORM_ITEMS: FormItemSection[] = [
         label: '日期',
         prop: 'date',
         customType: 'date',
+        ruleNames: ['required'],
+        valueSubmitHandler: (val) => {
+          return {
+            date: moment(val).format('YYYY-MM-DD HH:mm:ss'),
+          };
+        },
       },
       {
         label: '培训时间',
         prop: 'start_end_time',
         customType: 'timerange',
+        ruleNames: ['required'],
+        valueSubmitHandler: (val) => {
+          return {
+            start_time: moment(val[0]).format('HH:mm:ss'),
+            end_time: moment(val[1]).format('HH:mm:ss'),
+          };
+        },
+        valueRebuildHandler: (val, key, params) => {
+          return {
+            start_end_time: [
+              `${params.date ?? DEFAULT_DATE} ${params.start_time}`,
+              `${params.date ?? DEFAULT_DATE} ${params.end_time}`,
+            ],
+          };
+        },
       },
       {
         label: '开展单位',
         prop: 'unit',
-        readonly: true,
+        disabled: true,
+        ruleNames: ['required'],
       },
       {
         label: '组织部门',
         prop: 'dept',
-        readonly: true,
+        disabled: true,
+        ruleNames: ['required'],
       },
       {
         label: '培训开展班组门',
@@ -187,25 +213,32 @@ export const FORM_ITEMS: FormItemSection[] = [
         label: '培训效果评估人数',
         prop: 'train_effect_count',
         customType: 'int',
+        ruleNames: ['intUnsigned'],
       },
       {
         label: '学员评价得分',
         prop: 'student_evaluation_score',
         customType: 'float',
+        ruleNames: ['floatUnsigned'],
       },
       {
         label: '项目负责人评价得分',
         prop: 'maintainer_evaluation_score',
         customType: 'float',
+        ruleNames: ['floatUnsigned'],
       },
       {
         label: '培训效果评价得分',
         prop: 'effect_evaluation_score',
         tip: '等于学员评价得分*0.7+项目负责人评价得分*0.3',
+        customType: 'float',
+        ruleNames: ['floatUnsigned'],
       },
       {
         label: '培训课酬',
         prop: 'course_pay',
+        customType: 'float',
+        ruleNames: ['floatUnsigned'],
       },
 
     ],
@@ -217,6 +250,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         label: '备注',
         prop: 'remark',
         span: 24,
+        customType: 'textarea',
       },
     ],
   },

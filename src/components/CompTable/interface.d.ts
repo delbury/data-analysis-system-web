@@ -1,5 +1,8 @@
-import { ElTableColumn, ElFormItem } from 'element-plus';
+import { ElTableColumn, ElFormItem, ElForm } from 'element-plus';
 import { FormRuleNames } from './form-rules';
+
+export type FormInstance = InstanceType<typeof ElForm>
+export type ElFormProps = InstanceType<typeof ElForm>['$props'];
 
 // 列配置类型
 type BaseCustomType = 'date' | 'datetime' | 'time' | 'int' | 'float';
@@ -20,12 +23,18 @@ export type FormItem = ElFormItemProps & {
   span?: number;
   // 输入数据类型
   customType?: BaseCustomType | 'string' | 'select' | 'remote-select' | 'timerange' | 'textarea';
+  // 输入数据类型组件可选参数
+  customOption?: Record<string, any>;
   // tip
   tip?: string;
   readonly?: boolean;
   disabled?: boolean;
   // 字段规则，预设的规则
-  ruleName?: FormRuleNames[];
+  ruleNames?: FormRuleNames[];
+  // form表单值提交时处理
+  valueSubmitHandler?: (val: any, key: string, form: Record<string, any>) => Record<string, any>;
+  // form表单值回显时处理
+  valueRebuildHandler?: (val: any, key: string, form: Record<string, any>) => Record<string, any>;
 }
 
 // 表单字段组

@@ -4,7 +4,7 @@
       v-bind="tableConfig"
       :form-init-values="formInitValues"
       :form-items="formItems"
-      :dialog-props="{ width: '80%' }"
+      :dialog-props="{ width: '80%', top: '8vh' }"
     >
     </CompTable>
   </div>

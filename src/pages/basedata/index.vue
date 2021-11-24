@@ -14,6 +14,9 @@
           <el-menu-item
             :index="'/basedata' + item.path"
           >
+            <el-icon v-if="item.icon">
+              <component :is="item.icon"></component>
+            </el-icon>
             {{ item.label }}
           </el-menu-item>
         </template>
@@ -27,18 +30,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
+import { UserFilled, OfficeBuilding } from '@element-plus/icons';
+
+interface SubMenuOption {
+  label: string;
+  path: string;
+  icon?: ReturnType<typeof defineComponent>;
+}
 
 export default defineComponent({
   name: 'PageBasedata',
   setup() {
     const route = useRoute();
 
-    const subs = reactive([
-      { label: '班组管理', path: '/teamgroup' },
-      { label: '人员管理', path: '/people' },
-      { label: '其他管理', path: '/other' },
+    const subs = reactive<SubMenuOption[]>([
+      { label: '人员管理', path: '/staff', icon: shallowRef(UserFilled) },
+      { label: '班组管理', path: '/teamgroup', icon: shallowRef(OfficeBuilding) },
+      // { label: '权限管理', path: '/auth' },
     ]);
 
     return {

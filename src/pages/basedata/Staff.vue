@@ -25,7 +25,6 @@ import { FormItemSection, ColumnProps } from '/@/components/CompTable/interface'
 export default defineComponent({
   name: 'PageBasedataTeamGroup',
   setup() {
-    // table 参数
     const columns: ColumnProps[] = [
       {
         label: '名称',
@@ -55,7 +54,7 @@ export default defineComponent({
     ];
 
     return {
-      apis: apis.basedata_teamgroup,
+      apis: apis.basedata_staff,
       columns,
       formInitValues,
       formItems,

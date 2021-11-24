@@ -8,10 +8,14 @@ interface TableResult {
   pageSize: number;
   list: any[];
   total: number;
-  loadding: boolean;
+  loadding: boolean; // 获取table数据加载中
+  fetching: boolean; // 获取详情加载中
+  submitting: boolean; // 提交
   refresh: (params?: {}) => Promise<any>;
   delete: (id: string) => Promise<any>,
   create: (id: string) => Promise<any>,
+  detail: (id: string) => Promise<any>,
+  update: (id: string, data: any) => Promise<any>,
 }
 
 // 初始设置
@@ -28,6 +32,8 @@ export const useTableFetcher = (fetchers: FetchersType) => {
     list: [],
     total: 0,
     loadding: false,
+    fetching: false,
+    submitting: false,
     // 刷新表格，是否完全刷新
     refresh: async (params: {} = {}, reset = false) => {
       // 是否刷新到第一页
@@ -54,29 +60,45 @@ export const useTableFetcher = (fetchers: FetchersType) => {
     // 删除
     delete: async (id: string) => {
       try {
-        table.loadding = true;
-        await fetchers.delete(id);
-
+        table.submitting = true;
+        const res = await fetchers.delete(id);
         table.refresh();
         ElMessage.success('删除成功');
-      } catch(e) {
-        ElMessage.error('删除失败');
+        return res;
       } finally {
-        table.loadding = false;
+        table.submitting = false;
       }
     },
     // 新增
     create: async (data: any) => {
       try {
-        table.loadding = true;
-        await fetchers.post(data);
-
+        table.submitting = true;
+        const res = await fetchers.post(data);
         table.refresh();
-        ElMessage.success('新增成功');
-      } catch(e) {
-        ElMessage.error('新增失败');
+        return res;
       } finally {
-        table.loadding = false;
+        table.submitting = false;
+      }
+    },
+    // 详情
+    detail: async (id: string) => {
+      try {
+        table.fetching = true;
+        const res = await fetchers.getById(id);
+        return res.data.data;
+      } finally {
+        table.fetching = false;
+      }
+    },
+    // 修改
+    update: async (id: string, data: any) => {
+      try {
+        table.submitting = true;
+        const res = await fetchers.put(id, data);
+        table.refresh();
+        return res;
+      } finally {
+        table.submitting = false;
       }
     },
   });
