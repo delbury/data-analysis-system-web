@@ -10,8 +10,7 @@
         { label: '编辑', key: 'default-edit' },
         { label: '删除', key: 'default-delete' },
       ]"
-      :dialog-props="{ width: '600px' }"
-      :form-props="{ labelWidth: '60px' }"
+      :form-props="{ labelWidth: '100px' }"
     >
     </CompTable>
   </div>
@@ -27,8 +26,30 @@ export default defineComponent({
   setup() {
     const columns: ColumnProps[] = [
       {
-        label: '名称',
+        label: '姓名',
         prop: 'name',
+      },
+      {
+        label: '工号',
+        prop: 'code',
+      },
+      {
+        label: '手机号码',
+        prop: 'phone',
+      },
+      {
+        label: '单位',
+        prop: 'company',
+      },
+      {
+        label: '序列',
+        prop: 'job',
+      },
+      {
+        label: '是否取证',
+        prop: 'has_cert',
+        tip: '上岗资格证书',
+        customType: 'bool',
       },
       {
         label: '备注',
@@ -38,17 +59,23 @@ export default defineComponent({
 
     const formInitValues = {
       name: '',
+      code: '',
+      phone: '',
+      company: '',
+      job: '',
+      has_cert: 0,
       remark: '',
     };
     const formItems: FormItemSection[] = [
       {
         formItems: [
-          { label: '名称', prop: 'name', span: 24, ruleNames: ['required', 'normalLength'] },
-          { label: '备注',
-            prop: 'remark',
-            span: 24,
-            customType: 'textarea',
-          },
+          { label: '名称', prop: 'name', span: 12, ruleNames: ['required', 'normalLength'] },
+          { label: '工号', prop: 'code', span: 12, ruleNames: ['required'] },
+          { label: '手机号码', prop: 'phone', span: 12, ruleNames: ['required', 'phone'] },
+          { label: '单位', prop: 'company', span: 12, ruleNames: ['required'] },
+          { label: '序列', prop: 'job', span: 12 },
+          { label: '是否取证', info: '上岗资格证书', prop: 'has_cert', span: 12, customType: 'bool' },
+          { label: '备注', prop: 'remark', span: 24, customType: 'textarea' },
         ],
       },
     ];

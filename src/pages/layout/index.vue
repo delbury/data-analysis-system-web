@@ -5,13 +5,12 @@
     </div>
 
     <div class="layout-content">
-      <router-view v-slot="{ Component, route }">
-        <keep-alive>
-          <component
-            :is="Component"
-            :key="route.path"
-          ></component>
-        </keep-alive>
+      <router-view v-slot="{ Component }">
+        <!-- <keep-alive> -->
+        <component
+          :is="Component"
+        ></component>
+        <!-- </keep-alive> -->
       </router-view>
     </div>
   </div>

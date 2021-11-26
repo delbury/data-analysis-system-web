@@ -9,3 +9,13 @@ html {
 .el-message-box .el-message-box__container .el-message-box__status {
   position: absolute;
 }
+
+// 按钮样式
+.el-button--mini {
+  padding: 7px !important;
+}
+
+// 修复默认时间选择器 icon 样式问题
+.el-date-editor > .el-icon {
+  display: inline-flex;
+}

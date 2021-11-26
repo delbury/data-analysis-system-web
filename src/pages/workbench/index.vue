@@ -28,7 +28,7 @@ export default defineComponent({
     return {
       tableConfig,
       formInitValues: FORM_INIT_VALUES,
-      formItems: FORM_ITEMS,
+      formItems: reactive(FORM_ITEMS),
     };
   },
 });

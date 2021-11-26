@@ -60,15 +60,38 @@
     <div class="comp-table__pagination">
       <!-- 左下角插槽 -->
       <div class="comp-table__footer">
-        <slot name="footer">
-          <el-button
-            :icon="Plus"
-            type="primary"
-            @click="openDialog('create')"
-          >
-            新增
-          </el-button>
-        </slot>
+        <!-- 新增 -->
+        <comp-button
+          v-if="showCreateBtn"
+          :icon="icons.Plus"
+          :button-props="{
+            type: 'primary'
+          }"
+          tip="新增"
+          @click="openDialog('create')"
+        >
+        </comp-button>
+
+        <!-- 刷新 -->
+        <comp-button
+          :icon="icons.Refresh"
+          tip="刷新"
+          @click="table.refresh(void 0, true)"
+        ></comp-button>
+
+        <!-- 导入 -->
+        <comp-button
+          :icon="icons.Upload"
+          tip="导入"
+        ></comp-button>
+
+        <!-- 导出 -->
+        <comp-button
+          :icon="icons.Download"
+          tip="导出"
+        ></comp-button>
+
+        <slot name="footer"></slot>
       </div>
 
       <!-- 分页器 -->
@@ -105,10 +128,14 @@ import { useTableFetcher } from '/@/utils/hooks';
 import { ColumnProps, FormItemSection, DialogStatus, ElFormProps } from './interface';
 import CompTableColumn from './CompTableColumn.vue';
 import { ElMessageBox } from 'element-plus';
-import { Plus } from '@element-plus/icons';
+import { Plus, Refresh, Upload, Download } from '@element-plus/icons';
 import DialogForm from './DialogForm.vue';
 import { ElDialogProps } from '/@/components/CompDialog/interface';
 import { FetchersType } from '/@/service/tools';
+
+const icons = {
+  Plus, Refresh, Upload, Download,
+};
 
 type DialogFormInstance = InstanceType<typeof DialogForm>
 
@@ -117,7 +144,7 @@ export default defineGenericComponent();
 function defineGenericComponent<T = any>() {
   return defineComponent({
     name: 'CompTable',
-    components: { CompTableColumn, Plus, DialogForm },
+    components: { CompTableColumn, DialogForm },
     props: {
     // 表格列
       columns: {
@@ -160,6 +187,11 @@ function defineGenericComponent<T = any>() {
       formProps: {
         default: () => ({}),
         type: Object as PropType<ElFormProps>,
+      },
+      // 展示创建按钮
+      showCreateBtn: {
+        default: true,
+        type: Boolean,
       },
     },
     emits: ['btn'],
@@ -240,7 +272,7 @@ function defineGenericComponent<T = any>() {
       return {
         table,
         handleBtnClick,
-        Plus,
+        icons,
         dialog,
         dialogTitle,
         openDialog,
@@ -268,6 +300,10 @@ function defineGenericComponent<T = any>() {
     align-items: center;
     justify-content: space-between;
     padding: 20px;
+  }
+
+  .comp-table__footer {
+    display: flex;
   }
 }
 </style>

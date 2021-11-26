@@ -24,18 +24,30 @@ const directive: Directive = {
         const { screenX: ox, screenY: oy } = ev;
         const { scrollLeft: osl, scrollTop: ost } = elm;
 
+        // 记录元素的宽度
+        const selfWidth = window.parseInt(window.getComputedStyle(elm).width);
+        let childWidth = selfWidth;
+        Array.from(elm.children).forEach(child => {
+          childWidth = Math.max(window.parseInt(window.getComputedStyle(child).width));
+        });
+
+        // 横向比例滚动
+        const scaleWidth = selfWidth < childWidth ? (childWidth - selfWidth) / 500 : 1;
+
         // 滚动事件
         const fnMove = (ev: MouseEvent) => {
           const { screenX: cx, screenY: cy } = ev;
-          const dx = cx - ox;
+          const dx = (cx - ox) * scaleWidth;
           const dy = cy - oy;
-          elm.scrollTo(osl + dx, ost + dy);
+          elm.scrollTo(osl - dx, ost - dy);
         };
         // 滚动结束
         const fnUp = (ev: MouseEvent) => {
           document.removeEventListener('mousemove', fnMove);
           document.removeEventListener('mouseup', fnUp);
+          document.body.classList.remove('grabbing');
         };
+        document.body.classList.add('grabbing');
         document.addEventListener('mousemove', fnMove);
         document.addEventListener('mouseup', fnUp);
       }

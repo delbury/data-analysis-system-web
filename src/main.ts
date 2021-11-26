@@ -7,6 +7,8 @@ import '/@/assets/style/index.scss';
 // 自定义组件
 import CompTable from '/@/components/CompTable';
 import CompDialog from '/@/components/CompDialog/index.vue';
+import CompButton from '/@/components/CompButton/index.vue';
+
 // 引入自定义指令
 import Directives from '/@/plugins/directives';
 
@@ -19,6 +21,7 @@ app.use(elements).use(router).use(Directives);
 const comps = [
   CompTable,
   CompDialog,
+  CompButton,
 ];
 comps.forEach(comp => app.component(comp.name, comp));
 

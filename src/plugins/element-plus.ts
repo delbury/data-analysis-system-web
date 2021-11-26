@@ -37,7 +37,10 @@ import {
   ElAside,
   ElInputNumber,
   ElIcon,
+  ElSwitch,
+  ElSelectV2,
 } from 'element-plus';
+// import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css'; // messagebox 样式丢失
 
 const Coms = [
@@ -77,11 +80,18 @@ const Coms = [
   ElAside,
   ElInputNumber,
   ElIcon,
+  ElSwitch,
+  ElSelectV2,
 ];
+
+// 设置组件默认值
+ElTooltip.props.effect.default = 'light';
+ElTooltip.props.showAfter.default = 400;
 
 const plugin: Plugin = {
   install: (app) => {
     Coms.forEach(Com => app.use(Com));
+    // app.use(ElementPlus);
   },
 };
 export default plugin;

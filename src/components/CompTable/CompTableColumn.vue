@@ -20,7 +20,12 @@
       v-if="!children?.length"
       #default="{row, column}"
     >
-      {{ row[column.property] ?? '-' }}
+      <span v-if="columnProp.customType === 'bool'">
+        {{ row[column.property] === 1 ? '是' : '否' }}
+      </span>
+      <span v-else>
+        {{ row[column.property] ?? '-' }}
+      </span>
     </template>
   </el-table-column>
 </template>

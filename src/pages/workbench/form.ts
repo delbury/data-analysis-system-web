@@ -1,5 +1,31 @@
 import { FormItemSection } from '/@/components/CompTable/interface';
 import moment from 'moment';
+import { apis } from '/@/service';
+
+import { FetchersGetType } from '/@/service/tools';
+const getRemoteSelectFormItemOptions = (
+  fetcher: FetchersGetType, labelField = 'name', valueField = 'id',
+) => {
+  return {
+    remoteMethod: async (text: string, record: any) => {
+      // 缓存请求
+      if(!text && record.options?.length && !record.lastSearchedText) return;
+
+      try {
+        record.loading = true;
+        const res = await fetcher({ all: 1 });
+        record.options = (res.data.data.list ?? []).map((it) => ({ label: it[labelField], value: it[valueField] }));
+      } finally {
+        record.loading = false;
+      }
+      record.lastSearchedText = text;
+    },
+    options: [],
+    loading: false,
+    lastSearchedText: '',
+  };
+};
+
 
 const DEFAULT_DATE = '1970-01-01';
 
@@ -7,7 +33,7 @@ const DEFAULT_DATE = '1970-01-01';
 export const FORM_INIT_VALUES = {
   date: '',
   start_end_time: [],
-  unit: '运营一分公司',
+  company: '运营一分公司',
   dept: '机电三车间',
   project_code: '',
   tran_project_name: '',
@@ -76,7 +102,7 @@ export const FORM_ITEMS: FormItemSection[] = [
       },
       {
         label: '开展单位',
-        prop: 'unit',
+        prop: 'company',
         disabled: true,
         ruleNames: ['required'],
       },
@@ -87,8 +113,12 @@ export const FORM_ITEMS: FormItemSection[] = [
         ruleNames: ['required'],
       },
       {
-        label: '培训开展班组门',
-        prop: 'group',
+        label: '培训开展班组',
+        prop: 'group_id',
+        customType: 'remote-select',
+        customOption: {
+          ...getRemoteSelectFormItemOptions(apis.basedata_teamgroup.get),
+        },
       },
       {
         label: '项目编号',
@@ -152,7 +182,7 @@ export const FORM_ITEMS: FormItemSection[] = [
       },
       {
         label: '培训师所属单位',
-        prop: 'trainer_unit',
+        prop: 'trainer_company',
       },
       {
         label: '培训人数',

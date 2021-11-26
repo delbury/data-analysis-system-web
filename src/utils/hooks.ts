@@ -1,4 +1,4 @@
-import { reactive, onMounted, watch, toRef, nextTick } from 'vue';
+import { reactive, onMounted, watch, toRef, nextTick, ref } from 'vue';
 import { FetchersType } from '/@/service/tools';
 import { ElMessage } from 'element-plus';
 
@@ -24,8 +24,11 @@ const INIT_PARAMS = {
   pageNumber: 1,
 };
 // 刷新表格节流
-let willRefresh = false;
+// let willRefresh = false;
 export const useTableFetcher = (fetchers: FetchersType) => {
+  // 刷新表格节流
+  const willRefresh = ref(false);
+
   const table = reactive<TableResult>({
     pageSize: INIT_PARAMS.pageSize,
     pageNumber: INIT_PARAMS.pageNumber,
@@ -44,11 +47,9 @@ export const useTableFetcher = (fetchers: FetchersType) => {
       try {
         table.loadding = true;
         const res = await fetchers.get({
-          params: {
-            pageSize: table.pageSize,
-            pageNumber: table.pageNumber,
-            ...params,
-          },
+          pageSize: table.pageSize,
+          pageNumber: table.pageNumber,
+          ...params,
         });
         table.list.length = 0;
         table.list.push(...res.data.data.list);
@@ -112,11 +113,12 @@ export const useTableFetcher = (fetchers: FetchersType) => {
   const pn = toRef(table, 'pageNumber');
   // 监听页数和每页条数
   watch([ps, pn], (vals, olds) => {
-    if(!willRefresh) {
-      willRefresh = true;
+    if(!willRefresh.value) {
+      willRefresh.value = true;
       nextTick(() => {
+        console.log('watch');
         table.refresh();
-        willRefresh = false;
+        willRefresh.value = false;
       });
     }
   });

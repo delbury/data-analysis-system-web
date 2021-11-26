@@ -5,7 +5,7 @@ export type FormInstance = InstanceType<typeof ElForm>
 export type ElFormProps = InstanceType<typeof ElForm>['$props'];
 
 // 列配置类型
-type BaseCustomType = 'date' | 'datetime' | 'time' | 'int' | 'float';
+type BaseCustomType = 'date' | 'datetime' | 'time' | 'int' | 'float' | 'bool';
 export type ColumnProps = InstanceType<typeof ElTableColumn>['$props'] & {
   // btns?: { label: string; key: string; }[];
   // 展示数据类型
@@ -25,8 +25,10 @@ export type FormItem = ElFormItemProps & {
   customType?: BaseCustomType | 'string' | 'select' | 'remote-select' | 'timerange' | 'textarea';
   // 输入数据类型组件可选参数
   customOption?: Record<string, any>;
-  // tip
+  // tip，同label，超长显示省略号
   tip?: string;
+  // info，显示图标，hover显示
+  info?: string;
   readonly?: boolean;
   disabled?: boolean;
   // 字段规则，预设的规则

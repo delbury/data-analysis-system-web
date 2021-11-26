@@ -19,7 +19,7 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
   },
   {
     label: '开展单位',
-    prop: 'unit',
+    prop: 'company',
     showOverflowTooltip: true,
   },
   {
@@ -28,8 +28,8 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
     showOverflowTooltip: true,
   },
   {
-    label: '培训开展班组门',
-    prop: 'group',
+    label: '培训开展班组',
+    prop: 'group_name',
     showOverflowTooltip: true,
   },
   {
@@ -98,7 +98,7 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
   },
   {
     label: '培训师所属单位',
-    prop: 'trainer_unit',
+    prop: 'trainer_company',
     showOverflowTooltip: true,
   },
   {

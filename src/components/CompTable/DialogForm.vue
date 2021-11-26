@@ -16,6 +16,7 @@
       class="comp-table__form"
       :class="{ readonly: disabled }"
       :disabled="disabled"
+      :show-message="!disabled"
     >
       <template
         v-for="(section, index) in formItems"
@@ -49,12 +50,53 @@
                   >
                     <span>{{ formatLabel(item.label, item.tip) }}</span>
                   </el-tooltip>
-                  <span v-else>{{ item.label }}</span>
+
+                  <span
+                    v-else
+                    class="info"
+                  >
+                    {{ item.label }}
+                    <el-tooltip
+                      v-if="!!item.info"
+                      :content="item.info"
+                      placement="top"
+                    >
+                      <el-icon class="info-icon"><warning /></el-icon>
+                    </el-tooltip>
+                  </span>
                 </template>
 
+                <!-- 开关 -->
+                <el-switch
+                  v-if="item.customType === 'bool'"
+                  v-model="form[item.prop ?? '']"
+                  :disabled="item.disabled"
+                  inline-prompt
+                  active-text="是"
+                  inactive-text="否"
+                  :active-value="1"
+                  :inactive-value="0"
+                  v-bind="item.customOption ?? {}"
+                ></el-switch>
+                <el-select-v2
+                  v-else-if="item.customType === 'remote-select'"
+                  v-model="form[item.prop ?? '']"
+                  style="width: 100%;"
+                  clearable
+                  :disabled="item.disabled || disabled"
+                  filterable
+                  remote
+                  v-bind="item.customOption ?? {}"
+                  :remote-method="(text) => item.customOption?.remoteMethod(text, item.customOption)"
+                  @visible-change="(visible) => {
+                    if(visible) {
+                      item.customOption?.remoteMethod('', item.customOption)
+                    }
+                  }"
+                ></el-select-v2>
                 <!-- 日期 -->
                 <el-date-picker
-                  v-if="item.customType === 'date'"
+                  v-else-if="item.customType === 'date'"
                   v-model="form[item.prop ?? '']"
                   style="width: 100%;"
                   type="date"
@@ -130,13 +172,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType, ref, computed } from 'vue';
+import { defineComponent, reactive, PropType, ref, computed, onMounted } from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
 import { DialogStatus, FormItemSection, FormInstance, ElFormProps, FormItem } from './interface';
 import { ElDialogProps } from '/@/components/CompDialog/interface';
 import { formRules } from './form-rules';
+import { Warning } from '@element-plus/icons';
 
 export default defineComponent({
+  components: { Warning },
   props: {
     title: {
       type: String,
@@ -284,6 +328,15 @@ export default defineComponent({
         padding: 10px 0;
         font-size: 16px;
         font-weight: bold;
+      }
+    }
+
+    .info {
+      display: inline-flex;
+      align-items: center;
+
+      .info-icon {
+        padding-left: 0.5em;
       }
     }
   }

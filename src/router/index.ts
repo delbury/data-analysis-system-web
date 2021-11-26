@@ -13,7 +13,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/basedata',
         component: () => import('/@/pages/basedata/index.vue'),
-        redirect: '/basedata/teamgroup',
+        redirect: '/basedata/staff',
         children: [
           {
             path: 'teamgroup',

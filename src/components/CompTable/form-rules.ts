@@ -11,7 +11,7 @@ type Validator = NonNullable<GetRule<FormItemRule>>['validator'];
 const createRule = (validator: Validator): FormItemRule => ({ validator });
 
 // 生成文本长度规则
-const getStringLengthRule = (length: number): FormItemRule =>
+const getStringLengthRule = (length: number) =>
   createRule((rule, value: string, cb) => {
     if(value.length > length) {
       return cb(`输入文本长度不能超过${length}`);
@@ -49,6 +49,16 @@ export const getNumberRangeRule = ({ min, max }: { min?: number, max?: number })
     return cb();
   });
 
+// 手机号码校验
+const phoneReg = /^1\d{10}/;
+const phoneRule = createRule((rule, value: string, cb) => {
+  const phone = String(value);
+  if(phone && !phoneReg.test(phone)) {
+    return cb('请输入正确的11位手机号码');
+  }
+  return cb();
+});
+
 // 常用表单校验条件
 export const formRules = {
   // 必填
@@ -67,6 +77,8 @@ export const formRules = {
   float: <FormItemRule>getNumberTypeRule('float', false, true), // 浮点数
   floatUnsigned: <FormItemRule>getNumberTypeRule('float', true, true), // 非负浮点数
   floatPositive: <FormItemRule>getNumberTypeRule('float', true, false), // 正浮点数
+  // 手机号码
+  phone: <FormItemRule>phoneRule,
 };
 
 export type FormRuleNames = keyof (typeof formRules);
