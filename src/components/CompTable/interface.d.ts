@@ -34,9 +34,11 @@ export type FormItem = ElFormItemProps & {
   // 字段规则，预设的规则
   ruleNames?: FormRuleNames[];
   // form表单值提交时处理
-  valueSubmitHandler?: (val: any, key: string, form: Record<string, any>) => Record<string, any>;
+  valueSubmitHandler?: (params: {value: any, key: string, form: Record<string, any>}) => Record<string, any> | void;
   // form表单值回显时处理
-  valueRebuildHandler?: (val: any, key: string, form: Record<string, any>) => Record<string, any>;
+  valueRebuildHandler?: (
+    params: {value: any, key: string, params: Record<string, any>}
+  ) => Record<string, any> | void;
 }
 
 // 表单字段组

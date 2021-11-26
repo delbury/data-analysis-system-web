@@ -1,30 +1,7 @@
 import { FormItemSection } from '/@/components/CompTable/interface';
 import moment from 'moment';
 import { apis } from '/@/service';
-
-import { FetchersGetType } from '/@/service/tools';
-const getRemoteSelectFormItemOptions = (
-  fetcher: FetchersGetType, labelField = 'name', valueField = 'id',
-) => {
-  return {
-    remoteMethod: async (text: string, record: any) => {
-      // 缓存请求
-      if(!text && record.options?.length && !record.lastSearchedText) return;
-
-      try {
-        record.loading = true;
-        const res = await fetcher({ all: 1 });
-        record.options = (res.data.data.list ?? []).map((it) => ({ label: it[labelField], value: it[valueField] }));
-      } finally {
-        record.loading = false;
-      }
-      record.lastSearchedText = text;
-    },
-    options: [],
-    loading: false,
-    lastSearchedText: '',
-  };
-};
+import { getRemoteSelectFormItemOptions } from '/@/components/CompTable/util';
 
 
 const DEFAULT_DATE = '1970-01-01';
@@ -35,6 +12,7 @@ export const FORM_INIT_VALUES = {
   start_end_time: [],
   company: '运营一分公司',
   dept: '机电三车间',
+  group_id: '',
   project_code: '',
   tran_project_name: '',
   train_course_name: '',
@@ -74,9 +52,9 @@ export const FORM_ITEMS: FormItemSection[] = [
         prop: 'date',
         customType: 'date',
         ruleNames: ['required'],
-        valueSubmitHandler: (val) => {
+        valueSubmitHandler: ({ value }) => {
           return {
-            date: moment(val).format('YYYY-MM-DD HH:mm:ss'),
+            date: moment(value).format('YYYY-MM-DD HH:mm:ss'),
           };
         },
       },
@@ -85,13 +63,13 @@ export const FORM_ITEMS: FormItemSection[] = [
         prop: 'start_end_time',
         customType: 'timerange',
         ruleNames: ['required'],
-        valueSubmitHandler: (val) => {
+        valueSubmitHandler: ({ value }) => {
           return {
-            start_time: moment(val[0]).format('HH:mm:ss'),
-            end_time: moment(val[1]).format('HH:mm:ss'),
+            start_time: moment(value[0]).format('HH:mm:ss'),
+            end_time: moment(value[1]).format('HH:mm:ss'),
           };
         },
-        valueRebuildHandler: (val, key, params) => {
+        valueRebuildHandler: ({ params }) => {
           return {
             start_end_time: [
               `${params.date ?? DEFAULT_DATE} ${params.start_time}`,
@@ -117,7 +95,10 @@ export const FORM_ITEMS: FormItemSection[] = [
         prop: 'group_id',
         customType: 'remote-select',
         customOption: {
-          ...getRemoteSelectFormItemOptions(apis.basedata_teamgroup.get),
+          ...getRemoteSelectFormItemOptions(apis.basedata_teamgroup.get, {
+            rebuildLabelField: 'group_name',
+            rebuildValueField: 'group_id',
+          }),
         },
       },
       {

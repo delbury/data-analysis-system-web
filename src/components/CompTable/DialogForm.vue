@@ -246,7 +246,7 @@ export default defineComponent({
       Object.entries(form).forEach(([key, val]) => {
         const formatter = formItemsMap.value[key]?.valueSubmitHandler;
         if(formatter) {
-          Object.assign(temp, formatter(val, key, form));
+          Object.assign(temp, formatter({ value: val, key, form }));
         } else if(val !== null && val !== void 0 && val !== '') {
           temp[key] = val;
         }
@@ -258,17 +258,32 @@ export default defineComponent({
     const setFormValues = (params: Record<string, any>) => {
       dataId.value = params.id;
       Object.keys(form).forEach(key => {
-        const formatter = formItemsMap.value[key]?.valueRebuildHandler;
+        const config = formItemsMap.value[key];
+        const formatter = config?.valueRebuildHandler;
         if(formatter) {
-          const temp = formatter(params[key], key, params);
-          Object.entries(temp).forEach(([key, val]) => {
-            if(key in form) {
-              form[key] = val;
-            }
+          const temp = formatter({
+            value: params[key], key, params,
           });
-
+          if(temp) {
+            Object.entries(temp).forEach(([key, val]) => {
+              if(key in form) {
+                form[key] = val;
+              }
+            });
+          }
         } else {
           form[key] = params[key] ?? '';
+        }
+
+        // 远程搜索，构造初始选项
+        if(config?.customType === 'remote-select' && config.customOption) {
+          config.customOption.lastSearchedText = '_inited';
+          config.customOption.options = [
+            {
+              label: params[config.customOption?.rebuildField?.label],
+              value: params[config.customOption?.rebuildField?.value],
+            },
+          ];
         }
       });
     };
