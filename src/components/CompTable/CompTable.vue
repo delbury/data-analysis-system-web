@@ -103,6 +103,10 @@
           v-if="showExportBtn"
           :icon="icons.Download"
           tip="导出"
+          :button-props="{
+            loading: table.exporting
+          }"
+          @click="handleExport"
         ></comp-button>
 
         <slot name="footer"></slot>
@@ -162,6 +166,11 @@ function defineGenericComponent<T = any>() {
     name: 'CompTable',
     components: { CompTableColumn, DialogForm, TableSearch, ColumnConfig },
     props: {
+      // 表名
+      tableName: {
+        type: String,
+        default: void 0,
+      },
       // 表格列
       columns: {
         default: () => [],
@@ -210,7 +219,7 @@ function defineGenericComponent<T = any>() {
         type: Boolean,
       },
       showImportBtn: {
-        default: true,
+        default: false,
         type: Boolean,
       },
       showExportBtn: {
@@ -221,7 +230,7 @@ function defineGenericComponent<T = any>() {
     emits: ['btn'],
     setup(props, ctx) {
     // 表格
-      const table = useTableFetcher(props.apis);
+      const table = useTableFetcher(props.apis, { columns: props.columns, tableName: props.tableName });
       const dialogFormRef = ref<DialogFormInstance>();
 
       // 打开表单弹框
@@ -317,6 +326,11 @@ function defineGenericComponent<T = any>() {
         table.refresh(void 0, true);
       };
 
+      // 导出 excel
+      const handleExport = () => {
+        table.export();
+      };
+
       return {
         table,
         handleBtnClick,
@@ -328,6 +342,7 @@ function defineGenericComponent<T = any>() {
         dialogFormRef,
         handleSortChange,
         handleSearch,
+        handleExport,
       };
     },
   });

@@ -21,7 +21,6 @@ export type ColumnProps = Writeable<InstanceType<typeof ElTableColumn>['$props']
   tip?: string;
   // 格式化展示
   formatMap?: Record<string, string | { text: string; className?: string }>;
-  formatter?: (val: any, record: any) => string;
   // 远程搜索条件配置
   search?: SearchType;
   // 查询的字段名

@@ -5,6 +5,7 @@
       :form-init-values="formInitValues"
       :form-items="formItems"
       :dialog-props="{ width: '80%', top: '8vh' }"
+      table-name="培训计划完成表"
     >
     </CompTable>
   </div>
