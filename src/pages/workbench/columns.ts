@@ -67,7 +67,6 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
   {
     label: '项目编号',
     prop: 'project_code',
-    search: true,
   },
   {
     label: '培训项目名称',
@@ -266,6 +265,7 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
     prop: 'created_time',
     customType: 'datetime',
     sortable: 'custom',
+    search: true,
   },
   {
     label: '备注',

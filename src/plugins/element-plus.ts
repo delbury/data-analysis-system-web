@@ -40,8 +40,9 @@ import {
   ElSwitch,
   ElSelectV2,
 } from 'element-plus';
-// import ElementPlus from 'element-plus';
-import 'element-plus/dist/index.css'; // messagebox 样式丢失
+
+// import 'element-plus/dist/index.css';
+import 'element-plus/theme-chalk/el-message-box.css';
 
 const Coms = [
   ElButton,
