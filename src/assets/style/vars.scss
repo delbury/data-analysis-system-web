@@ -8,3 +8,12 @@ $info-base: #909399;
 $bg-blue-10: #002766;
 $bg-blue-9: #003a8c;
 $bg-blue-6: #1890ff;
+
+$color-map: (
+  primary: $primary-base,
+  success: $success-base,
+  warning: $warning-base,
+  danger: $danger-base,
+  error: $error-base,
+  info: $info-base
+);

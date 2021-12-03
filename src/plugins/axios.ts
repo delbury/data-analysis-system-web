@@ -1,9 +1,20 @@
 import axios, { AxiosResponse } from 'axios';
 import { ElMessage } from 'element-plus';
+import qs from 'qs';
 
 const instance = axios.create({
   baseURL: '/api',
   timeout: 6000,
+  paramsSerializer: params => qs.stringify(
+    params,
+    {
+      arrayFormat: 'repeat',
+      skipNulls: true,
+      filter: (prefix, value) => {
+        if(value == '') return;
+        return value;
+      },
+    }),
 });
 
 // 添加请求拦截器

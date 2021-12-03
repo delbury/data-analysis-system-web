@@ -11,10 +11,10 @@ export interface SearchParams {
 }
 
 // 创建 RESTful 风格基本接口
-export const createRESTfulAPI = <S = any, R = any>(baseUrl: string) => {
+export const createRESTfulAPI = <R = any>(baseUrl: string) => {
   return {
     // 查询
-    get: (params?: SearchParams, config?: AxiosRequestConfig<R>) =>
+    get: (params?: SearchParams & Partial<R>, config?: AxiosRequestConfig<R>) =>
       http.get<any, AxiosResponse<ResponseList<R>>>(`/${baseUrl}/list/`, config ? { ...config, params } : { params }),
     // 查询详情
     getById: (id: string) =>

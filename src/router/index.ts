@@ -26,8 +26,15 @@ const routes: RouteRecordRaw[] = [
         ],
       },
       {
-        path: '/auth',
-        component: () => import('/@/pages/auth/index.vue'),
+        path: '/system',
+        component: () => import('/@/pages/system/index.vue'),
+        redirect: '/system/role',
+        children: [
+          {
+            path: 'role',
+            component: () => import('/@/pages/system/Role.vue'),
+          },
+        ],
       },
     ],
   },

@@ -49,6 +49,14 @@ export const getNumberRangeRule = ({ min, max }: { min?: number, max?: number })
     return cb();
   });
 
+// 非零校验
+export const notZeroRule = createRule((rule, value: number, cb) => {
+  if(value === 0) {
+    return cb('不能为0');
+  }
+  return cb();
+});
+
 // 手机号码校验
 const phoneReg = /^1\d{10}/;
 const phoneRule = createRule((rule, value: string, cb) => {
@@ -79,6 +87,7 @@ export const formRules = {
   floatPositive: <FormItemRule>getNumberTypeRule('float', true, false), // 正浮点数
   // 手机号码
   phone: <FormItemRule>phoneRule,
+  notZero: <FormItemRule>notZeroRule,
 };
 
 export type FormRuleNames = keyof (typeof formRules);

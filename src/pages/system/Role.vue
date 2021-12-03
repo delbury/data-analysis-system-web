@@ -5,8 +5,11 @@
       :apis="apis"
       :form-init-values="formInitValues"
       :form-items="formItems"
+      :row-btns="[]"
+      :form-props="{ labelWidth: '100px' }"
       :dialog-props="{ width: '600px' }"
-      :form-props="{ labelWidth: '60px' }"
+      :show-import-btn="false"
+      :show-export-btn="false"
     >
     </CompTable>
   </div>
@@ -21,35 +24,36 @@ import { getFormItemInitValues } from '/@/components/CompTable/util';
 export default defineComponent({
   name: 'PageBasedataTeamGroup',
   setup() {
-    // table 参数
     const columns: ColumnProps[] = [
       {
         label: '名称',
         prop: 'name',
       },
       {
+        label: 'Tag',
+        prop: 'tag',
+      },
+      {
         label: '备注',
         prop: 'remark',
       },
     ];
+
     const formItems: FormItemSection[] = [
       {
         formItems: [
           { label: '名称', prop: 'name', span: 24, ruleNames: ['required', 'normalLength'] },
-          { label: '备注',
-            prop: 'remark',
-            span: 24,
-            customType: 'textarea',
-          },
+          { label: 'Tag', prop: 'tag', span: 24, ruleNames: ['required', 'normalLength'] },
+          { label: '备注', prop: 'remark', span: 24, customType: 'textarea' },
         ],
       },
     ];
 
     return {
-      apis: apis.basedata_teamgroup,
+      apis: apis.role,
       columns,
       formInitValues: getFormItemInitValues(formItems),
-      formItems,
+      formItems: reactive(formItems),
     };
   },
 });

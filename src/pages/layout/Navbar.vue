@@ -10,8 +10,8 @@
     <router-link to="/basedata">
       信息管理
     </router-link>
-    <router-link to="/auth">
-      权限管理
+    <router-link to="/system">
+      系统管理
     </router-link>
   </div>
 </template>

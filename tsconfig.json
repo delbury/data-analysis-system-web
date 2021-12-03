@@ -15,7 +15,8 @@
       "/@/*": ["src/*"],
       "/@types/*": ["types/*"]
     },
-    "types": ["element-plus/global"]
+    "types": ["element-plus/global"],
+    "noImplicitAny": false
   },
   "include": [
     "src/**/*.ts",

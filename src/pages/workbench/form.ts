@@ -1,46 +1,53 @@
 import { FormItemSection } from '/@/components/CompTable/interface';
 import moment from 'moment';
 import { apis } from '/@/service';
-import { getRemoteSelectFormItemOptions } from '/@/components/CompTable/util';
-
+import { getRemoteSelectFormItemOptions, getFormItemInitValues } from '/@/components/CompTable/util';
 
 const DEFAULT_DATE = '1970-01-01';
-
-// 表单初始值
-export const FORM_INIT_VALUES = {
-  date: '',
-  start_end_time: [],
-  company: '运营一分公司',
-  dept: '机电三车间',
-  group_id: '',
-  project_code: '',
-  tran_project_name: '',
-  train_course_name: '',
-  train_level: '',
-  train_content: '',
-  train_way1: '',
-  train_way2: '',
-  train_type: '',
-  train_class: '',
-  maintainer_id: '',
-  train_place: '',
-  trainer_id: '',
-  trained_count_manage: 0,
-  trained_count_key: 0,
-  trained_count_product: 0,
-  trained_count_new: 0,
-  trained_count_work: 0,
-  trained_count_total: 0,
-  trained_hours_theory: 0,
-  trained_hours_practice: 0,
-  trained_hours_total: 0,
-  train_effect_count: 0,
-  student_evaluation_score: 0,
-  maintainer_evaluation_score: 0,
-  effect_evaluation_score: 0,
-  course_pay: 0,
-  remark: '',
-};
+export const TRAIN_LEVEL_OPTIONS = [
+  { label: '分公司级', value: '分公司级' },
+  { label: '车间级', value: '车间级' },
+  { label: '班组级', value: '班组级' },
+];
+export const TRAIN_CONTENT_OPTIONS = [
+  { label: '管理才能类', value: '管理才能类' },
+  { label: '业务发展类', value: '业务发展类' },
+  { label: '综合保障类', value: '综合保障类' },
+  { label: '生产技能类', value: '生产技能类' },
+  { label: '三级安全培训', value: '三级安全培训' },
+  { label: '培训师培训', value: '培训师培训' },
+  { label: '班组长培训', value: '班组长培训' },
+];
+export const TRAIN_WAY1_OPTIONS = [
+  { label: '理论', value: '理论' },
+  { label: '实操', value: '实操' },
+];
+export const TRAIN_WAY2_OPTIONS = [
+  { label: '内部培训', value: '内部培训' },
+  { label: '外请讲师培训', value: '外请讲师培训' },
+  { label: '送外培训', value: '送外培训' },
+  { label: '对外培训', value: '对外培训' },
+];
+export const TRAIN_TYPE_OPTION = [
+  { label: '线上直播培训', value: '线上直播培训' },
+  { label: '线上自学培训', value: '线上自学培训' },
+  { label: '线下培训', value: '线下培训' },
+];
+export const TRAIN_CLASS_OPTIONS = [
+  { label: '运营期', value: '运营期' },
+  { label: '筹备期', value: '筹备期' },
+];
+export const TRAINER_LEVEL_OPTIONS = [
+  { label: '无', value: 0 },
+  { label: '见习', value: 1 },
+  { label: '一星', value: 2 },
+  { label: '二星', value: 3 },
+  { label: '三星', value: 4 },
+];
+export const GROUP_ID_REMOTE_OPTION = getRemoteSelectFormItemOptions(apis.basedata_teamgroup.get, {
+  rebuildLabelField: 'group_name',
+  rebuildValueField: 'group_id',
+});
 
 // 表单字段配置
 export const FORM_ITEMS: FormItemSection[] = [
@@ -83,87 +90,134 @@ export const FORM_ITEMS: FormItemSection[] = [
         prop: 'company',
         disabled: true,
         ruleNames: ['required'],
+        default: '运营一分公司',
       },
       {
         label: '组织部门',
         prop: 'dept',
         disabled: true,
         ruleNames: ['required'],
+        default: '机电三车间',
       },
       {
         label: '培训开展班组',
         prop: 'group_id',
+        ruleNames: ['required'],
         customType: 'remote-select',
         customOption: {
-          ...getRemoteSelectFormItemOptions(apis.basedata_teamgroup.get, {
-            rebuildLabelField: 'group_name',
-            rebuildValueField: 'group_id',
-          }),
+          ...GROUP_ID_REMOTE_OPTION,
         },
       },
       {
         label: '项目编号',
         prop: 'project_code',
+        ruleNames: ['required'],
       },
       {
         label: '培训项目名称',
         prop: 'train_project_name',
+        ruleNames: ['required'],
       },
       {
         label: '培训课程名称',
         prop: 'train_course_name',
+        ruleNames: ['required'],
       },
       {
         label: '培训层级',
         prop: 'train_level',
+        ruleNames: ['required'],
+        customType: 'select',
+        customOption: {
+          options: TRAIN_LEVEL_OPTIONS,
+        },
       },
       {
         label: '培训内容',
         prop: 'train_content',
+        ruleNames: ['required'],
+        customType: 'select',
+        customOption: {
+          options: TRAIN_CONTENT_OPTIONS,
+        },
       },
       {
         label: '培训方式1',
         prop: 'train_way1',
+        ruleNames: ['required'],
+        customType: 'select',
+        customOption: {
+          options: TRAIN_WAY1_OPTIONS,
+        },
       },
       {
         label: '培训方式2',
         prop: 'train_way2',
+        ruleNames: ['required'],
+        customType: 'select',
+        customOption: {
+          options: TRAIN_WAY2_OPTIONS,
+        },
       },
       {
         label: '培训形式',
         prop: 'train_type',
+        ruleNames: ['required'],
+        customType: 'select',
+        customOption: {
+          options: TRAIN_TYPE_OPTION,
+        },
       },
       {
         label: '培训线别',
         prop: 'train_class',
+        ruleNames: ['required'],
+        customType: 'select',
+        customOption: {
+          options: TRAIN_CLASS_OPTIONS,
+
+        },
       },
       {
         label: '培训项目负责人',
-        prop: 'maintainer_name',
+        prop: 'maintainer',
+        ruleNames: ['required'],
       },
       {
         label: '培训负责人工号',
         prop: 'maintainer_code',
+        ruleNames: ['required'],
       },
       {
         label: '培训地点',
         prop: 'train_place',
+        ruleNames: ['required'],
       },
       {
         label: '培训师',
-        prop: 'trainer_id',
+        prop: 'trainer',
+        ruleNames: ['required'],
       },
       {
         label: '培训师工号/外部师资编号',
         prop: 'trainer_code',
+        ruleNames: ['required'],
       },
       {
         label: '培训师星级',
         prop: 'trainer_level',
+        ruleNames: ['required'],
+        customType: 'select',
+        customOption: {
+          options: TRAINER_LEVEL_OPTIONS,
+        },
       },
       {
         label: '培训师所属单位',
         prop: 'trainer_company',
+        default: '机电三车间',
+        disabled: true,
+        ruleNames: ['required'],
       },
       {
         label: '培训人数',
@@ -198,27 +252,63 @@ export const FORM_ITEMS: FormItemSection[] = [
       {
         label: '培训总人数',
         prop: 'trained_count_total',
+        info: '等于管理和业务技术、行车关键岗位、生产人员、未持证人员、工勤等培训人数之和',
         customType: 'int',
+        customOption: {
+          controls: false,
+        },
+        disabled: true,
+        formValueChangeHandler: (current, old, form) => {
+          if(form) {
+            form.trained_count_total = current.trained_count_manage +
+              current.trained_count_key + current.trained_count_product +
+              current.trained_count_new + current.trained_count_work;
+          }
+        },
+        ruleNames: ['required', 'notZero'],
       },
       {
         label: '理论课时',
         prop: 'trained_hours_theory',
+        tip: '小时',
         customType: 'float',
+        customOption: {
+          precision: 1,
+        },
       },
       {
         label: '实操课时',
         prop: 'trained_hours_practice',
+        tip: '小时',
         customType: 'float',
+        customOption: {
+          precision: 1,
+        },
       },
       {
         label: '总课时',
         prop: 'trained_hours_total',
+        tip: '小时',
+        info: '等于理论课时与实操课时之和',
         customType: 'float',
+        disabled: true,
+        customOption: {
+          precision: 1,
+        },
+        formValueChangeHandler: (current, old, form) => {
+          if(form) {
+            form.trained_hours_total = current.trained_hours_practice + current.trained_hours_theory;
+          }
+        },
+        ruleNames: ['required', 'notZero'],
       },
     ],
   },
   {
     title: '培训完成情况',
+    sectionDisabled: (detail) => {
+      return detail?.status === void 0;
+    },
     formItems: [
       {
         label: '培训效果评估人数',
@@ -244,6 +334,16 @@ export const FORM_ITEMS: FormItemSection[] = [
         tip: '等于学员评价得分*0.7+项目负责人评价得分*0.3',
         customType: 'float',
         ruleNames: ['floatUnsigned'],
+        customOption: {
+          controls: false,
+        },
+        disabled: true,
+        formValueChangeHandler: (current, old, form) => {
+          if(form) {
+            form.effect_evaluation_score = current.student_evaluation_score * 0.7 +
+              current.maintainer_evaluation_score * 0.3;
+          }
+        },
       },
       {
         label: '培训课酬',
@@ -266,3 +366,6 @@ export const FORM_ITEMS: FormItemSection[] = [
     ],
   },
 ];
+
+// 表单初始值
+export const FORM_INIT_VALUES = getFormItemInitValues(FORM_ITEMS);

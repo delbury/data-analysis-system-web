@@ -3,22 +3,45 @@ import { FormRuleNames } from './form-rules';
 
 export type FormInstance = InstanceType<typeof ElForm>
 export type ElFormProps = InstanceType<typeof ElForm>['$props'];
+type Writeable<T> = {
+  -readonly [P in keyof T]: T[P];
+};
 
-// 列配置类型
 type BaseCustomType = 'date' | 'datetime' | 'time' | 'int' | 'float' | 'bool';
-export type ColumnProps = InstanceType<typeof ElTableColumn>['$props'] & {
+type SearchType = boolean | 'remote';
+type LableValue = { label: string; value: any; };
+/**
+ * table 展示列配置类型
+ */
+export type ColumnProps = Writeable<InstanceType<typeof ElTableColumn>['$props']> & {
   // btns?: { label: string; key: string; }[];
   // 展示数据类型
   customType?: BaseCustomType;
   children?: ColumnProps[];
   tip?: string;
+  // 格式化展示
+  formatMap?: Record<string, string | { text: string; className?: string }>;
+  formatter?: (val: any, record: any) => string;
+  // 远程搜索条件配置
+  search?: SearchType;
+  // 查询的字段名
+  searchProp?: string;
+  // 远程搜索过滤列表
+  searchOptions?: LableValue[];
+  // 远程搜索其他参数
+  searchAttach?: Record<string, any>;
 };
 
-// 表单字段配置
+
+/**
+ * 表单字段配置
+ */
 type ElFormItemProps = InstanceType<typeof ElFormItem>['$props'];
 // rule prop 类型
 export type FormItemRule = ElFormItemProps['rules'];
 export type FormItem = ElFormItemProps & {
+  // 创建时的默认值
+  default?: any;
   // 列宽
   span?: number;
   // 输入数据类型
@@ -39,12 +62,16 @@ export type FormItem = ElFormItemProps & {
   valueRebuildHandler?: (
     params: {value: any, key: string, params: Record<string, any>}
   ) => Record<string, any> | void;
+  // 表单值改变时的回调
+  formValueChangeHandler?: (current: Record<string, any>, old?: Record<string, any>, form?: Record<string, any>) => void;
 }
 
 // 表单字段组
 export interface FormItemSection {
   title?: string;
   formItems: FormItem[];
+  // 禁用该 section 内容
+  sectionDisabled?: (detail?: Record<string, any>) => boolean;
 }
 
 // 表单弹框状态

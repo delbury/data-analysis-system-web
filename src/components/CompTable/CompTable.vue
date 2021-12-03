@@ -4,12 +4,19 @@
     v-drag-scroll="'.el-table__body-wrapper'"
     class="comp-table"
   >
+    <!-- 搜索条件 -->
+    <TableSearch
+      :columns="columns"
+      @search="handleSearch"
+    ></TableSearch>
+
     <div class="comp-table__table">
       <el-table
         :data="table.list"
         height="100%"
         stripe
         v-bind="$attrs"
+        @sort-change="handleSortChange"
       >
         <!-- 序号列 -->
         <el-table-column
@@ -18,7 +25,12 @@
           type="index"
           fixed="left"
           align="center"
-        ></el-table-column>
+          :width="60"
+        >
+          <template #header>
+            <ColumnConfig></ColumnConfig>
+          </template>
+        </el-table-column>
 
         <!-- 操作列 -->
         <el-table-column
@@ -81,12 +93,14 @@
 
         <!-- 导入 -->
         <comp-button
+          v-if="showImportBtn"
           :icon="icons.Upload"
           tip="导入"
         ></comp-button>
 
         <!-- 导出 -->
         <comp-button
+          v-if="showExportBtn"
           :icon="icons.Download"
           tip="导出"
         ></comp-button>
@@ -123,8 +137,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, reactive, computed } from 'vue';
-import { useTableFetcher } from '/@/utils/hooks';
+import { defineComponent, ref, PropType, reactive, computed, watch } from 'vue';
+import { useTableFetcher } from './hooks';
 import { ColumnProps, FormItemSection, DialogStatus, ElFormProps } from './interface';
 import CompTableColumn from './CompTableColumn.vue';
 import { ElMessageBox } from 'element-plus';
@@ -132,6 +146,8 @@ import { Plus, Refresh, Upload, Download } from '@element-plus/icons';
 import DialogForm from './DialogForm.vue';
 import { ElDialogProps } from '/@/components/CompDialog/interface';
 import { FetchersType } from '/@/service/tools';
+import TableSearch from './TableSearch.vue';
+import ColumnConfig from './ColumnConfig.vue';
 
 const icons = {
   Plus, Refresh, Upload, Download,
@@ -144,9 +160,9 @@ export default defineGenericComponent();
 function defineGenericComponent<T = any>() {
   return defineComponent({
     name: 'CompTable',
-    components: { CompTableColumn, DialogForm },
+    components: { CompTableColumn, DialogForm, TableSearch, ColumnConfig },
     props: {
-    // 表格列
+      // 表格列
       columns: {
         default: () => [],
         type: Array as PropType<ColumnProps[]>,
@@ -190,6 +206,14 @@ function defineGenericComponent<T = any>() {
       },
       // 展示创建按钮
       showCreateBtn: {
+        default: true,
+        type: Boolean,
+      },
+      showImportBtn: {
+        default: true,
+        type: Boolean,
+      },
+      showExportBtn: {
         default: true,
         type: Boolean,
       },
@@ -269,6 +293,30 @@ function defineGenericComponent<T = any>() {
         }
       };
 
+      // 表格排序
+      const handleSortChange = ({ column, prop, order }) => {
+        table.orderBy = prop;
+        switch(order) {
+          case 'descending':
+            table.order = 'desc';
+            break;
+          case 'ascending':
+            table.order = 'asc';
+            break;
+          default:
+            table.orderBy = void 0;
+            table.order = void 0;
+            break;
+        }
+        table.refresh();
+      };
+
+      // 搜索
+      const handleSearch = (params?: {}) => {
+        table.searchParams = params;
+        table.refresh(void 0, true);
+      };
+
       return {
         table,
         handleBtnClick,
@@ -278,6 +326,8 @@ function defineGenericComponent<T = any>() {
         openDialog,
         confirmAction,
         dialogFormRef,
+        handleSortChange,
+        handleSearch,
       };
     },
   });

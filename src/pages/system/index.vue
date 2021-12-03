@@ -4,18 +4,17 @@
 
 <script lang="ts">
 import { defineComponent, reactive, shallowRef } from 'vue';
-import { User, OfficeBuilding } from '@element-plus/icons';
+import { SetUp } from '@element-plus/icons';
 import SubLayout from '/@/pages/layout/SubLayout.vue';
 import { SubMenuOption } from '/@/pages/layout/interface';
 
 
 export default defineComponent({
-  name: 'PageBasedata',
+  name: 'PageSystem',
   components: { SubLayout },
   setup() {
     const subs = reactive<SubMenuOption[]>([
-      { label: '人员管理', path: '/basedata/staff', icon: shallowRef(User) },
-      { label: '班组管理', path: '/basedata/teamgroup', icon: shallowRef(OfficeBuilding) },
+      { label: '角色管理', path: '/system/role', icon: shallowRef(SetUp) },
     ]);
 
     return {

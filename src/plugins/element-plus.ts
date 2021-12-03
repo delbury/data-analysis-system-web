@@ -87,6 +87,7 @@ const Coms = [
 // 设置组件默认值
 ElTooltip.props.effect.default = 'light';
 ElTooltip.props.showAfter.default = 400;
+ElTooltip.props.placement.default = 'top';
 
 const plugin: Plugin = {
   install: (app) => {

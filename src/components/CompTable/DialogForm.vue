@@ -22,7 +22,10 @@
         v-for="(section, index) in formItems"
         :key="`${section.title}-${index}`"
       >
-        <el-row class="comp-table__form-section">
+        <el-row
+          v-if="!section.sectionDisabled || !section.sectionDisabled(detail)"
+          class="comp-table__form-section"
+        >
           <el-col
             v-if="section.title"
             :span="24"
@@ -43,26 +46,28 @@
                 ]"
               >
                 <template #label>
-                  <el-tooltip
-                    v-if="!!item.tip"
-                    :content="item.tip"
-                    placement="top"
-                  >
-                    <span>{{ formatLabel(item.label, item.tip) }}</span>
-                  </el-tooltip>
+                  <span class="label-wrapper">
+                    <span>{{ item.label }}</span>
 
-                  <span
-                    v-else
-                    class="info"
-                  >
-                    {{ item.label }}
                     <el-tooltip
-                      v-if="!!item.info"
-                      :content="item.info"
-                      placement="top"
+                      v-if="!!item.tip"
+                      :content="item.tip"
+                      :disabled="item.tip.length <= 4"
                     >
-                      <el-icon class="info-icon"><warning /></el-icon>
+                      <span>{{ formatLabel(item.tip) }}</span>
                     </el-tooltip>
+
+                    <span
+                      v-if="!!item.info"
+                      class="info"
+                    >
+                      <el-tooltip
+                        v-if="!!item.info"
+                        :content="item.info"
+                      >
+                        <el-icon class="info-icon"><warning /></el-icon>
+                      </el-tooltip>
+                    </span>
                   </span>
                 </template>
 
@@ -78,6 +83,15 @@
                   :inactive-value="0"
                   v-bind="item.customOption ?? {}"
                 ></el-switch>
+                <el-select-v2
+                  v-else-if="item.customType === 'select'"
+                  v-model="form[item.prop ?? '']"
+                  style="width: 100%;"
+                  clearable
+                  :disabled="item.disabled"
+                  v-bind="item.customOption ?? {}"
+                ></el-select-v2>
+                <!-- 远程选择 -->
                 <el-select-v2
                   v-else-if="item.customType === 'remote-select'"
                   v-model="form[item.prop ?? '']"
@@ -138,7 +152,8 @@
                   clearable
                   :disabled="item.disabled"
                   :min="0"
-                  :controls="false"
+                  :precision="2"
+                  controls-position="right"
                   v-bind="item.customOption ?? {}"
                 ></el-input-number>
                 <!-- 长文本 -->
@@ -172,7 +187,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType, ref, computed, onMounted } from 'vue';
+import { defineComponent, reactive, PropType, ref, computed, watch } from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
 import { DialogStatus, FormItemSection, FormInstance, ElFormProps, FormItem } from './interface';
 import { ElDialogProps } from '/@/components/CompDialog/interface';
@@ -222,29 +237,39 @@ export default defineComponent({
       default: false,
     },
   },
-  setup(props) {
+  setup(props, ctx) {
     const form = reactive(cloneDeep(props.formInitValues));
     const formRef = ref<FormInstance | null>(null);
     // 编辑时的数据id
     const dataId = ref<number>();
     // 是否只读
     const disabled = computed(() => props.status === 'detail');
+    // 已有数据的详情
+    const detail = ref<Record<string, any>>();
 
-    // 表单配置map
-    const formItemsMap = computed(() => {
+    // 表单配置预处理
+    const formItemsConfig = computed(() => {
+      // 表单 item 配置的 map
       const map: Record<string, FormItem> = {};
+      // 表单 item 的回调列表
+      const cbs: NonNullable<FormItem['formValueChangeHandler']>[] = [];
+
       props.formItems.forEach(item => {
         item.formItems.forEach(it => {
           map[it.prop ?? ''] = it;
+
+          if(it.formValueChangeHandler) {
+            cbs.push(it.formValueChangeHandler);
+          }
         });
       });
-      return map;
+      return { map, cbs };
     });
     // 表单数据处理
     const resolveForm = (form: Record<string, any>) => {
       const temp: Record<string, any> = {};
       Object.entries(form).forEach(([key, val]) => {
-        const formatter = formItemsMap.value[key]?.valueSubmitHandler;
+        const formatter = formItemsConfig.value.map[key]?.valueSubmitHandler;
         if(formatter) {
           Object.assign(temp, formatter({ value: val, key, form }));
         } else if(val !== null && val !== void 0 && val !== '') {
@@ -256,9 +281,12 @@ export default defineComponent({
 
     // 设置表单的值
     const setFormValues = (params: Record<string, any>) => {
+      // 设置详情数据
+      detail.value = params;
+
       dataId.value = params.id;
       Object.keys(form).forEach(key => {
-        const config = formItemsMap.value[key];
+        const config = formItemsConfig.value.map[key];
         const formatter = config?.valueRebuildHandler;
         if(formatter) {
           const temp = formatter({
@@ -288,13 +316,23 @@ export default defineComponent({
       });
     };
 
+    // 监听 form 表单数据改变
+    watch(form, (current, old) => {
+      // 判断是否有需要执行的回调
+      if(formItemsConfig.value.cbs.length) {
+        formItemsConfig.value.cbs.forEach(cb => {
+          cb(current, old, form);
+        });
+      }
+    }, { deep: true, immediate: true });
+
     return {
       disabled,
       form,
       formRef,
-      formatLabel: (label?: string, tip?: string) => {
-        if(!tip) return label;
-        return `${label}（${tip.length < 4 ? tip : tip.slice(0, 4) + '...'}）`;
+      formatLabel: (tip?: string) => {
+        if(!tip) return '';
+        return `(${tip.length < 4 ? tip : tip.slice(0, 4) + '...'})`;
       },
       submitAction: async() => {
         try {
@@ -310,9 +348,11 @@ export default defineComponent({
         // 弹框关闭重置表单
         formRef.value?.resetFields();
         dataId.value = void 0;
+        detail.value = void 0;
       },
       setFormValues,
       defaultFormRules: formRules,
+      detail,
     };
   },
 });
@@ -344,6 +384,11 @@ export default defineComponent({
         font-size: 16px;
         font-weight: bold;
       }
+    }
+
+    .label-wrapper {
+      display: inline-flex;
+      align-items: center;
     }
 
     .info {

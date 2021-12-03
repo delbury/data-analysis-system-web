@@ -11,7 +11,10 @@ interface TableResult {
   loadding: boolean; // 获取table数据加载中
   fetching: boolean; // 获取详情加载中
   submitting: boolean; // 提交
-  refresh: (params?: {}) => Promise<any>;
+  order?: 'desc' | 'asc';
+  orderBy?: string;
+  searchParams?: {};
+  refresh: (params?: {}, reset?: boolean) => Promise<any>;
   delete: (id: string) => Promise<any>,
   create: (id: string) => Promise<any>,
   detail: (id: string) => Promise<any>,
@@ -37,10 +40,13 @@ export const useTableFetcher = (fetchers: FetchersType) => {
     loadding: false,
     fetching: false,
     submitting: false,
+    orderBy: void 0,
+    order: void 0,
+    searchParams: void 0,
     // 刷新表格，是否完全刷新
-    refresh: async (params: {} = {}, reset = false) => {
+    refresh: async (params?: {}, reset?: boolean) => {
       // 是否刷新到第一页
-      if(reset && table.pageNumber !== INIT_PARAMS.pageNumber) {
+      if((reset || params) && table.pageNumber !== INIT_PARAMS.pageNumber) {
         table.pageNumber = INIT_PARAMS.pageNumber;
         return;
       }
@@ -49,7 +55,10 @@ export const useTableFetcher = (fetchers: FetchersType) => {
         const res = await fetchers.get({
           pageSize: table.pageSize,
           pageNumber: table.pageNumber,
-          ...params,
+          order: table.order,
+          orderBy: table.orderBy,
+          ...(params ?? {}),
+          ...(table.searchParams ?? {}),
         });
         table.list.length = 0;
         table.list.push(...res.data.data.list);
