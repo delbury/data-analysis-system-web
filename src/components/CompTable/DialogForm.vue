@@ -6,6 +6,7 @@
       ...dialogProps,
     }"
     :submit-action="submitAction"
+    @open="handleOpen"
     @closed="handleClosed"
   >
     <el-form
@@ -83,6 +84,7 @@
                   :inactive-value="0"
                   v-bind="item.customOption ?? {}"
                 ></el-switch>
+                <!-- 选择 -->
                 <el-select-v2
                   v-else-if="item.customType === 'select'"
                   v-model="form[item.prop ?? '']"
@@ -93,13 +95,14 @@
                 ></el-select-v2>
                 <!-- 远程选择 -->
                 <el-select-v2
-                  v-else-if="item.customType === 'remote-select'"
+                  v-else-if="item.customType === 'remote-select' || item.customType === 'remote-select-multi'"
                   v-model="form[item.prop ?? '']"
                   style="width: 100%;"
                   clearable
                   :disabled="item.disabled || disabled"
                   filterable
                   remote
+                  :multiple="item.customType === 'remote-select-multi'"
                   v-bind="item.customOption ?? {}"
                   :remote-method="(text) => item.customOption?.remoteMethod(text, item.customOption)"
                   @visible-change="(visible) => {
@@ -108,6 +111,20 @@
                     }
                   }"
                 ></el-select-v2>
+                <!-- tags -->
+                <el-select
+                  v-else-if="item.customType === 'tags'"
+                  v-model="form[item.prop ?? '']"
+                  style="width: 100%;"
+                  clearable
+                  allow-create
+                  filterable
+                  multiple
+                  default-first-option
+                  placeholder="请输入后按回车或选择确定"
+                  :disabled="item.disabled"
+                  v-bind="item.customOption ?? {}"
+                ></el-select>
                 <!-- 日期 -->
                 <el-date-picker
                   v-else-if="item.customType === 'date'"
@@ -171,7 +188,7 @@
                 <!-- 文本输入 -->
                 <el-input
                   v-else
-                  v-model="form[item.prop ?? '']"
+                  v-model.trim="form[item.prop ?? '']"
                   :placeholder="disabled ? '' : '请输入'"
                   clearable
                   :disabled="item.disabled"
@@ -187,7 +204,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType, ref, computed, watch } from 'vue';
+import { defineComponent, reactive, PropType, ref, computed, watch, nextTick } from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
 import { DialogStatus, FormItemSection, FormInstance, ElFormProps, FormItem } from './interface';
 import { ElDialogProps } from '/@/components/CompDialog/interface';
@@ -343,6 +360,11 @@ export default defineComponent({
         } catch(e) {
           return false;
         }
+      },
+      handleOpen: () => {
+        nextTick(() => {
+          formRef.value?.clearValidate();
+        });
       },
       handleClosed: () => {
         // 弹框关闭重置表单

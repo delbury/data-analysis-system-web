@@ -3,6 +3,7 @@ import { FormItemRule } from './interface';
 const CHAR_LENGTH_SHORT = 20;
 const CHAR_LENGTH_NORMAL = 100;
 const CHAR_LENGTH_LONG = 255;
+const CHAR_LENGTH_LONGER = 1023;
 
 type GetRule<T> = T extends any[] ? never : T;
 type Validator = NonNullable<GetRule<FormItemRule>>['validator'];
@@ -13,7 +14,12 @@ const createRule = (validator: Validator): FormItemRule => ({ validator });
 // 生成文本长度规则
 const getStringLengthRule = (length: number) =>
   createRule((rule, value: string, cb) => {
-    if(value.length > length) {
+    if(Array.isArray(value)) {
+      // 如果是数组，则将数组 join(',') 并比较 length
+      if(value.join(',').length > length) {
+        return cb('输入的数据内容过长');
+      }
+    } else if(value.length > length) {
       return cb(`输入文本长度不能超过${length}`);
     }
     return cb();
@@ -67,6 +73,31 @@ const phoneRule = createRule((rule, value: string, cb) => {
   return cb();
 });
 
+// 路径校验
+const pathReg1 = /^\/[a-zA-Z0-9\/]*[a-zA-Z0-9]$/i;
+const pathReg2 = /\/\//;
+const pathRule = createRule((rule, value: string, cb) => {
+  if(value !== '/' && (!pathReg1.test(value) || pathReg2.test(value))) {
+    return cb('请输入合法的路径');
+  }
+  return cb();
+});
+
+// tag 校验
+const tagReg1 = /^[a-zA-Z][a-zA-Z0-9\.]*[a-zA-Z0-9]$/i;
+const tagReg2 = /\.\./;
+const tagRule = createRule((r, val, cb) => {
+  if(!Array.isArray(val)) {
+    val = [val];
+  }
+  if(
+    val.some(it => tagReg2.test(it) || !tagReg1.test(it))
+  ) {
+    return cb('请输入合法tag e.g. xxx|xxx.yyy');
+  }
+  return cb();
+});
+
 // 常用表单校验条件
 export const formRules = {
   // 必填
@@ -78,6 +109,7 @@ export const formRules = {
   shortLength: <FormItemRule>getStringLengthRule(CHAR_LENGTH_SHORT),
   normalLength: <FormItemRule>getStringLengthRule(CHAR_LENGTH_NORMAL),
   longLength: <FormItemRule>getStringLengthRule(CHAR_LENGTH_LONG),
+  longerLength: <FormItemRule>getStringLengthRule(CHAR_LENGTH_LONGER),
   // 数字限制
   int: <FormItemRule>getNumberTypeRule('int', false, true), // 整数
   intUnsigned: <FormItemRule>getNumberTypeRule('int', true, true), // 非负整数
@@ -88,6 +120,10 @@ export const formRules = {
   // 手机号码
   phone: <FormItemRule>phoneRule,
   notZero: <FormItemRule>notZeroRule,
+  // 路径
+  path: <FormItemRule>pathRule,
+  // tag
+  tag: <FormItemRule>tagRule,
 };
 
 export type FormRuleNames = keyof (typeof formRules);

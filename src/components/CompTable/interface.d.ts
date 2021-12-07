@@ -9,18 +9,21 @@ type Writeable<T> = {
 
 type BaseCustomType = 'date' | 'datetime' | 'time' | 'int' | 'float' | 'bool';
 type SearchType = boolean | 'remote';
-type LableValue = { label: string; value: any; };
+export type LableValue = { label: string; value: any; };
+export type FormatMapType = Record<string, string | { text: string; className?: string }>;
 /**
  * table 展示列配置类型
  */
 export type ColumnProps = Writeable<InstanceType<typeof ElTableColumn>['$props']> & {
   // btns?: { label: string; key: string; }[];
   // 展示数据类型
-  customType?: BaseCustomType;
+  customType?: BaseCustomType | 'list';
+  // 当数据为 object list 时，展示的字段 key
+  listLabelKey?: string;
   children?: ColumnProps[];
   tip?: string;
   // 格式化展示
-  formatMap?: Record<string, string | { text: string; className?: string }>;
+  formatMap?: FormatMapType;
   // 远程搜索条件配置
   search?: SearchType;
   // 查询的字段名
@@ -44,7 +47,7 @@ export type FormItem = ElFormItemProps & {
   // 列宽
   span?: number;
   // 输入数据类型
-  customType?: BaseCustomType | 'string' | 'select' | 'remote-select' | 'timerange' | 'textarea';
+  customType?: BaseCustomType | 'string' | 'select' | 'remote-select' | 'remote-select-multi' | 'timerange' | 'textarea' | 'tags';
   // 输入数据类型组件可选参数
   customOption?: Record<string, any>;
   // tip，同label，超长显示省略号

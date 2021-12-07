@@ -50,20 +50,20 @@ export const walkColumnConfig = (columns: ColumnProps[]): ColumnProps[] => {
 
 // 创建远程选择表单项的配置
 interface FormItemOptionsConfig {
-  labelField?: string;
-  valueField?: string;
-  rebuildLabelField: string; // 返回数据的label字段
-  rebuildValueField: string; // 返回数据的value字段
+  labelField?: string; // 查询的可选数据的label字段
+  valueField?: string; // 查询的可选数据的value字段
+  rebuildLabelField?: string; // 返回数据的label字段
+  rebuildValueField?: string; // 返回数据的value字段
 }
 export const getRemoteSelectFormItemOptions = (
-  fetcher: FetchersGetType, config: FormItemOptionsConfig,
+  fetcher: FetchersGetType, config?: FormItemOptionsConfig,
 ) => {
   const {
     labelField = 'name',
     valueField = 'id',
-    rebuildLabelField,
-    rebuildValueField,
-  } = config;
+    rebuildLabelField = 'name',
+    rebuildValueField = 'id',
+  } = config ?? {};
 
   return {
     remoteMethod: async (text: string, record: any) => {

@@ -1,6 +1,6 @@
 <template>
   <el-container class="page">
-    <el-aside>
+    <el-aside width="200px">
       <el-menu
         mode="vertical"
         class="sub-menu"

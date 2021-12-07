@@ -5,8 +5,10 @@
       :apis="apis"
       :form-init-values="formInitValues"
       :form-items="formItems"
+      :form-props="{ labelWidth: '100px' }"
       :dialog-props="{ width: '600px' }"
-      :form-props="{ labelWidth: '60px' }"
+      :show-import-btn="false"
+      :show-export-btn="false"
     >
     </CompTable>
   </div>
@@ -17,55 +19,60 @@ import { defineComponent, reactive } from 'vue';
 import { apis } from '/@/service';
 import { FormItemSection, ColumnProps } from '/@/components/CompTable/interface';
 import { getFormItemInitValues } from '/@/components/CompTable/util';
-import common from '/@/pages/common';
 
 export default defineComponent({
-  name: 'PageBasedataTeamGroup',
+  name: 'PageSystemPermission',
   setup() {
-    // table 参数
     const columns: ColumnProps[] = [
       {
         label: '名称',
         prop: 'name',
       },
       {
-        label: '类型',
-        prop: 'type',
-        formatMap: common.maps.GROUP_TYPE_MAP,
+        label: '路径',
+        prop: 'path',
+      },
+      {
+        label: '权限',
+        prop: 'tags',
+        customType: 'list',
       },
       {
         label: '备注',
         prop: 'remark',
       },
     ];
+
     const formItems: FormItemSection[] = [
       {
         formItems: [
           { label: '名称', prop: 'name', span: 24, ruleNames: ['required', 'normalLength'] },
           {
-            label: '类型',
-            prop: 'type',
+            label: '路径',
+            prop: 'path',
             span: 24,
-            customType: 'select',
+            ruleNames: ['required', 'normalLength', 'path'],
             customOption: {
-              options: common.opts.GROUP_TYPE_OPTIONS,
+              placeholder: '请输入路径，e.g. /xxx/yyy',
             },
-            ruleNames: ['required'],
           },
-          { label: '备注',
-            prop: 'remark',
+          {
+            label: '权限',
+            prop: 'tags',
             span: 24,
-            customType: 'textarea',
+            ruleNames: ['required', 'longerLength', 'tag'],
+            customType: 'tags',
           },
+          { label: '备注', prop: 'remark', span: 24, customType: 'textarea' },
         ],
       },
     ];
 
     return {
-      apis: apis.basedata_teamgroup,
+      apis: apis.peermission,
       columns,
       formInitValues: getFormItemInitValues(formItems),
-      formItems,
+      formItems: reactive(formItems),
     };
   },
 });

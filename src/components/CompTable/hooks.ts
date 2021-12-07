@@ -27,7 +27,7 @@ interface TableResult {
 
 // 初始设置
 const INIT_PARAMS = {
-  pageSize: 20,
+  pageSize: 10,
   pageNumber: 1,
 };
 // 获取有自定义渲染配置的列

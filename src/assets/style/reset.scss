@@ -13,6 +13,10 @@ html {
 // 按钮样式
 .el-button--mini {
   padding: 7px !important;
+
+  .el-icon {
+    font-size: var(--el-font-size-extra-small);
+  }
 }
 
 // 修复默认时间选择器 icon 样式问题
@@ -43,5 +47,12 @@ html {
     justify-content: center;
     height: 13px !important;
     line-height: 13px !important;
+  }
+}
+
+// 禁用状态下，select 的鼠标样式
+.el-input.is-disabled .el-input__suffix {
+  .el-icon {
+    cursor: not-allowed;
   }
 }

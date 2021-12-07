@@ -1,25 +1,13 @@
 import { ColumnProps } from '/@/components/CompTable/interface';
 import { walkColumnConfig } from '/@/components/CompTable/util';
-import {
-  TRAINER_LEVEL_OPTIONS,
-  TRAIN_CLASS_OPTIONS,
-  TRAIN_CONTENT_OPTIONS,
-  TRAIN_LEVEL_OPTIONS,
-  TRAIN_TYPE_OPTION,
-  TRAIN_WAY1_OPTIONS,
-  TRAIN_WAY2_OPTIONS,
-  GROUP_ID_REMOTE_OPTION,
-} from './form';
+import common from '/@/pages/common';
 
 export const getColumns = (): ColumnProps[] => walkColumnConfig([
   {
     label: '状态',
     prop: 'status',
     width: 60,
-    formatMap: {
-      1: '计划',
-      2: { text: '完成', className: 'color-success' },
-    },
+    formatMap: common.maps.WORKBENCH_STATUS_MAP,
     search: true,
   },
   {
@@ -61,8 +49,13 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
     search: 'remote',
     searchProp: 'group_id',
     searchAttach: {
-      ...GROUP_ID_REMOTE_OPTION,
+      ...common.remote.GROUP_ID_REMOTE_OPTIONS,
     },
+  },
+  {
+    label: '班组类型',
+    prop: 'group_type',
+    formatMap: common.maps.GROUP_TYPE_MAP,
   },
   {
     label: '项目编号',
@@ -84,21 +77,21 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
     minWidth: 100,
     sortable: 'custom',
     search: true,
-    searchOptions: TRAIN_LEVEL_OPTIONS,
+    searchOptions: common.opts.TRAIN_LEVEL_OPTIONS,
   },
   {
     label: '培训内容',
     prop: 'train_content',
     minWidth: 90,
     search: true,
-    searchOptions: TRAIN_CONTENT_OPTIONS,
+    searchOptions: common.opts.TRAIN_CONTENT_OPTIONS,
   },
   {
     label: '培训方式1',
     prop: 'train_way1',
     sortable: 'custom',
     search: true,
-    searchOptions: TRAIN_WAY1_OPTIONS,
+    searchOptions: common.opts.TRAIN_WAY1_OPTIONS,
   },
   {
     label: '培训方式2',
@@ -106,7 +99,7 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
     minWidth: 110,
     sortable: 'custom',
     search: true,
-    searchOptions: TRAIN_WAY2_OPTIONS,
+    searchOptions: common.opts.TRAIN_WAY2_OPTIONS,
   },
   {
     label: '培训形式',
@@ -114,14 +107,14 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
     sortable: 'custom',
     minWidth: 100,
     search: true,
-    searchOptions: TRAIN_TYPE_OPTION,
+    searchOptions: common.opts.TRAIN_TYPE_OPTION,
   },
   {
     label: '培训线别',
     prop: 'train_class',
     sortable: 'custom',
     search: true,
-    searchOptions: TRAIN_CLASS_OPTIONS,
+    searchOptions: common.opts.TRAIN_CLASS_OPTIONS,
   },
   {
     label: '培训项目负责人',
@@ -149,15 +142,9 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
     label: '培训师星级',
     prop: 'trainer_level',
     sortable: 'custom',
-    formatMap: {
-      0: '无',
-      1: '见习',
-      2: '一星',
-      3: '二星',
-      4: '三星',
-    },
+    formatMap: common.maps.TRAINER_LEVEL_MAP,
     search: true,
-    searchOptions: TRAINER_LEVEL_OPTIONS,
+    searchOptions: common.opts.TRAINER_LEVEL_OPTIONS,
   },
   {
     label: '培训师所属单位',

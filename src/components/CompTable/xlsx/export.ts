@@ -13,13 +13,16 @@ const createHeader = (columns: ColumnProps[]) => {
   const list: string[] = [];
   // 插入的 header 展示行
   const row: Record<string, string> = {};
+  // 列配置
+  const cols: xlsx.ColInfo[] = [];
+
   // 递归
   const walk = (cols?: ColumnProps[]) => {
     if(!cols) return;
     cols.forEach(col => {
       if(col.prop) {
         list.push(col.prop);
-        row[col.prop] = col.label ?? '';
+        row[col.prop] = (col.label ?? '') + (col.tip ? `（${col.tip}）` : '');
       }
       walk(col.children);
     });

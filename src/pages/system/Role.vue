@@ -5,7 +5,6 @@
       :apis="apis"
       :form-init-values="formInitValues"
       :form-items="formItems"
-      :row-btns="[]"
       :form-props="{ labelWidth: '100px' }"
       :dialog-props="{ width: '600px' }"
       :show-import-btn="false"
@@ -20,6 +19,7 @@ import { defineComponent, reactive } from 'vue';
 import { apis } from '/@/service';
 import { FormItemSection, ColumnProps } from '/@/components/CompTable/interface';
 import { getFormItemInitValues } from '/@/components/CompTable/util';
+import common from '/@/pages/common';
 
 export default defineComponent({
   name: 'PageBasedataTeamGroup',
@@ -30,8 +30,10 @@ export default defineComponent({
         prop: 'name',
       },
       {
-        label: 'Tag',
-        prop: 'tag',
+        label: '权限',
+        prop: 'permissions',
+        customType: 'list',
+        listLabelKey: 'name',
       },
       {
         label: '备注',
@@ -39,15 +41,24 @@ export default defineComponent({
       },
     ];
 
-    const formItems: FormItemSection[] = [
+    const formItems: FormItemSection[] = reactive([
       {
         formItems: [
           { label: '名称', prop: 'name', span: 24, ruleNames: ['required', 'normalLength'] },
-          { label: 'Tag', prop: 'tag', span: 24, ruleNames: ['required', 'normalLength'] },
+          {
+            label: '权限',
+            prop: 'permissions',
+            span: 24,
+            ruleNames: ['required'],
+            customType: 'remote-select-multi',
+            customOption: {
+              ...common.remote.PERMISSION_REMOTE_OPTIONS,
+            },
+          },
           { label: '备注', prop: 'remark', span: 24, customType: 'textarea' },
         ],
       },
-    ];
+    ]);
 
     return {
       apis: apis.role,

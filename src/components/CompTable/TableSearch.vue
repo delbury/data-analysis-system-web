@@ -1,5 +1,6 @@
 <template>
   <el-form
+    v-if="configs?.length"
     ref="formRef"
     class="comp-table_table-search"
     :model="form"

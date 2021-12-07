@@ -44,6 +44,12 @@
         {{ row[column.property] === 1 ? '是' : '否' }}
       </span>
       <span
+        v-else-if="columnProp.customType === 'list'"
+        :class="resolveTextClassName(row[column.property], row)"
+      >
+        {{ formatList(row[column.property], row) }}
+      </span>
+      <span
         v-else
         :class="resolveTextClassName(row[column.property], row)"
       >
@@ -79,9 +85,6 @@ export default defineComponent({
           const opt = props.columnProp.formatMap[val];
           if(opt !== void 0) return typeof opt === 'string' ? opt : opt.text;
         }
-        if(props.columnProp.formatter) {
-          return props.columnProp.formatter(val, row);
-        }
         return val;
       },
       // text 的 class
@@ -95,6 +98,20 @@ export default defineComponent({
       formatTip: (tip?: string) => {
         if(!tip) return '';
         return `(${tip.length <= 4 ? tip : (tip.slice(0, 4) + '...')})`;
+      },
+      // 格式化 list
+      formatList: (val: any, row: any) => {
+        if(Array.isArray(val)) {
+          const lk = props.columnProp.listLabelKey;
+          if(lk) {
+            return val.map(it => it[lk]).join(', ');
+
+          } else {
+            return val.join(', ');
+          }
+        } else {
+          return (val ?? '-');
+        }
       },
     };
   },

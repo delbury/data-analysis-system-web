@@ -15,7 +15,8 @@
 import { defineComponent, reactive } from 'vue';
 import { apis } from '/@/service';
 import { FormItemSection, ColumnProps } from '/@/components/CompTable/interface';
-import { getFormItemInitValues, getRemoteSelectFormItemOptions } from '/@/components/CompTable/util';
+import { getFormItemInitValues } from '/@/components/CompTable/util';
+import common from '/@/pages/common';
 
 export default defineComponent({
   name: 'PageBasedataTeamGroup',
@@ -36,6 +37,11 @@ export default defineComponent({
       {
         label: '班组',
         prop: 'group_name',
+      },
+      {
+        label: '班组类型',
+        prop: 'group_type',
+        formatMap: common.maps.GROUP_TYPE_MAP,
       },
       {
         label: '职系',
@@ -66,10 +72,7 @@ export default defineComponent({
             ruleNames: ['required'],
             customType: 'remote-select',
             customOption: {
-              ...getRemoteSelectFormItemOptions(apis.basedata_teamgroup.get, {
-                rebuildLabelField: 'group_name',
-                rebuildValueField: 'group_id',
-              }),
+              ...common.remote.GROUP_ID_REMOTE_OPTIONS,
             },
           },
           { label: '职系', prop: 'job', span: 12 },

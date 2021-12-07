@@ -34,6 +34,14 @@ const routes: RouteRecordRaw[] = [
             path: 'role',
             component: () => import('/@/pages/system/Role.vue'),
           },
+          {
+            path: 'permission',
+            component: () => import('/@/pages/system/Permission.vue'),
+          },
+          {
+            path: 'account',
+            component: () => import('/@/pages/system/Account.vue'),
+          },
         ],
       },
     ],
