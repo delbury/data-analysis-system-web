@@ -4,15 +4,14 @@
       Data Analysis System
     </div>
 
-    <router-link to="/workbench">
-      工作台
-    </router-link>
-    <router-link to="/basedata">
-      信息管理
-    </router-link>
-    <router-link to="/system">
-      系统管理
-    </router-link>
+    <template
+      v-for="item in links"
+      :key="item.path"
+    >
+      <router-link :to="item.path">
+        {{ item.label }}
+      </router-link>
+    </template>
   </div>
 </template>
 
@@ -22,7 +21,13 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'PageLayoutNavbar',
   setup() {
-
+    return {
+      links: [
+        { label: '工作台', path: '/workbench' },
+        { label: '信息管理', path: '/basedata' },
+        { label: '系统管理', path: '/system' },
+      ],
+    };
   },
 });
 </script>

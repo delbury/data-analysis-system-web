@@ -1,4 +1,4 @@
-import { reactive, onMounted, watch, toRef, nextTick, ref } from 'vue';
+import { markRaw, shallowReactive, onMounted, watch, toRef, nextTick, ref } from 'vue';
 import { FetchersType } from '/@/service/tools';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { ColumnProps } from './interface';
@@ -71,7 +71,7 @@ export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
     })).data.data;
   };
 
-  const table = reactive<TableResult>({
+  const table = shallowReactive<TableResult>({
     pageSize: INIT_PARAMS.pageSize,
     pageNumber: INIT_PARAMS.pageNumber,
     list: [],
@@ -84,7 +84,7 @@ export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
     order: void 0,
     searchParams: void 0,
     // 刷新表格，是否完全刷新
-    refresh: async (params?: {}, reset?: boolean) => {
+    refresh: markRaw(async (params?: {}, reset?: boolean) => {
       // 是否刷新到第一页
       if((reset || params) && table.pageNumber !== INIT_PARAMS.pageNumber) {
         table.pageNumber = INIT_PARAMS.pageNumber;
@@ -93,15 +93,14 @@ export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
       try {
         table.loadding = true;
         const res = await fetch(params);
-        table.list.length = 0;
-        table.list.push(...res.list);
+        table.list = res.list;
         table.total = res.total;
       } finally {
         table.loadding = false;
       }
-    },
+    }),
     // 删除
-    delete: async (id: string) => {
+    delete: markRaw(async (id: string) => {
       try {
         table.submitting = true;
         const res = await fetchers.delete(id);
@@ -111,9 +110,9 @@ export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
       } finally {
         table.submitting = false;
       }
-    },
+    }),
     // 新增
-    create: async (data: any) => {
+    create: markRaw(async (data: any) => {
       try {
         table.submitting = true;
         const res = await fetchers.post(data);
@@ -122,9 +121,9 @@ export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
       } finally {
         table.submitting = false;
       }
-    },
+    }),
     // 详情
-    detail: async (id: string) => {
+    detail: markRaw(async (id: string) => {
       try {
         table.fetching = true;
         const res = await fetchers.getById(id);
@@ -132,9 +131,9 @@ export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
       } finally {
         table.fetching = false;
       }
-    },
+    }),
     // 修改
-    update: async (id: string, data: any) => {
+    update: markRaw(async (id: string, data: any) => {
       try {
         table.submitting = true;
         const res = await fetchers.put(id, data);
@@ -143,9 +142,9 @@ export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
       } finally {
         table.submitting = false;
       }
-    },
+    }),
     // 导出
-    export: () => {
+    export: markRaw(() => {
       ElMessageBox.confirm(
         '确认导出？（将会根据筛选条件导出所有数据）',
         '导出',
@@ -180,7 +179,7 @@ export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
           },
         },
       );
-    },
+    }),
   });
 
   // 挂载时请求一次

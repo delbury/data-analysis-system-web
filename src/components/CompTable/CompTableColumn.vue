@@ -31,30 +31,14 @@
       v-if="!children?.length"
       #default="{row, column}"
     >
-      <span
-        v-if="columnProp.formatMap || columnProp.formatter"
-        :class="resolveTextClassName(row[column.property], row)"
-      >
-        {{ formatCell(row[column.property], row) ?? '-' }}
-      </span>
-      <span
-        v-else-if="columnProp.customType === 'bool'"
-        :class="resolveTextClassName(row[column.property], row)"
-      >
-        {{ row[column.property] === 1 ? '是' : '否' }}
-      </span>
-      <span
-        v-else-if="columnProp.customType === 'list'"
-        :class="resolveTextClassName(row[column.property], row)"
-      >
-        {{ formatList(row[column.property], row) }}
-      </span>
-      <span
-        v-else
-        :class="resolveTextClassName(row[column.property], row)"
-      >
-        {{ row[column.property] ?? '-' }}
-      </span>
+      <template v-if="resolveTextClassName(row[column.property], row)">
+        <span :class="resolveTextClassName(row[column.property], row)">
+          {{ formatCell(row[column.property], row) }}
+        </span>
+      </template>
+      <template v-else>
+        {{ formatCell(row[column.property], row) }}
+      </template>
     </template>
   </el-table-column>
 </template>
@@ -77,15 +61,31 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props, { attrs }) {
+  setup(props, ctx) {
     return {
       // 格式化显示单元格
       formatCell: (val: any, row: any) => {
         if(props.columnProp.formatMap) {
           const opt = props.columnProp.formatMap[val];
-          if(opt !== void 0) return typeof opt === 'string' ? opt : opt.text;
+          if(opt !== void 0) {
+            return typeof opt === 'string' ? opt : opt.text;
+          }
+        } else if(props.columnProp.customType === 'bool') {
+          return val === 1 ? '是' : '否';
+        } else if(props.columnProp.customType === 'list') {
+          if(Array.isArray(val)) {
+            const lk = props.columnProp.listLabelKey;
+            if(lk) {
+              return val.map(it => it[lk]).join(', ');
+
+            } else {
+              return val.join(', ');
+            }
+          } else {
+            return (val ?? '-');
+          }
         }
-        return val;
+        return val ?? '-';
       },
       // text 的 class
       resolveTextClassName: (val: any, row: any) => {
@@ -98,20 +98,6 @@ export default defineComponent({
       formatTip: (tip?: string) => {
         if(!tip) return '';
         return `(${tip.length <= 4 ? tip : (tip.slice(0, 4) + '...')})`;
-      },
-      // 格式化 list
-      formatList: (val: any, row: any) => {
-        if(Array.isArray(val)) {
-          const lk = props.columnProp.listLabelKey;
-          if(lk) {
-            return val.map(it => it[lk]).join(', ');
-
-          } else {
-            return val.join(', ');
-          }
-        } else {
-          return (val ?? '-');
-        }
       },
     };
   },

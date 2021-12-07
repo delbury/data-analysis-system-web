@@ -1,3 +1,4 @@
-@import './reset.scss';
-@import './common.scss';
-@import './helper.scss';
+@use './reset.scss';
+@use './common.scss';
+@use './helper.scss';
+@use './transition.scss';

@@ -25,11 +25,16 @@
 
     <el-main class="main">
       <router-view v-slot="{ Component }">
-        <!-- <keep-alive> -->
-        <component
-          :is="Component"
-        ></component>
-        <!-- </keep-alive> -->
+        <transition
+          name="fade"
+          mode="out-in"
+        >
+          <!-- <keep-alive> -->
+          <component
+            :is="Component"
+          ></component>
+          <!-- </keep-alive> -->
+        </transition>
       </router-view>
     </el-main>
   </el-container>

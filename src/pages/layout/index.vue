@@ -7,9 +7,14 @@
     <div class="layout-content">
       <router-view v-slot="{ Component }">
         <!-- <keep-alive> -->
-        <component
-          :is="Component"
-        ></component>
+        <transition
+          name="fade"
+          mode="out-in"
+        >
+          <component
+            :is="Component"
+          ></component>
+        </transition>
         <!-- </keep-alive> -->
       </router-view>
     </div>
