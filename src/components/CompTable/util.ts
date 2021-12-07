@@ -54,6 +54,7 @@ interface FormItemOptionsConfig {
   valueField?: string; // 查询的可选数据的value字段
   rebuildLabelField?: string; // 返回数据的label字段
   rebuildValueField?: string; // 返回数据的value字段
+  rebuildListField?: string; // 返回list数据的字段
 }
 export const getRemoteSelectFormItemOptions = (
   fetcher: FetchersGetType, config?: FormItemOptionsConfig,
@@ -61,6 +62,7 @@ export const getRemoteSelectFormItemOptions = (
   const {
     labelField = 'name',
     valueField = 'id',
+    rebuildListField,
     rebuildLabelField = 'name',
     rebuildValueField = 'id',
   } = config ?? {};
@@ -85,6 +87,7 @@ export const getRemoteSelectFormItemOptions = (
     rebuildField: {
       label: rebuildLabelField,
       value: rebuildValueField,
+      listField: rebuildListField,
     },
   };
 };

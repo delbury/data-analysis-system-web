@@ -54,6 +54,11 @@ export default defineComponent({
             customOption: {
               ...common.remote.PERMISSION_REMOTE_OPTIONS,
             },
+            valueRebuildHandler: ({ value }) => {
+              return {
+                permissions: value ? value.map(it => it.id) : [],
+              };
+            },
           },
           { label: '备注', prop: 'remark', span: 24, customType: 'textarea' },
         ],

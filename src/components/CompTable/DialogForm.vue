@@ -329,6 +329,15 @@ export default defineComponent({
               value: params[config.customOption?.rebuildField?.value],
             },
           ];
+        } else if(config?.customType === 'remote-select-multi' && config.customOption) {
+          config.customOption.lastSearchedText = '_inited';
+          const list = params[config.customOption?.rebuildField?.listField];
+          if(list?.length) {
+            config.customOption.options = list.map(it => ({
+              label: it[config.customOption?.rebuildField?.label],
+              value: it[config.customOption?.rebuildField?.value],
+            }));
+          }
         }
       });
     };

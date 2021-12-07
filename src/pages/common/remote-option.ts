@@ -12,4 +12,6 @@ export const GROUP_ID_REMOTE_OPTIONS = getRemoteSelectFormItemOptions(apis.based
 });
 
 // 权限
-export const PERMISSION_REMOTE_OPTIONS = getRemoteSelectFormItemOptions(apis.peermission.get);
+export const PERMISSION_REMOTE_OPTIONS = getRemoteSelectFormItemOptions(apis.peermission.get, {
+  rebuildListField: 'permissions',
+});
