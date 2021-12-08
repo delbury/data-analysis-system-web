@@ -104,6 +104,7 @@ export const formRules = {
   required: <FormItemRule>{
     required: true,
     message: '不能为空',
+    trigger: 'change',
   },
   // 长度限制
   shortLength: <FormItemRule>getStringLengthRule(CHAR_LENGTH_SHORT),

@@ -47,13 +47,30 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: '/login',
+    component: () => import('/@/pages/login/index.vue'),
+  },
+  {
     path: '/:notfound(.*)',
     redirect: '/',
   },
 ];
 
-
-export default createRouter({
+// 创建路由
+const router = createRouter({
   history: createWebHistory('/'),
   routes,
 });
+
+// 路由守卫
+router.beforeEach((to, from) => {
+  console.log(to);
+  console.log(from);
+  // 判断是否已经登录
+  const isLogin = false;
+  // 已经登录并且进入登录页面则跳到首页
+  if(isLogin && to.path === '/login') return '/';
+  if(!isLogin && to.path !== '/login') return '/login';
+});
+
+export default router;

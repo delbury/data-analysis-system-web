@@ -48,6 +48,7 @@ export default defineComponent({
           {
             label: '权限',
             prop: 'permissions',
+            default: [],
             span: 24,
             ruleNames: ['required'],
             customType: 'remote-select-multi',
@@ -66,7 +67,7 @@ export default defineComponent({
     ]);
 
     return {
-      apis: apis.role,
+      apis: apis.system_role,
       columns,
       formInitValues: getFormItemInitValues(formItems),
       formItems: reactive(formItems),

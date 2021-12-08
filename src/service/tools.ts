@@ -34,3 +34,17 @@ export const createRESTfulAPI = <R = any>(baseUrl: string) => {
 export type FetchersType = ReturnType<typeof createRESTfulAPI>;
 export type FetchersGetType =
   (params?: SearchParams, config?: AxiosRequestConfig<any> | undefined)=> Promise<AxiosResponse<ResponseList<any>, any>>;
+
+// 创建请求函数
+const createGetApi = <T = any, R = any>(path: string) =>
+  (params?: T, config?: AxiosRequestConfig) =>
+    http.get<any, AxiosResponse<Response<R>>>(path, config ? { ...config, params } : { params });
+
+const createPostApi = <T = any, R = any>(path: string) =>
+  (data?: T, config?: AxiosRequestConfig<T>) =>
+    http.post<any, AxiosResponse<Response<R>>>(path, data, config);
+
+export const apiCreater = {
+  get: createGetApi,
+  post: createPostApi,
+};

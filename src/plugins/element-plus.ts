@@ -39,6 +39,7 @@ import {
   ElIcon,
   ElSwitch,
   ElSelectV2,
+  ElCard,
 } from 'element-plus';
 
 // import 'element-plus/dist/index.css';
@@ -84,6 +85,7 @@ const Coms = [
   ElIcon,
   ElSwitch,
   ElSelectV2,
+  ElCard,
 ];
 
 // 设置组件默认值

@@ -12,6 +12,11 @@ export const GROUP_ID_REMOTE_OPTIONS = getRemoteSelectFormItemOptions(apis.based
 });
 
 // 权限
-export const PERMISSION_REMOTE_OPTIONS = getRemoteSelectFormItemOptions(apis.peermission.get, {
+export const PERMISSION_REMOTE_OPTIONS = getRemoteSelectFormItemOptions(apis.system_permission.get, {
   rebuildListField: 'permissions',
+});
+
+// 角色
+export const ROLE_REMOTE_OPTIONS = getRemoteSelectFormItemOptions(apis.system_role.get, {
+  rebuildListField: 'roles',
 });

@@ -126,6 +126,7 @@
 
     <!-- 表单弹框 -->
     <DialogForm
+      v-if="dialog.visible"
       ref="dialogFormRef"
       v-model="dialog.visible"
       :title="dialogTitle"

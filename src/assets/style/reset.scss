@@ -29,10 +29,6 @@ html {
   font-size: var(--el-font-size-extra-small);
 }
 
-.el-select-v2__placeholder {
-  color: var(--el-text-color-placeholder) !important;
-}
-
 // 表单校验失败时的样式
 .el-form-item.is-error .el-select-v2__wrapper {
   border-color: var(--el-color-danger);

@@ -5,7 +5,6 @@
       :apis="apis"
       :form-init-values="formInitValues"
       :form-items="formItems"
-      :row-btns="[]"
       :form-props="{ labelWidth: '100px' }"
       :dialog-props="{ width: '600px' }"
       :show-import-btn="false"
@@ -20,6 +19,7 @@ import { defineComponent, reactive } from 'vue';
 import { apis } from '/@/service';
 import { FormItemSection, ColumnProps } from '/@/components/CompTable/interface';
 import { getFormItemInitValues } from '/@/components/CompTable/util';
+import common from '/@/pages/common';
 
 export default defineComponent({
   name: 'PageBasedataTeamGroup',
@@ -30,12 +30,18 @@ export default defineComponent({
         prop: 'name',
       },
       {
-        label: 'Tag',
-        prop: 'tag',
+        label: '账号',
+        prop: 'account',
       },
       {
-        label: '权限',
-        prop: 'permission',
+        label: '密码',
+        prop: 'password',
+      },
+      {
+        label: '角色',
+        prop: 'roles',
+        customType: 'list',
+        listLabelKey: 'name',
       },
       {
         label: '备注',
@@ -47,14 +53,31 @@ export default defineComponent({
       {
         formItems: [
           { label: '名称', prop: 'name', span: 24, ruleNames: ['required', 'normalLength'] },
-          { label: 'Tag', prop: 'tag', span: 24, ruleNames: ['required', 'normalLength'] },
+          { label: '账号', prop: 'account', span: 24, ruleNames: ['required', 'normalLength'] },
+          { label: '密码', prop: 'password', span: 24, ruleNames: ['required', 'normalLength'] },
+          {
+            label: '角色',
+            prop: 'roles',
+            default: [],
+            span: 24,
+            ruleNames: ['required'],
+            customType: 'remote-select-multi',
+            customOption: {
+              ...common.remote.ROLE_REMOTE_OPTIONS,
+            },
+            valueRebuildHandler: ({ value }) => {
+              return {
+                roles: value ? value.map(it => it.id) : [],
+              };
+            },
+          },
           { label: '备注', prop: 'remark', span: 24, customType: 'textarea' },
         ],
       },
     ];
 
     return {
-      apis: apis.role,
+      apis: apis.system_account,
       columns,
       formInitValues: getFormItemInitValues(formItems),
       formItems: reactive(formItems),

@@ -14,8 +14,8 @@ export default defineComponent({
   components: { SubLayout },
   setup() {
     const subs = reactive<SubMenuOption[]>([
-      { label: '角色管理', path: '/system/role', icon: shallowRef(SetUp) },
       { label: '权限管理', path: '/system/permission', icon: shallowRef(Open) },
+      { label: '角色管理', path: '/system/role', icon: shallowRef(SetUp) },
       { label: '账号管理', path: '/system/account', icon: shallowRef(Key) },
     ]);
 

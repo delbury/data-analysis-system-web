@@ -59,6 +59,7 @@ export default defineComponent({
           {
             label: '权限',
             prop: 'tags',
+            default: [],
             span: 24,
             ruleNames: ['required', 'longerLength', 'tag'],
             customType: 'tags',
@@ -69,7 +70,7 @@ export default defineComponent({
     ];
 
     return {
-      apis: apis.peermission,
+      apis: apis.system_permission,
       columns,
       formInitValues: getFormItemInitValues(formItems),
       formItems: reactive(formItems),
