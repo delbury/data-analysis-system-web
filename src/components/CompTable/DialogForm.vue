@@ -207,7 +207,7 @@
 import { defineComponent, reactive, PropType, ref, computed, watch, nextTick } from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
 import { DialogStatus, FormItemSection, FormInstance, ElFormProps, FormItem } from './interface';
-import { ElDialogProps } from '/@/components/CompDialog/interface';
+import { ElDialogProps } from '~/components/CompDialog/interface';
 import { formRules } from './form-rules';
 import { Warning } from '@element-plus/icons';
 

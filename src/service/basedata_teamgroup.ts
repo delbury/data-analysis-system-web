@@ -1,4 +1,4 @@
-import { TeamGroupTable } from '/@types/db-table-type';
+import { TeamGroupTable } from '~types/db-table-type';
 import { createRESTfulAPI } from './tools';
 
 export default {

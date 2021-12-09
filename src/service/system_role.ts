@@ -1,4 +1,4 @@
-import { RoleTable } from '/@types/db-table-type';
+import { RoleTable } from '~types/db-table-type';
 import { createRESTfulAPI } from './tools';
 
 export default {

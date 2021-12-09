@@ -2,8 +2,8 @@
  * 远程搜索配置
  */
 
-import { apis } from '/@/service';
-import { getRemoteSelectFormItemOptions } from '/@/components/CompTable/util';
+import { apis } from '~/service';
+import { getRemoteSelectFormItemOptions } from '~/components/CompTable/util';
 
 // 班组
 export const GROUP_ID_REMOTE_OPTIONS = getRemoteSelectFormItemOptions(apis.basedata_teamgroup.get, {

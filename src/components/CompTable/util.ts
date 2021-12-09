@@ -1,5 +1,5 @@
 import { ColumnProps, FormItemSection } from './interface';
-import { FetchersGetType } from '/@/service/tools';
+import { FetchersGetType } from '~/service/tools';
 
 // 处理一些预设配置
 export const walkColumnConfig = (columns: ColumnProps[]): ColumnProps[] => {

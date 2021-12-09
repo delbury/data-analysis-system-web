@@ -1,7 +1,7 @@
-import { FormItemSection } from '/@/components/CompTable/interface';
+import { FormItemSection } from '~/components/CompTable/interface';
 import moment from 'moment';
-import { getFormItemInitValues } from '/@/components/CompTable/util';
-import common from '/@/pages/common';
+import { getFormItemInitValues } from '~/components/CompTable/util';
+import common from '~/pages/common';
 
 const DEFAULT_DATE = '1970-01-01';
 

@@ -13,10 +13,10 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
-import { apis } from '/@/service';
-import { FormItemSection, ColumnProps } from '/@/components/CompTable/interface';
-import { getFormItemInitValues } from '/@/components/CompTable/util';
-import common from '/@/pages/common';
+import { apis } from '~/service';
+import { FormItemSection, ColumnProps } from '~/components/CompTable/interface';
+import { getFormItemInitValues } from '~/components/CompTable/util';
+import common from '~/pages/common';
 
 export default defineComponent({
   name: 'PageBasedataTeamGroup',

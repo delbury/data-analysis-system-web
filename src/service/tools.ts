@@ -1,6 +1,6 @@
-import http from '/@/plugins/axios';
+import http from '~/plugins/axios';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ResponseList, Response } from '/@types/Server';
+import { ResponseList, Response } from '~types/Server';
 
 export interface SearchParams {
   all?: number;

@@ -1,4 +1,4 @@
-import { PermissionTable } from '/@types/db-table-type';
+import { PermissionTable } from '~types/db-table-type';
 import { createRESTfulAPI } from './tools';
 
 export default {

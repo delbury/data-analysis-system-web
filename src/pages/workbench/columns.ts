@@ -1,6 +1,6 @@
-import { ColumnProps } from '/@/components/CompTable/interface';
-import { walkColumnConfig } from '/@/components/CompTable/util';
-import common from '/@/pages/common';
+import { ColumnProps } from '~/components/CompTable/interface';
+import { walkColumnConfig } from '~/components/CompTable/util';
+import common from '~/pages/common';
 
 export const getColumns = (): ColumnProps[] => walkColumnConfig([
   {

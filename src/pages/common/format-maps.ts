@@ -2,7 +2,7 @@
  * table 数据渲染用的 formatMap
  * */
 
-import { FormatMapType } from '/@/components/CompTable/interface';
+import { FormatMapType } from '~/components/CompTable/interface';
 
 // 班组类型
 export const GROUP_TYPE_MAP: FormatMapType = {

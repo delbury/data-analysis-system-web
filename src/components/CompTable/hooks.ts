@@ -1,5 +1,5 @@
 import { markRaw, shallowReactive, onMounted, watch, toRef, nextTick, ref } from 'vue';
-import { FetchersType } from '/@/service/tools';
+import { FetchersType } from '~/service/tools';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { ColumnProps } from './interface';
 import { saveFile } from './xlsx/export';

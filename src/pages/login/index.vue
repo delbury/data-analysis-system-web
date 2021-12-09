@@ -51,9 +51,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
-import { formRules } from '/@/components/CompTable/form-rules';
-import { FormInstance } from '/@/components/CompTable/interface';
-import { apis } from '/@/service';
+import { formRules } from '~/components/CompTable/form-rules';
+import { FormInstance } from '~/components/CompTable/interface';
+import { apis } from '~/service';
 
 export default defineComponent({
   name: 'PageLogin',

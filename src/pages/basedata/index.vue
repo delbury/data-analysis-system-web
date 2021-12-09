@@ -5,8 +5,8 @@
 <script lang="ts">
 import { defineComponent, reactive, shallowRef } from 'vue';
 import { User, OfficeBuilding } from '@element-plus/icons';
-import SubLayout from '/@/pages/layout/SubLayout.vue';
-import { SubMenuOption } from '/@/pages/layout/interface';
+import SubLayout from '~/pages/layout/SubLayout.vue';
+import { SubMenuOption } from '~/pages/layout/interface';
 
 
 export default defineComponent({

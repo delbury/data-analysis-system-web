@@ -149,8 +149,8 @@ import CompTableColumn from './CompTableColumn.vue';
 import { ElMessageBox } from 'element-plus';
 import { Plus, Refresh, Upload, Download } from '@element-plus/icons';
 import DialogForm from './DialogForm.vue';
-import { ElDialogProps } from '/@/components/CompDialog/interface';
-import { FetchersType } from '/@/service/tools';
+import { ElDialogProps } from '~/components/CompDialog/interface';
+import { FetchersType } from '~/service/tools';
 import TableSearch from './TableSearch.vue';
 import ColumnConfig from './ColumnConfig.vue';
 

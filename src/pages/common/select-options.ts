@@ -1,7 +1,7 @@
 /**
  * 用于 form 表单 select 填写的选项
  */
-import { LableValue } from '/@/components/CompTable/interface';
+import { LableValue } from '~/components/CompTable/interface';
 type Options = LableValue[];
 
 export const GROUP_TYPE_OPTIONS: Options = [

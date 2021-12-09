@@ -14,7 +14,7 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import { getColumns } from './columns';
-import { apis } from '/@/service';
+import { apis } from '~/service';
 import { FORM_INIT_VALUES, FORM_ITEMS } from './form';
 
 export default defineComponent({

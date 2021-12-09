@@ -1,4 +1,4 @@
-import { AccountTable } from '/@types/db-table-type';
+import { AccountTable } from '~types/db-table-type';
 import { createRESTfulAPI } from './tools';
 
 export default {
