@@ -90,7 +90,7 @@
                   v-model="form[item.prop ?? '']"
                   style="width: 100%;"
                   clearable
-                  :disabled="item.disabled"
+                  :disabled="item.disabled || disabled"
                   v-bind="item.customOption ?? {}"
                 ></el-select-v2>
                 <!-- 远程选择 -->
