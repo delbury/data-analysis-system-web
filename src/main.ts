@@ -8,14 +8,15 @@ import '~/assets/style/index.scss';
 import CompTable from '~/components/CompTable';
 import CompDialog from '~/components/CompDialog/index.vue';
 import CompButton from '~/components/CompButton/index.vue';
-
 // 引入自定义指令
 import Directives from '~/plugins/directives';
+// 引入状态管理
+import { store, key } from '~/store';
 
 const app = createApp(App);
 
 app.config.globalProperties.$ELEMENT = globalOptions;
-app.use(elements).use(router).use(Directives);
+app.use(elements).use(router).use(Directives).use(store, key);
 
 // 注册组件
 const comps = [

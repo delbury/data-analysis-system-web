@@ -54,6 +54,8 @@ import { defineComponent, reactive, ref } from 'vue';
 import { formRules } from '~/components/CompTable/form-rules';
 import { FormInstance } from '~/components/CompTable/interface';
 import { apis } from '~/service';
+import { useStore } from '~/store';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'PageLogin',
@@ -64,6 +66,8 @@ export default defineComponent({
     });
     const logging = ref(false);
     const formRef = ref<FormInstance>();
+    const store = useStore();
+    const router = useRouter();
 
     // 登录
     const handleLogin = () => {
@@ -72,6 +76,10 @@ export default defineComponent({
           try {
             logging.value = true;
             const res = await apis.auth.postLogin({ ...form });
+            if(res.data.data) {
+              store.commit('setUserInfo', res.data.data);
+              router.push('/');
+            }
           } finally {
             logging.value = false;
           }

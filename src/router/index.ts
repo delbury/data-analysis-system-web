@@ -1,4 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { store } from '~/store';
+
+console.log(store);
 
 const routes: RouteRecordRaw[] = [
   {
@@ -64,10 +67,8 @@ const router = createRouter({
 
 // 路由守卫
 router.beforeEach((to, from) => {
-  console.log(to);
-  console.log(from);
   // 判断是否已经登录
-  const isLogin = true;
+  const isLogin = !!store.state.userInfo;
   // 已经登录并且进入登录页面则跳到首页
   if(isLogin && to.path === '/login') return '/';
   if(!isLogin && to.path !== '/login') return '/login';
