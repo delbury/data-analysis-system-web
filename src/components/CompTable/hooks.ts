@@ -42,7 +42,7 @@ const getColumnRenderMap = (columns?: ColumnProps[]) => {
       if(col.formatMap && col.prop) {
         temp[col.prop] = col;
       }
-      walk(col.children);
+      walk(col.subColumns);
     });
   };
   walk(columns);

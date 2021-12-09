@@ -62,8 +62,8 @@
           :key="(item.prop ?? item.label) + index"
         >
           <CompTableColumn
-            :column-prop="{ ...item, children: void 0 }"
-            :children="item.children"
+            :column-prop="{ ...item }"
+            :children="item.subColumns"
           ></CompTableColumn>
         </template>
       </el-table>

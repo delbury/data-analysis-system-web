@@ -20,7 +20,7 @@ export type ColumnProps = Writeable<InstanceType<typeof ElTableColumn>['$props']
   customType?: BaseCustomType | 'list';
   // 当数据为 object list 时，展示的字段 key
   listLabelKey?: string;
-  children?: ColumnProps[];
+  subColumns?: ColumnProps[];
   tip?: string;
   // 格式化展示
   formatMap?: FormatMapType;

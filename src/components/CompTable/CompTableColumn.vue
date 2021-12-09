@@ -22,7 +22,7 @@
       >
         <CompTableColumn
           :column-prop="item"
-          :children="item.children"
+          :children="item.subColumns"
         ></CompTableColumn>
       </template>
     </template>
@@ -54,7 +54,7 @@ export default defineComponent({
   props: {
     children: {
       type: Array as PropType<ColumnProps[]>,
-      default: null,
+      default: void 0,
     },
     columnProp: {
       type: Object as PropType<ColumnProps>,

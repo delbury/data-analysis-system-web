@@ -67,7 +67,7 @@ router.beforeEach((to, from) => {
   console.log(to);
   console.log(from);
   // 判断是否已经登录
-  const isLogin = false;
+  const isLogin = true;
   // 已经登录并且进入登录页面则跳到首页
   if(isLogin && to.path === '/login') return '/';
   if(!isLogin && to.path !== '/login') return '/login';

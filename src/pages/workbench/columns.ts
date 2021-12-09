@@ -154,7 +154,7 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
   {
     label: '培训人数',
     headerAlign: 'center',
-    children: [
+    subColumns: [
       {
         label: '培训人数',
         prop: 'trained_count_manage',

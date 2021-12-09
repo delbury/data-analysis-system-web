@@ -24,7 +24,7 @@ const createHeader = (columns: ColumnProps[]) => {
         list.push(col.prop);
         row[col.prop] = (col.label ?? '') + (col.tip ? `（${col.tip}）` : '');
       }
-      walk(col.children);
+      walk(col.subColumns);
     });
   };
   walk(columns);

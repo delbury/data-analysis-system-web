@@ -40,8 +40,8 @@ export const walkColumnConfig = (columns: ColumnProps[]): ColumnProps[] => {
       col.align = 'right';
     }
     // 遍历嵌套列配置
-    if(Array.isArray(col.children)) {
-      walkColumnConfig(col.children);
+    if(Array.isArray(col.subColumns)) {
+      walkColumnConfig(col.subColumns);
     }
 
     return col;
@@ -160,7 +160,7 @@ export const getSearchConfigs = (columns: ColumnProps[]) => {
         }
       }
 
-      walk(item.children);
+      walk(item.subColumns);
     });
   };
   walk(columns);
