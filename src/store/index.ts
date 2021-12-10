@@ -6,6 +6,7 @@ import { apis } from '~/service';
 export interface IState {
   userInfo: Partial<AccountTable> | null;
   userInfoLoading: boolean;
+  globalLoading: boolean;
 }
 
 export const key: InjectionKey<Store<IState>> = Symbol();
@@ -14,6 +15,7 @@ export const store = createStore<IState>({
   state: {
     userInfo: null,
     userInfoLoading: false,
+    globalLoading: false,
   },
   mutations: {
     clearUserInof(state) {
@@ -24,6 +26,9 @@ export const store = createStore<IState>({
     },
     setUserInfoLoading(state, flag) {
       state.userInfoLoading = flag;
+    },
+    setGlobalLoading(state, flag) {
+      state.globalLoading = flag;
     },
   },
   actions: {

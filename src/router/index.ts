@@ -64,7 +64,7 @@ const router = createRouter({
 });
 
 // 路由守卫
-router.beforeEach(async (to, from, next) => {
+router.beforeResolve(async (to, from, next) => {
   // 判断是否已经登录
   let isLogin = !!store.state.userInfo;
 

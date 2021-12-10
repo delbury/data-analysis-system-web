@@ -6,7 +6,10 @@
       class="loading-wrapper"
     >
     </div>
-    <router-view v-show="!loading"></router-view>
+    <router-view
+      v-show="!loading"
+      v-loading="globalLoading"
+    ></router-view>
   </el-config-provider>
 </template>
 
@@ -27,6 +30,7 @@ export default defineComponent({
     return {
       locale: zhCn,
       loading: computed(() => store.state.userInfoLoading),
+      globalLoading: computed(() => store.state.globalLoading),
     };
   },
 });

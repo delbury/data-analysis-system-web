@@ -30,12 +30,14 @@
 
   <!-- 详情 -->
   <UserInfoDetail
+    v-if="visibility.detail"
     v-model="visibility.detail"
     :user-info="userInfo"
   ></UserInfoDetail>
 
   <!-- 修改密码 -->
   <ModifyPassword
+    v-if="visibility.modify"
     v-model="visibility.modify"
     :user-info="userInfo"
   ></ModifyPassword>
@@ -74,12 +76,12 @@ export default defineComponent({
           '提示',
           { type: 'warning' },
         );
-        store.commit('setUserInfoLoading', true);
+        store.commit('setGlobalLoading', true);
         await apis.auth.postLogout();
         store.commit('clearUserInof');
         router.push('/login');
       } finally {
-        store.commit('setUserInfoLoading', false);
+        store.commit('setGlobalLoading', false);
       }
     };
 

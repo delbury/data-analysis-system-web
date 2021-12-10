@@ -98,8 +98,7 @@ export default defineComponent({
       submitAction: async () => {
         try {
           const res = await formRef.value?.validate();
-          console.log(res);
-          return false;
+          await apis.auth.putModifyPassword({ ...form });
         } catch(e) {
           return false;
         }
