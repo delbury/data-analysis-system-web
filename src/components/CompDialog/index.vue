@@ -13,10 +13,13 @@
 
     <template #footer>
       <slot name="footer">
-        <el-button @click="close()">
-          取消
+        <el-button
+          @click="close()"
+        >
+          {{ readonly ? '关闭' : '取消' }}
         </el-button>
         <el-button
+          v-if="!readonly"
           type="primary"
           :loading="submitting"
           @click="handleSubmit"
@@ -46,6 +49,11 @@ export default defineComponent({
     submitAction: {
       type: Function as PropType<(...args: any) => any>,
       default: null,
+    },
+    // 是否只读
+    readonly: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ['update:modelValue'],

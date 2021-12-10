@@ -4,7 +4,7 @@ import qs from 'qs';
 
 const instance = axios.create({
   baseURL: '/api',
-  timeout: 6000,
+  timeout: 5e3,
   paramsSerializer: params => qs.stringify(
     params,
     {

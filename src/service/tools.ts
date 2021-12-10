@@ -44,7 +44,12 @@ const createPostApi = <T = any, R = any>(path: string) =>
   (data?: T, config?: AxiosRequestConfig<T>) =>
     http.post<any, AxiosResponse<Response<R>>>(path, data, config);
 
+const createPutApi = <T = any, R = any>(path: string) =>
+  (data?: T, config?: AxiosRequestConfig<T>) =>
+    http.put<any, AxiosResponse<Response<R>>>(path, data, config);
+
 export const apiCreater = {
   get: createGetApi,
   post: createPostApi,
+  put: createPutApi,
 };

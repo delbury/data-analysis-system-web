@@ -36,13 +36,12 @@ export default defineComponent({
 .navbar {
   display: flex;
   align-items: center;
-  width: 100%;
   height: 100%;
   color: #fff;
   user-select: none;
 
   .logo {
-    padding: 0 50px;
+    margin-right: 50px;
     font-size: 24px;
     color: inherit;
   }

@@ -20,8 +20,10 @@ html {
 }
 
 // 修复默认时间选择器 icon 样式问题
-.el-date-editor > .el-icon {
-  display: inline-flex;
+.el-input__suffix,
+.el-input__prefix-inner,
+.el-input__suffix-inner {
+  align-items: center;
 }
 
 // select-v2 placeholder 字体大小

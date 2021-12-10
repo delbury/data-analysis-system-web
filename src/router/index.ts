@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { store } from '~/store';
 
-console.log(store);
-
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -31,7 +29,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/system',
         component: () => import('~/pages/system/index.vue'),
-        redirect: '/system/role',
+        redirect: '/system/permission',
         children: [
           {
             path: 'role',
@@ -66,12 +64,20 @@ const router = createRouter({
 });
 
 // 路由守卫
-router.beforeEach((to, from) => {
+router.beforeEach(async (to, from, next) => {
   // 判断是否已经登录
-  const isLogin = !!store.state.userInfo;
+  let isLogin = !!store.state.userInfo;
+
+  if(!isLogin) {
+    // 请求登录信息
+    isLogin = !!(await store.dispatch('getUserInfo'));
+  }
+
   // 已经登录并且进入登录页面则跳到首页
-  if(isLogin && to.path === '/login') return '/';
-  if(!isLogin && to.path !== '/login') return '/login';
+  if(isLogin && to.path === '/login') return next('/');
+  if(!isLogin && to.path !== '/login') return next('/login');
+
+  next();
 });
 
 export default router;

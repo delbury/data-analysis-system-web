@@ -1,5 +1,6 @@
 import { ElTableColumn, ElFormItem, ElForm } from 'element-plus';
 import { FormRuleNames } from './form-rules';
+export { FormItemRule } from 'element-plus/es/components/form/src/form.type';
 
 export type FormInstance = InstanceType<typeof ElForm>
 export type ElFormProps = InstanceType<typeof ElForm>['$props'];
@@ -39,8 +40,6 @@ export type ColumnProps = Writeable<InstanceType<typeof ElTableColumn>['$props']
  * 表单字段配置
  */
 type ElFormItemProps = InstanceType<typeof ElFormItem>['$props'];
-// rule prop 类型
-export type FormItemRule = ElFormItemProps['rules'];
 export type FormItem = ElFormItemProps & {
   // 创建时的默认值
   default?: any;

@@ -11,3 +11,10 @@ export const postLogout = apiCreater.post('/auth/logout');
 
 // 获取用户信息
 export const getUserInfo = apiCreater.get('/auth/info');
+
+// 修改密码
+export const putModifyPassword = apiCreater.put<{
+  oldPassword: string;
+  newPassword: string;
+  newPasswordCheck: string;
+}>('/auth/password');

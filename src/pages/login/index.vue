@@ -19,6 +19,7 @@
             class="login-input"
             placeholder="请输入账号"
             clearable
+            @keypress.enter="handleLogin"
           ></el-input>
         </el-form-item>
         <el-form-item
@@ -32,6 +33,7 @@
             placeholder="请输入密码"
             type="password"
             show-password
+            @keypress.enter="handleLogin"
           ></el-input>
         </el-form-item>
 
@@ -107,10 +109,6 @@ export default defineComponent({
 
   .login-wrapper {
     margin-top: -30vh;
-
-    .el-form-item {
-      padding-right: 0;
-    }
   }
 
   .login-input {

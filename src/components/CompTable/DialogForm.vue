@@ -188,7 +188,7 @@
                 <!-- 文本输入 -->
                 <el-input
                   v-else
-                  v-model.trim="form[item.prop ?? '']"
+                  v-model="form[item.prop ?? '']"
                   :placeholder="disabled ? '' : '请输入'"
                   clearable
                   :disabled="item.disabled"

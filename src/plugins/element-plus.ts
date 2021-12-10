@@ -40,6 +40,11 @@ import {
   ElSwitch,
   ElSelectV2,
   ElCard,
+  ElAvatar,
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem,
+  ElTag,
 } from 'element-plus';
 
 // import 'element-plus/dist/index.css';
@@ -86,6 +91,11 @@ const Coms = [
   ElSwitch,
   ElSelectV2,
   ElCard,
+  ElAvatar,
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem,
+  ElTag,
 ];
 
 // 设置组件默认值
