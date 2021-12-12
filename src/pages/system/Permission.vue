@@ -33,7 +33,7 @@ export default defineComponent({
         prop: 'path',
       },
       {
-        label: '权限',
+        label: '接口权限',
         prop: 'tags',
         customType: 'list',
       },
@@ -57,7 +57,7 @@ export default defineComponent({
             },
           },
           {
-            label: '权限',
+            label: '接口权限',
             prop: 'tags',
             default: [],
             span: 24,

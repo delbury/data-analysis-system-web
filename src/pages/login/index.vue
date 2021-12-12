@@ -78,7 +78,7 @@ export default defineComponent({
           try {
             logging.value = true;
             const res = await apis.auth.postLogin({ ...form });
-            if(res.data.data) {
+            if(res?.data.data) {
               store.commit('setUserInfo', res.data.data);
               router.push('/');
             }

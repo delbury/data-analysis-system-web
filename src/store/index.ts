@@ -21,13 +21,13 @@ export const store = createStore<IState>({
     clearUserInof(state) {
       state.userInfo = null;
     },
-    setUserInfo(state, payload) {
+    setUserInfo(state, payload: IState['userInfo']) {
       state.userInfo = payload;
     },
-    setUserInfoLoading(state, flag) {
+    setUserInfoLoading(state, flag: boolean) {
       state.userInfoLoading = flag;
     },
-    setGlobalLoading(state, flag) {
+    setGlobalLoading(state, flag: boolean) {
       state.globalLoading = flag;
     },
   },
