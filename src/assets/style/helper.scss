@@ -12,6 +12,11 @@
   }
 }
 
+// 禁用
+.cna {
+  cursor: not-allowed !important;
+}
+
 // 抓取
 .grabbing {
   cursor: grabbing !important;

@@ -46,6 +46,14 @@
                 :key="btn.key"
               >
                 <el-tag
+                  v-if="btn.disabled === true || (btn.disabled && btn.disabled(row))"
+                  type="info"
+                  class="cna"
+                >
+                  {{ btn.label }}
+                </el-tag>
+                <el-tag
+                  v-else
                   class="cp"
                   checked
                   @click="handleBtnClick(btn.key, row, $index)"
@@ -144,7 +152,7 @@
 <script lang="ts">
 import { defineComponent, ref, PropType, reactive, computed, watch } from 'vue';
 import { useTableFetcher } from './hooks';
-import { ColumnProps, FormItemSection, DialogStatus, ElFormProps } from './interface';
+import { ColumnProps, FormItemSection, DialogStatus, ElFormProps, RowBtn } from './interface';
 import CompTableColumn from './CompTableColumn.vue';
 import { ElMessageBox } from 'element-plus';
 import { Plus, Refresh, Upload, Download } from '@element-plus/icons';
@@ -191,10 +199,18 @@ function defineGenericComponent<T = any>() {
       rowBtns: {
         default: () => [
           { label: '详情', key: 'default-detail' },
-          { label: '编辑', key: 'default-edit' },
-          { label: '删除', key: 'default-delete' },
+          {
+            label: '编辑',
+            key: 'default-edit',
+            disabled: (row: any) => !!row.is_system,
+          },
+          {
+            label: '删除',
+            key: 'default-delete',
+            disabled: (row: any) => !!row.is_system,
+          },
         ],
-        type: Array as PropType<{ label: string; key: string }[] | null>,
+        type: Array as PropType<RowBtn[] | null>,
       },
       // 表单初始值
       formInitValues: {

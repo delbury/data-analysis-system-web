@@ -6,6 +6,7 @@
       ...dialogProps,
     }"
     :submit-action="submitAction"
+    :readonly="disabled"
     @open="handleOpen"
     @closed="handleClosed"
   >

@@ -77,3 +77,10 @@ export interface FormItemSection {
 
 // 表单弹框状态
 export type DialogStatus = 'create' | 'edit' | 'detail';
+
+// 行按钮配置
+export type RowBtn = {
+  label: string;
+  key: string;
+  disabled?: boolean | ((row: any) => boolean);
+};
