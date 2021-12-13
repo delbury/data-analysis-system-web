@@ -1,59 +1,23 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { store } from '~/store';
+import { AccountTable } from '~types/db-table-type/Account';
+import { dynamicRoutes, filterRoute } from './dynamic-routes';
+import { createLinks } from '~/store/utils';
 
+const ROOT_ROUTE_NAME = 'root';
+const rootRoute: RouteRecordRaw = {
+  path: '/',
+  name: ROOT_ROUTE_NAME,
+  component: () => import('~/pages/layout/index.vue'),
+};
 const routes: RouteRecordRaw[] = [
-  {
-    path: '/',
-    redirect: '/workbench',
-    component: () => import('~/pages/layout/index.vue'),
-    children: [
-      {
-        path: '/workbench',
-        component: () => import('~/pages/workbench/index.vue'),
-      },
-      {
-        path: '/basedata',
-        component: () => import('~/pages/basedata/index.vue'),
-        redirect: '/basedata/staff',
-        children: [
-          {
-            path: 'teamgroup',
-            component: () => import('~/pages/basedata/TeamGroup.vue'),
-          },
-          {
-            path: 'staff',
-            component: () => import('~/pages/basedata/Staff.vue'),
-          },
-        ],
-      },
-      {
-        path: '/system',
-        component: () => import('~/pages/system/index.vue'),
-        redirect: '/system/permission',
-        children: [
-          {
-            path: 'role',
-            component: () => import('~/pages/system/Role.vue'),
-          },
-          {
-            path: 'permission',
-            component: () => import('~/pages/system/Permission.vue'),
-          },
-          {
-            path: 'account',
-            component: () => import('~/pages/system/Account.vue'),
-          },
-        ],
-      },
-    ],
-  },
   {
     path: '/login',
     component: () => import('~/pages/login/index.vue'),
   },
   {
     path: '/:notfound(.*)',
-    redirect: '/',
+    component: () => import('~/pages/error/404.vue'),
   },
 ];
 
@@ -64,18 +28,44 @@ const router = createRouter({
 });
 
 // 路由守卫
-router.beforeResolve(async (to, from, next) => {
+let hasInitRoute = false; // 是否已经初始化路由
+router.beforeEach(async (to, from, next) => {
+  if(to.path === '/login') {
+    return next();
+  }
+
   // 判断是否已经登录
-  let isLogin = !!store.state.userInfo;
+  let info = store.state.userInfo;
+  let isLogin = !!info;
 
   if(!isLogin) {
-    // 请求登录信息
-    isLogin = !!(await store.dispatch('getUserInfo'));
+    // 请求用户信息
+    info = await store.dispatch('getUserInfo') as AccountTable;
+    isLogin = !!info;
+  }
+
+  if(isLogin && !hasInitRoute && info) {
+    hasInitRoute = true;
+    // 构造路由
+    const paths = info.roles?.map(it => it.permissions).flat().map(it => it.path) ?? [];
+
+    // 现有静态 routes 配置根据返回权限转换成动态 routes，设置到 store
+    // 计算顶部 navbar 的导航栏数据及其子页面的导航栏数据
+    const routes = filterRoute(dynamicRoutes, paths);
+    const routeTree = createLinks(routes);
+    // 设置根路由
+    rootRoute.redirect = routeTree[0]?.path ?? '';
+    router.addRoute(rootRoute);
+    routes.forEach(rt => router.addRoute(ROOT_ROUTE_NAME, rt));
+    // 设置路由树
+    store.commit('setRouteTree', routeTree);
+    return next(to.fullPath);
   }
 
   // 已经登录并且进入登录页面则跳到首页
-  if(isLogin && to.path === '/login') return next('/');
-  if(!isLogin && to.path !== '/login') return next('/login');
+  if(!isLogin) {
+    return next('/login');
+  }
 
   next();
 });

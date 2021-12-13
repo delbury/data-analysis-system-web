@@ -41,23 +41,34 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { SubMenuOption } from './interface';
+import { useStore } from '~/store';
 
 export default defineComponent({
   name: 'PageSubLayout',
   props: {
-    subs: {
-      type: Array as PropType<SubMenuOption[]>,
-      default: () => [],
+    rootPath: {
+      type: String,
+      default: '',
+      required: true,
     },
   },
   setup(props) {
     const route = useRoute();
+    const store = useStore();
 
     return {
       route,
+      subs: computed(() => {
+        const root = store.state.routeTree.find(it => it.path === props.rootPath);
+        return root
+          ? (root.subs ?? []).map(it => ({
+            ...it,
+            path: `${props.rootPath}/${it.path}`,
+          }))
+          : [];
+      }),
     };
   },
 });

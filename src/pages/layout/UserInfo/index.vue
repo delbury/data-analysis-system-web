@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from 'vue';
+import { defineComponent, computed, reactive, nextTick } from 'vue';
 import { Avatar } from '@element-plus/icons';
 import { useStore } from '~/store';
 import UserInfoDetail from './UserInfoDetail.vue';
@@ -79,7 +79,7 @@ export default defineComponent({
         store.commit('setGlobalLoading', true);
         await apis.auth.postLogout();
         store.commit('clearUserInof');
-        router.push('/login');
+        window.location.reload();
       } finally {
         store.commit('setGlobalLoading', false);
       }

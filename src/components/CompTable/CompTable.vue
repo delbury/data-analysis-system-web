@@ -45,13 +45,18 @@
                 v-for="btn in rowBtns"
                 :key="btn.key"
               >
-                <el-tag
-                  v-if="btn.disabled === true || (btn.disabled && btn.disabled(row))"
-                  type="info"
-                  class="cna"
+                <el-tooltip
+                  v-if="btn.disabled === true || (btn.disabled && btn.disabled(row, permission))"
+                  :content="typeof btn.tip === 'function' ? btn.tip(row, permission) : btn.tip"
+                  :disabled="!btn.tip"
                 >
-                  {{ btn.label }}
-                </el-tag>
+                  <el-tag
+                    type="info"
+                    class="cna"
+                  >
+                    {{ btn.label }}
+                  </el-tag>
+                </el-tooltip>
                 <el-tag
                   v-else
                   class="cp"
@@ -151,7 +156,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, PropType, reactive, computed, watch } from 'vue';
-import { useTableFetcher } from './hooks';
+import { useTableFetcher, usePermission, PermissionType } from './hooks';
 import { ColumnProps, FormItemSection, DialogStatus, ElFormProps, RowBtn } from './interface';
 import CompTableColumn from './CompTableColumn.vue';
 import { ElMessageBox } from 'element-plus';
@@ -165,18 +170,21 @@ import ColumnConfig from './ColumnConfig.vue';
 const icons = {
   Plus, Refresh, Upload, Download,
 };
-
-type DialogFormInstance = InstanceType<typeof DialogForm>
+type DialogFormInstance = InstanceType<typeof DialogForm>;
 
 export default defineGenericComponent();
-
 function defineGenericComponent<T = any>() {
   return defineComponent({
     name: 'CompTable',
     components: { CompTableColumn, DialogForm, TableSearch, ColumnConfig },
     props: {
-      // 表名
+      // 表名 label
       tableName: {
+        type: String,
+        default: void 0,
+      },
+      // 对应数据库的表名
+      dbTable: {
         type: String,
         default: void 0,
       },
@@ -202,12 +210,16 @@ function defineGenericComponent<T = any>() {
           {
             label: '编辑',
             key: 'default-edit',
-            disabled: (row: any) => !!row.is_system,
+            disabled: (row: any, ps: PermissionType) => !!row.is_system || (ps && !ps.write),
+            tip: (row: any, ps: PermissionType) =>
+              row.is_system ? '系统创建，无法编辑' : ((ps && !ps.write) ? '没有权限' : void 0),
           },
           {
             label: '删除',
             key: 'default-delete',
-            disabled: (row: any) => !!row.is_system,
+            disabled: (row: any, ps: PermissionType) => !!row.is_system || (ps && !ps.write),
+            tip: (row: any, ps: PermissionType) =>
+              row.is_system ? '系统创建，无法删除' : ((ps && !ps.write) ? '没有权限' : void 0),
           },
         ],
         type: Array as PropType<RowBtn[] | null>,
@@ -348,6 +360,9 @@ function defineGenericComponent<T = any>() {
         table.export();
       };
 
+      // 权限控制
+      const permission = usePermission(props.dbTable);
+
       return {
         table,
         handleBtnClick,
@@ -360,6 +375,7 @@ function defineGenericComponent<T = any>() {
         handleSortChange,
         handleSearch,
         handleExport,
+        permission,
       };
     },
   });

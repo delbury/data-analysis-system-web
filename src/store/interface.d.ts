@@ -1,7 +1,8 @@
 import { defineComponent, PropType } from 'vue';
 
-export interface SubMenuOption {
+export type RouteNode = {
   label: string;
   path: string;
   icon?: ReturnType<typeof defineComponent>;
-}
+  subs?: RouteNode[];
+};

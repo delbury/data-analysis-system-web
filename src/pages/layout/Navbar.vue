@@ -16,17 +16,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
+import { useStore } from '~/store';
 
 export default defineComponent({
   name: 'PageLayoutNavbar',
   setup() {
+    const store = useStore();
+
     return {
-      links: [
-        { label: '工作台', path: '/workbench' },
-        { label: '信息管理', path: '/basedata' },
-        { label: '系统管理', path: '/system' },
-      ],
+      links: computed(() => store.state.routeTree),
     };
   },
 });

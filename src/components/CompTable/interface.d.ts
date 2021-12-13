@@ -82,5 +82,6 @@ export type DialogStatus = 'create' | 'edit' | 'detail';
 export type RowBtn = {
   label: string;
   key: string;
-  disabled?: boolean | ((row: any) => boolean);
+  disabled?: boolean | ((row: any, other?: any) => boolean);
+  tip?: string | ((row: any, other?: any) => string);
 };
