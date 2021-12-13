@@ -7,6 +7,7 @@
       :form-items="formItems"
       :dialog-props="{ width: '600px' }"
       :form-props="{ labelWidth: '60px' }"
+      show-id
     >
     </CompTable>
   </div>

@@ -70,6 +70,13 @@
           </template>
         </el-table-column>
 
+        <el-table-column
+          v-if="showId"
+          label="ID"
+          prop="id"
+          width="50px"
+        ></el-table-column>
+
         <template
           v-for="(item, index) in columns"
           :key="(item.prop ?? item.label) + index"
@@ -253,6 +260,11 @@ function defineGenericComponent<T = any>() {
       },
       showExportBtn: {
         default: true,
+        type: Boolean,
+      },
+      // 是否展示 id 列
+      showId: {
+        default: false,
         type: Boolean,
       },
     },

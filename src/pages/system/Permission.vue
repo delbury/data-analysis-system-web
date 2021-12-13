@@ -34,7 +34,17 @@ export default defineComponent({
       },
       {
         label: '接口权限',
-        prop: 'tags',
+        prop: 'apis',
+        customType: 'list',
+      },
+      {
+        label: '数据权限',
+        prop: 'datas',
+        customType: 'list',
+      },
+      {
+        label: '页面元素权限',
+        prop: 'elms',
         customType: 'list',
       },
       {
@@ -58,10 +68,26 @@ export default defineComponent({
           },
           {
             label: '接口权限',
-            prop: 'tags',
+            prop: 'apis',
             default: [],
             span: 24,
             ruleNames: ['required', 'longerLength', 'tag'],
+            customType: 'tags',
+          },
+          {
+            label: '数据权限',
+            prop: 'datas',
+            default: [],
+            span: 24,
+            ruleNames: ['longerLength', 'tag'],
+            customType: 'tags',
+          },
+          {
+            label: '页面元素权限',
+            prop: 'elms',
+            default: [],
+            span: 24,
+            ruleNames: ['longerLength', 'tag'],
             customType: 'tags',
           },
           { label: '备注', prop: 'remark', span: 24, customType: 'textarea' },

@@ -35,7 +35,7 @@ export const store = createStore<IState>({
     // 设置用户信息
     setUserInfo(state, payload: IState['userInfo']) {
       state.userInfo = payload;
-      const ps = new Set(payload?.roles?.map(it => it.permissions).flat().map(it => it.tags).flat());
+      const ps = new Set(payload?.roles?.map(it => it.permissions).flat().map(it => it.apis).flat());
       state.permissionsSet = ps;
     },
     setUserInfoLoading(state, flag: boolean) {
