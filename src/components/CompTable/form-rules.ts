@@ -84,7 +84,7 @@ const pathRule = createRule((rule, value: string, cb) => {
 });
 
 // tag 校验
-const tagReg1 = /^[a-zA-Z][a-zA-Z0-9\.]*[a-zA-Z0-9]$/i;
+const tagReg1 = /^[a-zA-Z][a-zA-Z0-9_\.]*[a-zA-Z0-9]$/i;
 const tagReg2 = /\.\./;
 const tagRule = createRule((r, val, cb) => {
   if(!val?.length) return cb();

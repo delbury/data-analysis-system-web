@@ -254,7 +254,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         },
         formValueChangeHandler: (current, old, form) => {
           if(form) {
-            form.trained_hours_total = current.trained_hours_practice + current.trained_hours_theory;
+            form.trained_hours_total = +((current.trained_hours_practice + current.trained_hours_theory) as number).toPrecision(2);
           }
         },
         ruleNames: ['required', 'notZero'],
@@ -297,8 +297,8 @@ export const FORM_ITEMS: FormItemSection[] = [
         disabled: true,
         formValueChangeHandler: (current, old, form) => {
           if(form) {
-            form.effect_evaluation_score = current.student_evaluation_score * 0.7 +
-              current.maintainer_evaluation_score * 0.3;
+            form.effect_evaluation_score = +((current.student_evaluation_score * 0.7 +
+              current.maintainer_evaluation_score * 0.3) as number).toPrecision(2);
           }
         },
       },
