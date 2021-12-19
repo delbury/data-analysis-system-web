@@ -1,12 +1,12 @@
 <template>
   <el-tooltip
     placement="top"
-    v-bind="tooltipProps"
+    v-bind="{ ...tooltipProps, ref: void 0 }"
     :disabled="disabled || !tip"
     :content="tip"
   >
     <el-button
-      v-bind="buttonProps"
+      v-bind="{ ...buttonProps, ref: void 0 }"
       :disabled="disabled"
       :icon="icon"
       @click="$emit('click')"
