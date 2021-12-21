@@ -15,19 +15,19 @@ export const createRESTfulAPI = <R = any>(baseUrl: string) => {
   return {
     // 查询
     get: (params?: SearchParams & Partial<R>, config?: AxiosRequestConfig<R>) =>
-      http.get<any, AxiosResponse<ResponseList<R>>>(`/${baseUrl}/list/`, config ? { ...config, params } : { params }),
+      http.get<any, AxiosResponse<ResponseList<R>>>(`/${baseUrl}/list`, config ? { ...config, params } : { params }),
     // 查询详情
     getById: (id: string) =>
-      http.get<any, AxiosResponse<ResponseList<R>>>(`/${baseUrl}/list/${id}/`),
+      http.get<any, AxiosResponse<ResponseList<R>>>(`/${baseUrl}/list/${id}`),
     // 新增
     post: (data?: Partial<R>, config?: AxiosRequestConfig<R>) =>
-      http.post<any, AxiosResponse<ResponseList<Response>>>(`/${baseUrl}/list/`, data, config),
+      http.post<any, AxiosResponse<ResponseList<Response>>>(`/${baseUrl}/list`, data, config),
     // 修改
     put: (id?: string, data?: Partial<R>, config?: AxiosRequestConfig<R>) =>
-      http.put<any, AxiosResponse<ResponseList<Response>>>(`/${baseUrl}/list/${id}/`, data, config),
+      http.put<any, AxiosResponse<ResponseList<Response>>>(`/${baseUrl}/list/${id}`, data, config),
     // 删除
     delete: (id: string) =>
-      http.delete<any, AxiosResponse<ResponseList<Response>>>(`/${baseUrl}/list/${id}/`),
+      http.delete<any, AxiosResponse<ResponseList<Response>>>(`/${baseUrl}/list/${id}`),
   };
 };
 
