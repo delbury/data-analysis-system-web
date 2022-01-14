@@ -24,7 +24,7 @@
           :loading="submitting"
           @click="handleSubmit"
         >
-          确定
+          {{ confirmText }}
         </el-button>
       </slot>
     </template>
@@ -54,6 +54,10 @@ export default defineComponent({
     readonly: {
       type: Boolean,
       default: false,
+    },
+    confirmText: {
+      type: String,
+      default: '确定',
     },
   },
   emits: ['update:modelValue'],

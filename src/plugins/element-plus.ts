@@ -45,6 +45,8 @@ import {
   ElDropdownMenu,
   ElDropdownItem,
   ElTag,
+  ElEmpty,
+  ElUpload,
 } from 'element-plus';
 
 // import 'element-plus/dist/index.css';
@@ -96,6 +98,8 @@ const Coms = [
   ElDropdownMenu,
   ElDropdownItem,
   ElTag,
+  ElEmpty,
+  ElUpload,
 ];
 
 // 设置组件默认值
