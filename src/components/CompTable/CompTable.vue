@@ -96,9 +96,7 @@
         <comp-button
           v-if="showCreateBtn"
           :icon="icons.Plus"
-          :button-props="{
-            type: 'primary'
-          }"
+          :button-props="{ type: 'primary' }"
           tip="新增"
           @click="openDialog('create')"
         >
@@ -123,9 +121,7 @@
           v-if="showExportBtn"
           :icon="icons.Download"
           tip="导出"
-          :button-props="{
-            loading: table.exporting
-          }"
+          :button-props="{ loading: table.exporting }"
           @click="handleExport"
         ></comp-button>
 

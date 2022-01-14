@@ -29,7 +29,7 @@
 
     <template
       v-if="!children?.length"
-      #default="{row, column}"
+      #default="{ row, column }"
     >
       <template v-if="resolveTextClassName(row[column.property], row)">
         <span :class="resolveTextClassName(row[column.property], row)">

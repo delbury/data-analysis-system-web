@@ -44,7 +44,7 @@
                 v-bind="{ ...item, ref: void 0 }"
                 :rules="[
                   ...(item.rules ?? []),
-                  ...(item.ruleNames ?? []).map(name => defaultFormRules[name]).filter(it => it)
+                  ...(item.ruleNames ?? []).map(name => defaultFormRules[name]).filter(it => it),
                 ]"
               >
                 <template #label>
