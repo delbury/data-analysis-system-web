@@ -155,6 +155,12 @@
       :loading="table.fetching"
       :form-props="formProps"
     ></DialogForm>
+
+    <!-- 导入预览 -->
+    <ImportPreview
+      v-if="showImportBtn || importExcel.visible"
+      v-model="importExcel.visible"
+    ></ImportPreview>
   </div>
 </template>
 
@@ -170,6 +176,7 @@ import { ElDialogProps } from '~/components/CompDialog/interface';
 import { FetchersType } from '~/service/tools';
 import TableSearch from './TableSearch.vue';
 import ColumnConfig from './ColumnConfig.vue';
+import ImportPreview from './ImportPreview.vue';
 
 const icons = {
   Plus, Refresh, Upload, Download,
@@ -180,7 +187,7 @@ export default defineGenericComponent();
 function defineGenericComponent<T = any>() {
   return defineComponent({
     name: 'CompTable',
-    components: { CompTableColumn, DialogForm, TableSearch, ColumnConfig },
+    components: { CompTableColumn, DialogForm, TableSearch, ColumnConfig, ImportPreview },
     props: {
       // 表名 label
       tableName: {
@@ -267,7 +274,7 @@ function defineGenericComponent<T = any>() {
     },
     emits: ['btn'],
     setup(props, ctx) {
-    // 表格
+      // 表格
       const table = useTableFetcher(props.apis, { columns: props.columns, tableName: props.tableName });
       const dialogFormRef = ref<DialogFormInstance>();
 
@@ -372,6 +379,9 @@ function defineGenericComponent<T = any>() {
       // 权限控制
       const permission = usePermission(props.dbTable);
 
+      // 导入
+      const importExcel = reactive({ visible: true });
+
       return {
         table,
         handleBtnClick,
@@ -385,6 +395,7 @@ function defineGenericComponent<T = any>() {
         handleSearch,
         handleExport,
         permission,
+        importExcel,
       };
     },
   });
