@@ -58,7 +58,7 @@ export type FormItem = Omit<ElFormItemProps, 'rules'> & {
   // info，显示图标，hover显示
   info?: string;
   readonly?: boolean;
-  disabled?: boolean;
+  disabled?: boolean | ((form: any) => boolean);
   // 字段规则，预设的规则
   ruleNames?: FormRuleNames[];
   rules?: Rule | Rule[];
@@ -69,7 +69,7 @@ export type FormItem = Omit<ElFormItemProps, 'rules'> & {
     params: {value: any, key: string, params: Record<string, any>}
   ) => Record<string, any> | void;
   // 表单值改变时的回调
-  formValueChangeHandler?: (current: Record<string, any>, old?: Record<string, any>, form?: Record<string, any>) => void;
+  formValueChangeHandler?: (current: Record<string, any>, old: Record<string, any> | undefined, form: any) => void;
 }
 
 // 表单字段组

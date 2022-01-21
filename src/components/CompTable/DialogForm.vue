@@ -83,7 +83,7 @@
                 <el-switch
                   v-if="item.customType === 'bool'"
                   v-model="form[item.prop ?? '']"
-                  :disabled="item.disabled"
+                  :disabled="formItemDisabled(item.disabled)"
                   inline-prompt
                   active-text="是"
                   inactive-text="否"
@@ -97,7 +97,7 @@
                   v-model="form[item.prop ?? '']"
                   style="width: 100%;"
                   clearable
-                  :disabled="item.disabled || disabled"
+                  :disabled="formItemDisabled(item.disabled)"
                   v-bind="item.customOption ?? {}"
                 ></el-select-v2>
                 <!-- 远程选择 -->
@@ -106,7 +106,7 @@
                   v-model="form[item.prop ?? '']"
                   style="width: 100%;"
                   clearable
-                  :disabled="item.disabled || disabled"
+                  :disabled="formItemDisabled(item.disabled)"
                   filterable
                   remote
                   :multiple="item.customType === 'remote-select-multi'"
@@ -129,7 +129,7 @@
                   multiple
                   default-first-option
                   placeholder="请输入后按回车或选择确定"
-                  :disabled="item.disabled"
+                  :disabled="formItemDisabled(item.disabled)"
                   v-bind="item.customOption ?? {}"
                 ></el-select>
                 <!-- 日期 -->
@@ -140,7 +140,7 @@
                   type="date"
                   :placeholder="disabled ? '' : '请选择日期'"
                   clearable
-                  :disabled="item.disabled"
+                  :disabled="formItemDisabled(item.disabled)"
                   v-bind="item.customOption ?? {}"
                 ></el-date-picker>
                 <!-- 时间 -->
@@ -152,7 +152,7 @@
                   :start-placeholder="disabled ? '' : '开始时间'"
                   :end-placeholder="disabled ? '' : '结束时间'"
                   clearable
-                  :disabled="item.disabled"
+                  :disabled="formItemDisabled(item.disabled)"
                   v-bind="item.customOption ?? {}"
                 ></el-time-picker>
                 <!-- 整数 -->
@@ -161,7 +161,7 @@
                   v-model.number="form[item.prop ?? '']"
                   style="width: 100%;"
                   clearable
-                  :disabled="item.disabled"
+                  :disabled="formItemDisabled(item.disabled)"
                   :min="0"
                   :step="1"
                   step-strictly
@@ -174,7 +174,7 @@
                   v-model.number="form[item.prop ?? '']"
                   style="width: 100%;"
                   clearable
-                  :disabled="item.disabled"
+                  :disabled="formItemDisabled(item.disabled)"
                   :min="0"
                   :precision="2"
                   controls-position="right"
@@ -189,7 +189,7 @@
                   :autosize="{ minRows: 2 }"
                   :placeholder="disabled ? '' : '请输入'"
                   clearable
-                  :disabled="item.disabled"
+                  :disabled="formItemDisabled(item.disabled)"
                   v-bind="item.customOption ?? {}"
                 ></el-input>
                 <!-- 文本输入 -->
@@ -198,7 +198,7 @@
                   v-model="form[item.prop ?? '']"
                   :placeholder="disabled ? '' : '请输入'"
                   clearable
-                  :disabled="item.disabled"
+                  :disabled="formItemDisabled(item.disabled)"
                   v-bind="item.customOption ?? {}"
                 ></el-input>
               </el-form-item>
@@ -391,6 +391,9 @@ export default defineComponent({
       setFormValues,
       defaultFormRules: formRules,
       detail,
+      formItemDisabled: (itemDisabled: boolean | ((form: any) => boolean) = false) => {
+        return disabled.value || typeof itemDisabled === 'boolean' ? itemDisabled : itemDisabled(form);
+      },
     };
   },
 });

@@ -107,6 +107,13 @@ export const FORM_ITEMS: FormItemSection[] = [
         customOption: {
           options: common.opts.TRAIN_WAY1_OPTIONS,
         },
+        formValueChangeHandler: (current, old, form: WorkbenchTable) => {
+          if(form.train_way1 === '理论') {
+            form.trained_hours_practice = 0;
+          } else if(form.train_way1 === '实操') {
+            form.trained_hours_theory = 0;
+          }
+        },
       },
       {
         label: '培训方式2',
@@ -216,12 +223,10 @@ export const FORM_ITEMS: FormItemSection[] = [
           controls: false,
         },
         disabled: true,
-        formValueChangeHandler: (current, old, form) => {
-          if(form) {
-            form.trained_count_total = current.trained_count_manage +
+        formValueChangeHandler: (current, old, form:WorkbenchTable) => {
+          form.trained_count_total = current.trained_count_manage +
               current.trained_count_key + current.trained_count_product +
               current.trained_count_new + current.trained_count_work;
-          }
         },
         ruleNames: ['required', 'notZero'],
       },
@@ -233,6 +238,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         customOption: {
           precision: 1,
         },
+        disabled: (form: WorkbenchTable) => form.train_way1 !== '理论',
       },
       {
         label: '实操课时',
@@ -242,6 +248,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         customOption: {
           precision: 1,
         },
+        disabled: (form: WorkbenchTable) => form.train_way1 !== '实操',
       },
       {
         label: '总课时',
@@ -253,10 +260,8 @@ export const FORM_ITEMS: FormItemSection[] = [
         customOption: {
           precision: 1,
         },
-        formValueChangeHandler: (current, old, form) => {
-          if(form) {
-            form.trained_hours_total = +((current.trained_hours_practice + current.trained_hours_theory) as number).toFixed(2);
-          }
+        formValueChangeHandler: (current, old, form: WorkbenchTable) => {
+          form.trained_hours_total = +((current.trained_hours_practice + current.trained_hours_theory) as number).toFixed(2);
         },
         ruleNames: ['required', 'notZero'],
       },
@@ -277,7 +282,7 @@ export const FORM_ITEMS: FormItemSection[] = [
           validatorWithForm: (form: WorkbenchTable) => (r, val, cb) => {
             const min = Math.ceil(+form.trained_count_total * 2 / 3);
             if(val < min) {
-              return cb(`需要大于${min}（培训总人数的2/3）人`);
+              return cb(`需要不少于${min}（培训总人数的2/3）人`);
             }
             return cb();
           },
@@ -305,11 +310,9 @@ export const FORM_ITEMS: FormItemSection[] = [
           controls: false,
         },
         disabled: true,
-        formValueChangeHandler: (current, old, form) => {
-          if(form) {
-            form.effect_evaluation_score = +((current.student_evaluation_score * 0.7 +
+        formValueChangeHandler: (current, old, form: WorkbenchTable) => {
+          form.effect_evaluation_score = +((current.student_evaluation_score * 0.7 +
               current.maintainer_evaluation_score * 0.3) as number).toFixed(2);
-          }
         },
       },
       {
