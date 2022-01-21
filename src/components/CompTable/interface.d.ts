@@ -1,6 +1,6 @@
 import { ElTableColumn, ElFormItem, ElForm } from 'element-plus';
 import { FormRuleNames } from './form-rules';
-export { FormItemRule } from 'element-plus/es/components/form/src/form.type';
+import { FormItemRule } from 'element-plus/es/components/form/src/form.type';
 
 export type FormInstance = InstanceType<typeof ElForm>
 export type ElFormProps = InstanceType<typeof ElForm>['$props'];
@@ -40,7 +40,11 @@ export type ColumnProps = Writeable<InstanceType<typeof ElTableColumn>['$props']
  * 表单字段配置
  */
 type ElFormItemProps = InstanceType<typeof ElFormItem>['$props'];
-export type FormItem = ElFormItemProps & {
+interface Rule extends FormItemRule {
+  validatorWithForm?: (form: any) => NonNullable<FormItemRule['validator']>;
+}
+export { Rule as FormItemRule };
+export type FormItem = Omit<ElFormItemProps, 'rules'> & {
   // 创建时的默认值
   default?: any;
   // 列宽
@@ -57,6 +61,7 @@ export type FormItem = ElFormItemProps & {
   disabled?: boolean;
   // 字段规则，预设的规则
   ruleNames?: FormRuleNames[];
+  rules?: Rule | Rule[];
   // form表单值提交时处理
   valueSubmitHandler?: (params: {value: any, key: string, form: Record<string, any>}) => Record<string, any> | void;
   // form表单值回显时处理

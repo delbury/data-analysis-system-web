@@ -33,6 +33,7 @@ export default defineComponent({
         label: '类型',
         prop: 'type',
         formatMap: common.maps.GROUP_TYPE_MAP,
+        search: true,
       },
       {
         label: '备注',

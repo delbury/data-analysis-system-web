@@ -2,6 +2,7 @@ import { FormItemSection } from '~/components/CompTable/interface';
 import moment from 'moment';
 import { getFormItemInitValues } from '~/components/CompTable/util';
 import common from '~/pages/common';
+import { WorkbenchTable } from '~types/db-table-type/Workbench';
 
 const DEFAULT_DATE = '1970-01-01';
 
@@ -254,7 +255,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         },
         formValueChangeHandler: (current, old, form) => {
           if(form) {
-            form.trained_hours_total = +((current.trained_hours_practice + current.trained_hours_theory) as number).toPrecision(2);
+            form.trained_hours_total = +((current.trained_hours_practice + current.trained_hours_theory) as number).toFixed(2);
           }
         },
         ruleNames: ['required', 'notZero'],
@@ -272,6 +273,15 @@ export const FORM_ITEMS: FormItemSection[] = [
         prop: 'train_effect_count',
         customType: 'int',
         ruleNames: ['intUnsigned'],
+        rules: [{
+          validatorWithForm: (form: WorkbenchTable) => (r, val, cb) => {
+            const min = Math.ceil(+form.trained_count_total * 2 / 3);
+            if(val < min) {
+              return cb(`需要大于${min}（培训总人数的2/3）人`);
+            }
+            return cb();
+          },
+        }],
       },
       {
         label: '学员评价得分',
@@ -298,7 +308,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         formValueChangeHandler: (current, old, form) => {
           if(form) {
             form.effect_evaluation_score = +((current.student_evaluation_score * 0.7 +
-              current.maintainer_evaluation_score * 0.3) as number).toPrecision(2);
+              current.maintainer_evaluation_score * 0.3) as number).toFixed(2);
           }
         },
       },

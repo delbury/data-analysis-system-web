@@ -43,7 +43,13 @@
               <el-form-item
                 v-bind="{ ...item, ref: void 0 }"
                 :rules="[
-                  ...(item.rules ?? []),
+                  ...(item.rules ?? []).map(it => {
+                    // 传入 form
+                    if(it.validatorWithForm) {
+                      it.validator = it.validatorWithForm(form)
+                    }
+                    return it;
+                  }),
                   ...(item.ruleNames ?? []).map(name => defaultFormRules[name]).filter(it => it),
                 ]"
               >
