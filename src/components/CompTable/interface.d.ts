@@ -87,7 +87,9 @@ export type FormItem = Omit<ElFormItemProps, 'rules'> & {
     params: {value: any, key: string, params: Record<string, any>}
   ) => Record<string, any> | void;
   // 表单值改变时的回调
-  formValueChangeHandler?: (current: Record<string, any>, old: Record<string, any> | undefined, form: any) => void;
+  formValueChangeHandler?: (current: any, form: any, other?: any) => void;
+  // 表单值改变是否 immediate，默认 false
+  immediate?: boolean;
 }
 
 // 表单字段组

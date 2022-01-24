@@ -16,6 +16,7 @@ module.exports = {
     'max-nesting-depth': 2,
     'alpha-value-notation': 'number',
     'color-function-notation': 'legacy',
+    'no-descending-specificity': null,
   },
   defaultSeverity: 'warning',
 };

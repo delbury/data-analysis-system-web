@@ -6,7 +6,7 @@
       ...dialogProps,
     }"
     :submit-action="submitAction"
-    :readonly="disabled"
+    :readonly="readonly"
     @open="handleOpen"
     @closed="handleClosed"
   >
@@ -16,9 +16,9 @@
       v-loading="loading"
       :model="form"
       class="comp-table__form"
-      :class="{ readonly: disabled }"
-      :disabled="disabled"
-      :show-message="!disabled"
+      :class="{ readonly: readonly }"
+      :disabled="readonly"
+      :show-message="!readonly"
     >
       <template
         v-for="(section, index) in formItems"
@@ -99,7 +99,6 @@
                   clearable
                   :disabled="formItemDisabled(item.disabled)"
                   v-bind="item.customOption ?? {}"
-                  @change="(val) => handleSelectChange(val, item)"
                 ></el-select-v2>
                 <!-- 远程选择 -->
                 <el-select-v2
@@ -118,7 +117,6 @@
                       item.customOption?.remoteMethod('', item.customOption)
                     }
                   }"
-                  @change="(val) => handleSelectChange(val, item)"
                 ></el-select-v2>
                 <!-- tags -->
                 <el-select
@@ -140,7 +138,7 @@
                   v-model="form[item.prop ?? '']"
                   style="width: 100%;"
                   type="date"
-                  :placeholder="disabled ? '' : '请选择日期'"
+                  :placeholder="readonly ? '' : '请选择日期'"
                   clearable
                   :disabled="formItemDisabled(item.disabled)"
                   v-bind="item.customOption ?? {}"
@@ -151,8 +149,8 @@
                   v-model="form[item.prop ?? '']"
                   style="width: 100%;"
                   is-range
-                  :start-placeholder="disabled ? '' : '开始时间'"
-                  :end-placeholder="disabled ? '' : '结束时间'"
+                  :start-placeholder="readonly ? '' : '开始时间'"
+                  :end-placeholder="readonly ? '' : '结束时间'"
                   clearable
                   :disabled="formItemDisabled(item.disabled)"
                   v-bind="item.customOption ?? {}"
@@ -189,7 +187,7 @@
                   style="width: 100%;"
                   type="textarea"
                   :autosize="{ minRows: 2 }"
-                  :placeholder="disabled ? '' : '请输入'"
+                  :placeholder="readonly ? '' : '请输入'"
                   clearable
                   :disabled="formItemDisabled(item.disabled)"
                   v-bind="item.customOption ?? {}"
@@ -198,7 +196,7 @@
                 <el-input
                   v-else
                   v-model="form[item.prop ?? '']"
-                  :placeholder="disabled ? '' : '请输入'"
+                  :placeholder="readonly ? '' : '请输入'"
                   clearable
                   :disabled="formItemDisabled(item.disabled)"
                   v-bind="item.customOption ?? {}"
@@ -213,7 +211,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType, ref, computed, watch, nextTick } from 'vue';
+import { defineComponent, reactive, PropType, ref, computed, watch, nextTick, shallowReactive, toRef } from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
 import { DialogStatus, FormItemSection, FormInstance, ElFormProps, FormItem } from './interface';
 import { ElDialogProps } from '~/components/CompDialog/interface';
@@ -264,12 +262,14 @@ export default defineComponent({
     },
   },
   setup(props, ctx) {
+    // 是否加载了详情
+    const isInited = ref(false);
     const form = reactive(cloneDeep(props.formInitValues));
     const formRef = ref<FormInstance | null>(null);
     // 编辑时的数据id
     const dataId = ref<number>();
     // 是否只读
-    const disabled = computed(() => props.status === 'detail');
+    const readonly = computed(() => props.status === 'detail');
     // 已有数据的详情
     const detail = ref<Record<string, any>>();
 
@@ -277,10 +277,11 @@ export default defineComponent({
     const formItemsConfig = computed(() => {
       // 表单 item 配置的 map
       const map: Record<string, FormItem> = {};
-      // 表单 item 的回调列表
+      // // 表单 item 的回调列表
       const cbs: {
         cb: NonNullable<FormItem['formValueChangeHandler']>;
         prop?: string;
+        config: FormItem;
       }[] = [];
 
       props.formItems.forEach(item => {
@@ -291,12 +292,40 @@ export default defineComponent({
             cbs.push({
               prop: it.prop,
               cb: it.formValueChangeHandler,
+              config: it,
             });
           }
         });
       });
       return { map, cbs };
     });
+
+    // 监听
+    const unwatchers = shallowReactive<(() => void)[]>([]);
+    watch(formItemsConfig, (current, old) => {
+      // 解除旧的监听
+      unwatchers.forEach(unwatch => unwatch());
+      unwatchers.length = 0;
+
+      // 详情不做计算
+      if(props.status === 'detail') return;
+
+      // 新增监听
+      current.cbs.forEach(({ cb, prop, config }) => {
+        if(prop && (prop in form)) {
+          const unwatch = watch(toRef(form, prop), (newVal, oldVal) => {
+            if(isInited.value) {
+              const opts = config.customOption?.options;
+              cb(newVal, form, opts?.find(it => it.value === newVal));
+            }
+          }, { immediate: config.immediate });
+          unwatchers.push(unwatch);
+        }
+      });
+    }, {
+      immediate: true,
+    });
+
     // 表单数据处理
     const resolveForm = (form: Record<string, any>) => {
       const temp: Record<string, any> = {};
@@ -355,20 +384,14 @@ export default defineComponent({
           }
         }
       });
+      // 初始化完成
+      nextTick(() => {
+        isInited.value = true;
+      });
     };
 
-    // 监听 form 表单数据改变
-    watch(form, (current, old) => {
-      // 判断是否有需要执行的回调
-      if(formItemsConfig.value.cbs.length) {
-        formItemsConfig.value.cbs.forEach(({ cb, prop }) => {
-          cb(current[prop ?? ''], old?.[prop ?? ''], form);
-        });
-      }
-    }, { deep: true, immediate: true });
-
     return {
-      disabled,
+      readonly,
       form,
       formRef,
       formatLabel: (tip?: string) => {
@@ -388,6 +411,9 @@ export default defineComponent({
       handleOpen: () => {
         nextTick(() => {
           formRef.value?.clearValidate();
+          if(props.status === 'create') {
+            isInited.value = true;
+          }
         });
       },
       handleClosed: () => {
@@ -400,14 +426,7 @@ export default defineComponent({
       defaultFormRules: formRules,
       detail,
       formItemDisabled: (itemDisabled: boolean | ((form: any) => boolean) = false) => {
-        return disabled.value || typeof itemDisabled === 'boolean' ? itemDisabled : itemDisabled(form);
-      },
-      handleSelectChange: (val: any, item: FormItem) => {
-        const cb = item.customOption?.selectChange;
-        if(cb) {
-          const opts = item.customOption?.options;
-          cb(val, opts?.find(it => it.value === val), form);
-        }
+        return typeof itemDisabled === 'boolean' ? itemDisabled : itemDisabled(form);
       },
     };
   },
@@ -424,11 +443,13 @@ export default defineComponent({
       padding-right: 2em;
     }
 
-    &.readonly {
-      :global(.is-disabled *) {
-        color: var(--el-input-font-color, var(--el-text-color-regular)) !important;
-        // background-color: #fff !important;
-      }
+    :global(.is-disabled > *:not(.el-input__prefix):not(.el-input__suffix)),
+    :global(.comp-table__form.readonly .el-select-v2__wrapper) {
+      color: var(--el-input-font-color, var(--el-text-color-regular)) !important;
+      cursor: not-allowed;
+      // background-color: #fff !important;
+      background-color: var(--el-disabled-bg-color) !important;
+      border-color: var(--el-disabled-border-color);
     }
 
     .comp-table__form-section {
