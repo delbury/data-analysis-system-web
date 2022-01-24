@@ -8,6 +8,7 @@
     :submit-action="submitAction"
     :readonly="readonly"
     @open="handleOpen"
+    @opened="handleOpened"
     @closed="handleClosed"
   >
     <el-form
@@ -411,6 +412,10 @@ export default defineComponent({
       handleOpen: () => {
         nextTick(() => {
           formRef.value?.clearValidate();
+        });
+      },
+      handleOpened: () => {
+        nextTick(() => {
           if(props.status === 'create') {
             isInited.value = true;
           }
@@ -421,6 +426,7 @@ export default defineComponent({
         formRef.value?.resetFields();
         dataId.value = void 0;
         detail.value = void 0;
+        isInited.value = false;
       },
       setFormValues,
       defaultFormRules: formRules,

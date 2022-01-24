@@ -5,7 +5,7 @@
   >
     <div class="user-info_wrapper">
       <el-avatar
-        size="medium"
+        size="small"
         :icon="icons.Avatar"
       ></el-avatar>
       <span class="user-info-name">

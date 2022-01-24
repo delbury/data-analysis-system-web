@@ -318,7 +318,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         label: '培训效果评估人数',
         prop: 'train_effect_count',
         customType: 'int',
-        ruleNames: ['intUnsigned'],
+        ruleNames: ['intUnsigned', 'required'],
         rules: [{
           validatorWithForm: (form: WorkbenchTable) => (r, val, cb) => {
             const min = Math.ceil(+form.trained_count_total * 2 / 3);
@@ -333,20 +333,20 @@ export const FORM_ITEMS: FormItemSection[] = [
         label: '学员评价得分',
         prop: 'student_evaluation_score',
         customType: 'float',
-        ruleNames: ['floatUnsigned'],
+        ruleNames: ['floatUnsigned', 'required'],
       },
       {
         label: '项目负责人评价得分',
         prop: 'maintainer_evaluation_score',
         customType: 'float',
-        ruleNames: ['floatUnsigned'],
+        ruleNames: ['floatUnsigned', 'required'],
       },
       {
         label: '培训效果评价得分',
         prop: 'effect_evaluation_score',
         tip: '等于学员评价得分*0.7+项目负责人评价得分*0.3',
         customType: 'float',
-        ruleNames: ['floatUnsigned'],
+        ruleNames: ['floatUnsigned', 'required'],
         customOption: {
           controls: false,
         },
@@ -360,7 +360,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         label: '培训课酬',
         prop: 'course_pay',
         customType: 'float',
-        ruleNames: ['floatUnsigned'],
+        ruleNames: ['floatUnsigned', 'required'],
       },
 
     ],
