@@ -3,6 +3,7 @@ import moment from 'moment';
 import { getFormItemInitValues } from '~/components/CompTable/util';
 import common from '~/pages/common';
 import { WorkbenchTable } from '~types/db-table-type/Workbench';
+import { apis } from '~/service';
 
 const DEFAULT_DATE = '1970-01-01';
 
@@ -67,14 +68,29 @@ export const FORM_ITEMS: FormItemSection[] = [
         },
       },
       {
-        label: '项目编号',
-        prop: 'project_code',
-        ruleNames: ['required'],
-      },
-      {
         label: '培训项目名称',
         prop: 'train_project_name',
         ruleNames: ['required'],
+        customType: 'select',
+        customOption: {
+          options: common.opts.TRAIN_PROJECT_NAME,
+          selectChange: async (val, opt: { other: { code: number } }, form: WorkbenchTable) => {
+            if(val) {
+              const res = apis.workbench.getProjectCode({ project: val, code: opt.other.code });
+              form.project_code = (await res).data.data ?? '';
+            } else {
+              form.project_code = '';
+            }
+          },
+        },
+      },
+      {
+        label: '项目编号',
+        prop: 'project_code',
+        ruleNames: ['required'],
+        customOption: {
+          placeholder: '选择培训项目名称自动生成',
+        },
       },
       {
         label: '培训课程名称',

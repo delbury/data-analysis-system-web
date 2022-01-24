@@ -99,6 +99,7 @@
                   clearable
                   :disabled="formItemDisabled(item.disabled)"
                   v-bind="item.customOption ?? {}"
+                  @change="(val) => handleSelectChange(val, item)"
                 ></el-select-v2>
                 <!-- 远程选择 -->
                 <el-select-v2
@@ -117,6 +118,7 @@
                       item.customOption?.remoteMethod('', item.customOption)
                     }
                   }"
+                  @change="(val) => handleSelectChange(val, item)"
                 ></el-select-v2>
                 <!-- tags -->
                 <el-select
@@ -276,14 +278,20 @@ export default defineComponent({
       // 表单 item 配置的 map
       const map: Record<string, FormItem> = {};
       // 表单 item 的回调列表
-      const cbs: NonNullable<FormItem['formValueChangeHandler']>[] = [];
+      const cbs: {
+        cb: NonNullable<FormItem['formValueChangeHandler']>;
+        prop?: string;
+      }[] = [];
 
       props.formItems.forEach(item => {
         item.formItems.forEach(it => {
           map[it.prop ?? ''] = it;
 
           if(it.formValueChangeHandler) {
-            cbs.push(it.formValueChangeHandler);
+            cbs.push({
+              prop: it.prop,
+              cb: it.formValueChangeHandler,
+            });
           }
         });
       });
@@ -332,17 +340,17 @@ export default defineComponent({
           config.customOption.lastSearchedText = '_inited';
           config.customOption.options = [
             {
-              label: params[config.customOption?.rebuildField?.label],
-              value: params[config.customOption?.rebuildField?.value],
+              label: params[config.customOption?.rebuildField?.label ?? ''],
+              value: params[config.customOption?.rebuildField?.value ?? ''],
             },
           ];
         } else if(config?.customType === 'remote-select-multi' && config.customOption) {
           config.customOption.lastSearchedText = '_inited';
-          const list = params[config.customOption?.rebuildField?.listField];
+          const list = params[config.customOption?.rebuildField?.listField ?? ''];
           if(list?.length) {
             config.customOption.options = list.map(it => ({
-              label: it[config.customOption?.rebuildField?.label],
-              value: it[config.customOption?.rebuildField?.value],
+              label: it[config.customOption?.rebuildField?.label ?? ''],
+              value: it[config.customOption?.rebuildField?.value ?? ''],
             }));
           }
         }
@@ -353,8 +361,8 @@ export default defineComponent({
     watch(form, (current, old) => {
       // 判断是否有需要执行的回调
       if(formItemsConfig.value.cbs.length) {
-        formItemsConfig.value.cbs.forEach(cb => {
-          cb(current, old, form);
+        formItemsConfig.value.cbs.forEach(({ cb, prop }) => {
+          cb(current[prop ?? ''], old?.[prop ?? ''], form);
         });
       }
     }, { deep: true, immediate: true });
@@ -393,6 +401,13 @@ export default defineComponent({
       detail,
       formItemDisabled: (itemDisabled: boolean | ((form: any) => boolean) = false) => {
         return disabled.value || typeof itemDisabled === 'boolean' ? itemDisabled : itemDisabled(form);
+      },
+      handleSelectChange: (val: any, item: FormItem) => {
+        const cb = item.customOption?.selectChange;
+        if(cb) {
+          const opts = item.customOption?.options;
+          cb(val, opts?.find(it => it.value === val), form);
+        }
       },
     };
   },

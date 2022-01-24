@@ -2,13 +2,12 @@
  * 用于 form 表单 select 填写的选项
  */
 import { LableValue } from '~/components/CompTable/interface';
-type Options = LableValue[];
+type Options<T = any> = LableValue<T>[];
 
 export const GROUP_TYPE_OPTIONS: Options = [
   { label: '车间', value: 1 },
   { label: '委外', value: 2 },
 ];
-
 export const TRAIN_LEVEL_OPTIONS: Options = [
   { label: '分公司级', value: '分公司级' },
   { label: '车间级', value: '车间级' },
@@ -48,4 +47,15 @@ export const TRAINER_LEVEL_OPTIONS: Options = [
   { label: '一星', value: 2 },
   { label: '二星', value: 3 },
   { label: '三星', value: 4 },
+];
+export const TRAIN_PROJECT_NAME: Options<{ code: number }> = [
+  { label: '安全类培训', value: '安全类培训', other: { code: 116 }},
+  { label: '车间综合管理类培训', value: '车间综合管理类培训', other: { code: 117 }},
+  { label: '继续教育学时学分制培训', value: '继续教育学时学分制培训', other: { code: 118 }},
+  { label: '综合监控专业知识培训', value: '综合监控专业知识培训', other: { code: 119 }},
+  { label: '消防专业知识培训', value: '消防专业知识培训', other: { code: 120 }},
+  { label: '屏蔽门专业知识培训', value: '屏蔽门专业知识培训', other: { code: 121 }},
+  { label: '电扶梯专业知识培训', value: '电扶梯专业知识培训', other: { code: 122 }},
+  { label: '风水点专业知识培训', value: '风水点专业知识培训', other: { code: 123 }},
+  { label: 'AFC专业知识培训', value: 'AFC专业知识培训', other: { code: 124 }},
 ];

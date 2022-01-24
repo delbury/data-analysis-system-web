@@ -10,7 +10,7 @@ type Writeable<T> = {
 
 type BaseCustomType = 'date' | 'datetime' | 'time' | 'int' | 'float' | 'bool';
 type SearchType = boolean | 'remote';
-export type LableValue = { label: string; value: any; };
+export type LableValue<T = any> = { label: string; value: any; other?: T };
 export type FormatMapType = Record<string, string | { text: string; className?: string }>;
 /**
  * table 展示列配置类型
@@ -43,6 +43,23 @@ type ElFormItemProps = InstanceType<typeof ElFormItem>['$props'];
 interface Rule extends FormItemRule {
   validatorWithForm?: (form: any) => NonNullable<FormItemRule['validator']>;
 }
+type CustomSelectOption = {
+  options?: LableValue[];
+  lastSearchedText?: string;
+  rebuildField?: {
+    listField?: string;
+    label?: string;
+    value?: string;
+  }
+  selectChange?: (val: string, opt: any, form: any) => void;
+}
+type CustomNumberOption = {
+  controls?: boolean;
+  precision?: number;
+}
+type CustomInputOption = {
+  placeholder?: string;
+}
 export { Rule as FormItemRule };
 export type FormItem = Omit<ElFormItemProps, 'rules'> & {
   // 创建时的默认值
@@ -52,7 +69,8 @@ export type FormItem = Omit<ElFormItemProps, 'rules'> & {
   // 输入数据类型
   customType?: BaseCustomType | 'string' | 'select' | 'remote-select' | 'remote-select-multi' | 'timerange' | 'textarea' | 'tags';
   // 输入数据类型组件可选参数
-  customOption?: Record<string, any>;
+  // TODO 考虑拆成 | 形式的类型
+  customOption?: CustomSelectOption & CustomNumberOption & CustomInputOption;
   // tip，同label，超长显示省略号
   tip?: string;
   // info，显示图标，hover显示
