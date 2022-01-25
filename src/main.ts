@@ -15,7 +15,7 @@ import { store, key } from '~/store';
 
 const app = createApp(App);
 
-app.config.globalProperties.$ELEMENT = globalOptions;
+// app.config.globalProperties.$ELEMENT = globalOptions;
 app.use(elements).use(router).use(Directives).use(store, key);
 
 // 注册组件
