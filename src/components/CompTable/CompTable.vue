@@ -1,6 +1,6 @@
 <template>
   <div
-    v-loading="table.loadding"
+    v-loading="table.loading"
     v-drag-scroll="'.el-table__body-wrapper'"
     class="comp-table"
   >

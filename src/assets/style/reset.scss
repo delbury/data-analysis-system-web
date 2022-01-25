@@ -11,7 +11,7 @@ html {
 }
 
 // 按钮样式
-.el-button--mini {
+.el-button--small {
   padding: 7px !important;
 
   .el-icon {
@@ -27,30 +27,13 @@ html {
 }
 
 // select-v2 placeholder 字体大小
-.el-select-v2--mini .el-select-v2__placeholder {
+.el-select-v2--small .el-select-v2__placeholder {
   font-size: var(--el-font-size-extra-small);
 }
 
 // 表单校验失败时的样式
 .el-form-item.is-error .el-select-v2__wrapper {
   border-color: var(--el-color-danger);
-}
-
-// mini 表单样式
-.el-form-item--mini .el-form-item__label {
-  font-size: var(--el-font-size-extra-small);
-}
-
-// el-input-number 右侧按钮样式问题
-.el-input-number--mini.is-controls-right {
-  .el-input-number__decrease,
-  .el-input-number__increase {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 13px !important;
-    line-height: 13px !important;
-  }
 }
 
 // 禁用状态下，select 的鼠标样式

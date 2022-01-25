@@ -30,7 +30,7 @@ interface TableResult {
   pageSize: number;
   list: any[];
   total: number;
-  loadding: boolean; // 获取table数据加载中
+  loading: boolean; // 获取table数据加载中
   fetching: boolean; // 获取详情加载中
   submitting: boolean; // 提交
   exporting: boolean; // 导出中
@@ -96,7 +96,7 @@ export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
     pageNumber: INIT_PARAMS.pageNumber,
     list: [],
     total: 0,
-    loadding: false,
+    loading: false,
     fetching: false,
     exporting: false,
     submitting: false,
@@ -111,12 +111,12 @@ export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
         return;
       }
       try {
-        table.loadding = true;
+        table.loading = true;
         const res = await fetch(params);
         table.list = res.list;
         table.total = res.total;
       } finally {
-        table.loadding = false;
+        table.loading = false;
       }
     }),
     // 删除
