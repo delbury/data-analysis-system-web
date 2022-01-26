@@ -113,5 +113,5 @@ export default plugin;
 
 export const globalOptions = {
   size: 'small',
-  zIndex: 3000,
+  // zIndex: 3000,
 };

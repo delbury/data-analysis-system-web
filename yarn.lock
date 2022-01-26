@@ -964,10 +964,10 @@ electron-to-chromium@^1.3.886:
   resolved "https://registry.npmmirror.com/electron-to-chromium/download/electron-to-chromium-1.3.895.tgz?cache=0&sync_timestamp=1636687289988&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Felectron-to-chromium%2Fdownload%2Felectron-to-chromium-1.3.895.tgz#9b0f8f2e32d8283bbb200156fd5d8dfd775f31ed"
   integrity sha512-9Ww3fB8CWctjqHwkOt7DQbMZMpal2x2reod+/lU4b9axO1XJEDUpPMBxs7YnjLhhqpKXIIB5SRYN/B4K0QpvyQ==
 
-element-plus@^1.3.0-beta.8:
-  version "1.3.0-beta.8"
-  resolved "https://registry.npmmirror.com/element-plus/download/element-plus-1.3.0-beta.8.tgz#1305b1b9bd6ca7e029a85c9173c848f7ebe29260"
-  integrity sha512-PRYzCKKqHoQ5IWpNj0hxPyjjRhaKlQvN0WNPeVrIe4OK7SxsV2Q8lfwIwn0GDYg8uYANTytxkg0Bky8Y+SALOQ==
+element-plus@^1.3.0-beta.9:
+  version "1.3.0-beta.9"
+  resolved "https://registry.npmmirror.com/element-plus/download/element-plus-1.3.0-beta.9.tgz#eb182f30b56003b5b89b2174e6f78b603e246364"
+  integrity sha512-h+I6VVtJNwjVkNhfhXp2oCYjgBN7kWQ2Y6nWzwc0wiphAlQDhGuBXAGj9eYpf1uOrMgIpFFwbRhvK7C6sOJsWg==
   dependencies:
     "@ctrl/tinycolor" "^3.4.0"
     "@element-plus/icons-vue" "^0.2.6"
