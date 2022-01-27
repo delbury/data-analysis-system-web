@@ -110,8 +110,3 @@ const plugin: Plugin = {
   },
 };
 export default plugin;
-
-export const globalOptions = {
-  size: 'small',
-  // zIndex: 3000,
-};

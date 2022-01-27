@@ -52,6 +52,7 @@ type CustomSelectOption = {
     value?: string;
   }
   selectChange?: (val: string, opt: any, form: any) => void;
+  remoteMethod?: (text: string, opt: CustomOption) => void;
 }
 type CustomNumberOption = {
   controls?: boolean;
@@ -60,6 +61,7 @@ type CustomNumberOption = {
 type CustomInputOption = {
   placeholder?: string;
 }
+type CustomOption = CustomSelectOption & CustomNumberOption & CustomInputOption;
 export { Rule as FormItemRule };
 export type FormItem = Omit<ElFormItemProps, 'rules'> & {
   // 创建时的默认值
@@ -70,7 +72,7 @@ export type FormItem = Omit<ElFormItemProps, 'rules'> & {
   customType?: BaseCustomType | 'string' | 'select' | 'remote-select' | 'remote-select-multi' | 'timerange' | 'textarea' | 'tags';
   // 输入数据类型组件可选参数
   // TODO 考虑拆成 | 形式的类型
-  customOption?: CustomSelectOption & CustomNumberOption & CustomInputOption;
+  customOption?: CustomOption;
   // tip，同label，超长显示省略号
   tip?: string;
   // info，显示图标，hover显示

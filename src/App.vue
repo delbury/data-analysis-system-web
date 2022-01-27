@@ -1,5 +1,5 @@
 <template>
-  <el-config-provider :locale="locale" v-bind="globalOptions">
+  <el-config-provider :locale="locale" size="small">
     <div
       v-show="loading"
       v-loading="loading"
@@ -18,7 +18,6 @@ import { defineComponent, computed } from 'vue';
 import { ElConfigProvider } from 'element-plus';
 import zhCn from 'element-plus/lib/locale/lang/zh-cn';
 import { useStore } from '~/store';
-import { globalOptions } from '~/plugins/element-plus';
 
 export default defineComponent({
   name: 'App',
@@ -29,7 +28,6 @@ export default defineComponent({
     const store = useStore();
 
     return {
-      globalOptions,
       locale: zhCn,
       loading: computed(() => store.state.userInfoLoading),
       globalLoading: computed(() => store.state.globalLoading),

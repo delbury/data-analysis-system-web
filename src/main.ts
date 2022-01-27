@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from '~/router';
-import elements, { globalOptions } from './plugins/element-plus';
+import elements from './plugins/element-plus';
 // 引入样式
 import '~/assets/style/index.scss';
 // 自定义组件
@@ -15,7 +15,6 @@ import { store, key } from '~/store';
 
 const app = createApp(App);
 
-// app.config.globalProperties.$ELEMENT = globalOptions;
 app.use(elements).use(router).use(Directives).use(store, key);
 
 // 注册组件

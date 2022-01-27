@@ -44,7 +44,7 @@
               <el-form-item
                 v-bind="{ ...item, ref: void 0 }"
                 :rules="[
-                  ...(item.rules ?? []).map(it => {
+                  ...(Array.isArray(item.rules) ? item.rules : (item.rules ? [item.rules] : [])).map(it => {
                     // 传入 form
                     if(it.validatorWithForm) {
                       it.validator = it.validatorWithForm(form)
@@ -112,10 +112,10 @@
                   remote
                   :multiple="item.customType === 'remote-select-multi'"
                   v-bind="item.customOption ?? {}"
-                  :remote-method="(text) => item.customOption?.remoteMethod(text, item.customOption)"
+                  :remote-method="(text) => item.customOption?.remoteMethod?.(text, item.customOption)"
                   @visible-change="(visible) => {
                     if(visible) {
-                      item.customOption?.remoteMethod('', item.customOption)
+                      item.customOption?.remoteMethod?.('', item.customOption)
                     }
                   }"
                 ></el-select-v2>
