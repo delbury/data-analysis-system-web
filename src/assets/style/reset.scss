@@ -4,6 +4,15 @@ html {
   margin: 0;
 }
 
+a {
+  text-decoration: none;
+}
+
+a:active,
+a:visited {
+  color: currentColor;
+}
+
 /* 覆盖 element-plus 组件样式 */
 // 修复弹框图标样式 bug
 .el-message-box .el-message-box__container .el-message-box__status {
