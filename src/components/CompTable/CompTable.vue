@@ -15,6 +15,7 @@
         :data="table.list"
         height="100%"
         stripe
+        border
         v-bind="$attrs"
         @sort-change="handleSortChange"
       >
