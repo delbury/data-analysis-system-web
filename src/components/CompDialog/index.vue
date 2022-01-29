@@ -12,14 +12,14 @@
     <slot></slot>
 
     <template #footer>
+      <el-button
+        @click="close()"
+      >
+        {{ readonly ? '关闭' : '取消' }}
+      </el-button>
       <slot name="footer">
         <el-button
-          @click="close()"
-        >
-          {{ readonly ? '关闭' : '取消' }}
-        </el-button>
-        <el-button
-          v-if="!readonly"
+          v-if="!readonly && !hiddenDefaultConfirmBtn"
           type="primary"
           :loading="submitting"
           @click="handleSubmit"
@@ -58,6 +58,10 @@ export default defineComponent({
     confirmText: {
       type: String,
       default: '确定',
+    },
+    hiddenDefaultConfirmBtn: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ['update:modelValue'],
