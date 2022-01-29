@@ -1,5 +1,8 @@
 <template>
-  <div v-loading="loading" class="comp-local-table">
+  <div
+    v-loading="loading"
+    class="comp-local-table"
+  >
     <el-table
       ref="tableRef"
       stripe
@@ -15,6 +18,28 @@
         :width="60"
         :index="indexMethod"
       >
+      </el-table-column>
+
+      <el-table-column v-if="showOperation" label="操作" :width="120">
+        <template #default="{ row, $index }">
+          <el-space style="vertical-align: baseline;">
+            <el-tag
+              class="cp"
+              @click="handleEdit(row, $index)"
+            >
+              编辑
+            </el-tag>
+            <el-popconfirm title="确认移除？" @confirm="handleDelete(row, $index)">
+              <template #reference>
+                <el-tag
+                  class="cp"
+                >
+                  删除
+                </el-tag>
+              </template>
+            </el-popconfirm>
+          </el-space>
+        </template>
       </el-table-column>
 
       <slot name="column"></slot>
@@ -66,7 +91,12 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    showOperation: {
+      type: Boolean,
+      default: false,
+    },
   },
+  emits: ['update:data'],
   setup(props, ctx) {
     const table = reactive({
       pageSize: 10,
@@ -89,6 +119,18 @@ export default defineComponent({
       // 每页递增索引
       indexMethod: (index: number) => {
         return (table.pageNumber - 1) * table.pageSize + index + 1;
+      },
+      // 编辑行
+      handleEdit: (row: any, index: number) => {
+        const realindex = (table.pageNumber - 1) * table.pageSize + index;
+        console.log(realindex);
+      },
+      // 删除行
+      handleDelete: (row: any, index: number) => {
+        const realindex = (table.pageNumber - 1) * table.pageSize + index;
+        const newData = [...props.data];
+        newData.splice(realindex, 1);
+        ctx.emit('update:data', newData);
       },
     };
   },

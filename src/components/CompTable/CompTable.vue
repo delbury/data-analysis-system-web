@@ -1,7 +1,6 @@
 <template>
   <div
     v-loading="table.loading"
-    v-drag-scroll="'.el-table__body-wrapper'"
     class="comp-table"
   >
     <!-- 搜索条件 -->
@@ -41,7 +40,7 @@
           fixed="left"
         >
           <template #default="{ row, $index }">
-            <el-space>
+            <el-space style="vertical-align: baseline;">
               <template
                 v-for="btn in rowBtns"
                 :key="btn.key"
