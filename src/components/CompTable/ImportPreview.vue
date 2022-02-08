@@ -26,7 +26,7 @@
             :multiple="false"
             :limit="1"
           >
-            <el-button type="primary" size="large" :icon="Upload">
+            <el-button type="primary" size="large" :icon="icons.Upload">
               导入excel
             </el-button>
           </el-upload>
@@ -45,8 +45,55 @@
             </el-checkbox>
           </el-space>
 
+          <!-- tips -->
+          <div class="tips color-info fs-s">
+            <div>导入时默认过滤所有合并单元格存在的行/列，以及空行</div>
+            <div>
+              当前表单需要字段数量：<span class="color-primary">{{ counts.total }}</span>个，未分配：
+              <span class="color-error">{{ counts.unassigned }}</span>个
 
-          <span class="color-info fs-s">Tips：导入时默认过滤所有合并单元格存在的行/列，以及空行</span>
+              <!-- 查看映射关系 -->
+              <el-popover
+                title="字段列映射详情"
+                placement="left"
+                trigger="click"
+                width="fit-content"
+              >
+                <template #reference>
+                  <el-button class="tip-btn" type="text">
+                    查看
+                  </el-button>
+                </template>
+
+                <ul class="popover-list">
+                  <li
+                    v-for="(it, index) in formItemFlatList"
+                    :key="it.prop + index"
+                    class="popover-list__item"
+                  >
+                    <span class="popover-list__label label" :class="{ required: isRequired(it) }">
+                      <form-label :item="it"></form-label>
+                    </span>
+                    <span class="sym"><el-icon class="color-primary"><right /></el-icon></span>
+                    <span class="info">
+                      <el-select
+                        v-model="formFieldColMap[it.prop]"
+                        :teleported="false"
+                        clearable
+                        @change="(val) => handleFieldColMapChange(val, it.prop)"
+                      >
+                        <template v-for="col in columns" :key="col.prop">
+                          <el-option :value="col.prop">
+                            {{ col.label }}
+                          </el-option>
+                        </template>
+                      </el-select>
+                    </span>
+                  </li>
+                </ul>
+              </el-popover>
+            </div>
+          </div>
         </div>
 
         <comp-local-table
@@ -68,6 +115,42 @@
             stripe: false,
           }"
         >
+          <template #column-header="config">
+            <div class="flex-center-h">
+              <span class="line label">{{ config.column.label }}</span>
+
+              <el-popover
+                placement="bottom"
+                trigger="click"
+                width="fit-content"
+              >
+                <template #reference>
+                  <el-button
+                    :class="[formColFieldsMap[config.column.property]?.length ? 'color-primary' : 'color-info']"
+                    type="text"
+                    :icon="icons.Link"
+                  >
+                    {{ formColFieldsMap[config.column.property]?.length }}
+                  </el-button>
+                </template>
+
+                <el-select
+                  v-model="formColFieldsMap[config.column.property]"
+                  multiple
+                  clearable
+                  style="width: 240px;"
+                  :teleported="false"
+                  @change="(val) => handleColFieldsMapChange(val, config.column.property)"
+                >
+                  <template v-for="item in formItemFlatList" :key="item.prop">
+                    <el-option :value="item.prop" :label="item.label">
+                      <span class="label fs-n" :class="{ required: isRequired(item) }">{{ item.label }}</span>
+                    </el-option>
+                  </template>
+                </el-select>
+              </el-popover>
+            </div>
+          </template>
         </comp-local-table>
       </template>
     </div>
@@ -75,25 +158,38 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef, ref, computed, nextTick } from 'vue';
-import { Upload, Warning, ArrowLeft } from '@element-plus/icons';
+import { defineComponent, shallowRef, ref, computed, nextTick, PropType, reactive, watch } from 'vue';
+import { Upload, Warning, Right, Link } from '@element-plus/icons';
 import { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults';
 import { UploadFile } from 'element-plus/es/components/upload/src/upload.type';
 import { resolveFile, ResolvedTable } from './xlsx/import';
 import { ElMessage, ElTable, ElMessageBox } from 'element-plus';
 import _cloneDeep from 'lodash/cloneDeep';
+import _difference from 'lodash/difference';
+import { FormItemSection, FormItem } from './interface';
+import FormLabel from './FormLabel.vue';
 type TableColumn = Partial<TableColumnCtx<Record<string, unknown>>>;
 type TableInstance = InstanceType<typeof ElTable>;
 
+const icons = {
+  Upload,
+  Link,
+};
+
 export default defineComponent({
-  components: { Warning },
+  components: { Warning, Right, FormLabel },
   props: {
     value: {
       type: Boolean,
       default: false,
     },
+    // 表单字段
+    formItems: {
+      default: () => [],
+      type: Array as PropType<FormItemSection[]>,
+    },
   },
-  setup() {
+  setup(props) {
     const localTableRef = ref<{ tableRef: TableInstance }>();
     // 当前步骤
     // 上传文件(upload) -> 预览(preview) -> 编辑(preview)
@@ -109,8 +205,8 @@ export default defineComponent({
     const columns = computed<TableColumn[]>(() => currentTable.value?.header.map(it => ({
       label: it,
       prop: it,
-    })) ?? [],
-    );
+      minWidth: 120,
+    })) ?? []);
     // 数据
     const currentTableData = computed(() => currentTable.value?.data ?? []);
     const editData = shallowRef<ResolvedTable['data']>([]);
@@ -171,7 +267,29 @@ export default defineComponent({
       }
     };
 
+    // 创建表单的所需要的字段列表
+    // 数据字段(1) -> 表格列(1)，映射关系
+    const formFieldColMap = reactive<Record<string, { colkey: string; }>>({});
+    const formFieldColMapBak = shallowRef<Record<string, { colkey: string; }>>({});
+    // 表格列(1) -> 数据字段(n)，映射关系
+    const formColFieldsMap = reactive<Record<string, string[]>>({});
+    const formColFieldsMapBak = shallowRef<Record<string, string[]>>({});
+    // form-item 展平列表
+    const formItemFlatList = computed(() => props.formItems.flatMap(it => it.formItems));
+
     return {
+      // 计数信息
+      counts: computed(() => {
+        const total = formItemFlatList.value.length;
+        const assigned = Object.values(formFieldColMap).filter(it => it).length;
+        return {
+          unassigned: total - assigned,
+          total,
+        };
+      }),
+      formFieldColMap,
+      formColFieldsMap,
+      formItemFlatList,
       localTableRef,
       currentStep,
       isMergedCell,
@@ -181,12 +299,13 @@ export default defineComponent({
       editData,
       currentTableData,
       columns,
-      Upload,
-      ArrowLeft,
+      icons,
+      // 导入文件
       handleFileChange: (file: UploadFile, fileList: UploadFile[]) => {
         fileList.length = 0;
         loading.value = true;
-        nextTick(async () => {
+        // 延迟展示 loading 图标
+        setTimeout(async () => {
           try {
             const resolvedTables = await resolveFile(file.raw);
             tables.value = resolvedTables;
@@ -196,15 +315,22 @@ export default defineComponent({
           } catch(e) {
             ElMessage.error('解析文件出错');
           } finally {
-            loading.value = false;
+            window.requestIdleCallback(() => {
+              loading.value = false;
+            });
           }
-        });
+        }, 100);
       },
       handleTableChange: (tableName: string) => {
-        currentTableName.value = tableName;
-        nextTick(() => {
+        loading.value = true;
+        // 延迟展示 loading 图标
+        setTimeout(() => {
+          currentTableName.value = tableName;
           localTableRef.value?.tableRef.doLayout();
-        });
+          window.requestIdleCallback(() => {
+            loading.value = false;
+          });
+        }, 100);
       },
       spanMethod,
       // 上一步
@@ -222,6 +348,35 @@ export default defineComponent({
           default: return '导入数据';
         }
       }),
+      // 是否是必选的字段
+      isRequired: (item: FormItem): boolean => {
+        if(item.ruleNames?.length && item.ruleNames.includes('required')) {
+          return true;
+        }
+        if(item.rules) {
+          if(Array.isArray(item.rules)) {
+            return item.rules.findIndex(it => it.required) > -1;
+          } else {
+            return !!item.rules.required;
+          }
+        }
+        return false;
+      },
+      // 数据字段 -> 表格列，改变时同步改变，表格列 -> 数据字段
+      handleFieldColMapChange: (curVal: string, key: string) => {
+        // formFieldColMap[key]
+        // console.log(val, key);
+      },
+      // 表格列-> 数据字段，改变时同步改变，数据字段 ->  表格列
+      handleColFieldsMapChange: (curVal: string, key: string) => {
+        // formColFieldsMap --> formFieldColMap
+        const oldVal = formColFieldsMapBak.value[key] ?? [];
+        const addList = _difference(curVal, oldVal);
+        const removeList = _difference(oldVal, curVal);
+        console.log(oldVal, curVal);
+        console.log(addList, removeList);
+        formColFieldsMapBak.value = _cloneDeep(formColFieldsMap);
+      },
     };
   },
 });
@@ -230,5 +385,89 @@ export default defineComponent({
 <style lang="scss" scoped>
 .tools-row {
   margin-bottom: 10px;
+}
+
+.tips {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  > * {
+    display: flex;
+    align-items: center;
+  }
+
+  .tip-btn {
+    height: unset;
+    padding: 0 !important;
+    margin-left: 5px;
+  }
+}
+
+.label {
+  position: relative;
+  padding-left: 0.75em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &.required::before {
+    position: absolute;
+    left: 0;
+    color: var(--el-color-danger);
+    content: '*';
+  }
+}
+
+.popover-list {
+  max-height: 75vh;
+  padding-right: 1em;
+  overflow-y: auto;
+  font-size: $fs-s;
+
+  .btn-close {
+    position: absolute;
+    right: 12px;
+    width: 1em;
+    height: 1em;
+    padding: 0 !important;
+    font-size: 16px;
+    color: var(--el-color-info);
+    background: 0 0;
+    border-width: 0;
+    outline: none;
+    transform: translateY(-28px);
+  }
+
+  .popover-list__item {
+    display: flex;
+    align-items: center;
+    padding: 2px 0;
+    border-top: var(--el-border-base);
+
+    &:last-of-type {
+      border-bottom: var(--el-border-base);
+    }
+
+    &:hover {
+      background: var(--el-bg-color);
+    }
+  }
+
+  .popover-list__label {
+    display: inline-flex;
+    flex: 3;
+  }
+
+  .sym {
+    display: inline-flex;
+    margin: 0 1em;
+  }
+
+  .info {
+    display: inline-flex;
+    justify-content: flex-end;
+    width: 100px;
+  }
 }
 </style>
