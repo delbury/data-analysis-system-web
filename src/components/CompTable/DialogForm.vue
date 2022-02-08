@@ -55,29 +55,7 @@
                 ]"
               >
                 <template #label>
-                  <span class="label-wrapper">
-                    <span>{{ item.label }}</span>
-
-                    <el-tooltip
-                      v-if="!!item.tip"
-                      :content="item.tip"
-                      :disabled="item.tip.length <= 4"
-                    >
-                      <span>{{ formatLabel(item.tip) }}</span>
-                    </el-tooltip>
-
-                    <span
-                      v-if="!!item.info"
-                      class="info"
-                    >
-                      <el-tooltip
-                        v-if="!!item.info"
-                        :content="item.info"
-                      >
-                        <el-icon class="info-icon"><warning /></el-icon>
-                      </el-tooltip>
-                    </span>
-                  </span>
+                  <form-label :item="item"></form-label>
                 </template>
 
                 <!-- 开关 -->
@@ -217,10 +195,10 @@ import cloneDeep from 'lodash/cloneDeep';
 import { DialogStatus, FormItemSection, FormInstance, ElFormProps, FormItem } from './interface';
 import { ElDialogProps } from '~/components/CompDialog/interface';
 import { formRules } from './form-rules';
-import { Warning } from '@element-plus/icons';
+import FormLabel from './FormLabel.vue';
 
 export default defineComponent({
-  components: { Warning },
+  components: { FormLabel },
   props: {
     title: {
       type: String,
@@ -395,10 +373,6 @@ export default defineComponent({
       readonly,
       form,
       formRef,
-      formatLabel: (tip?: string) => {
-        if(!tip) return '';
-        return `(${tip.length < 4 ? tip : tip.slice(0, 4) + '...'})`;
-      },
       submitAction: async() => {
         try {
           if(props.status !== 'detail') {

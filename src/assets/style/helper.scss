@@ -12,6 +12,11 @@
   }
 }
 
+// 单行文本
+.line {
+  white-space: nowrap;
+}
+
 // 禁用
 .cna {
   cursor: not-allowed !important;
@@ -40,4 +45,8 @@
 .flex-sb {
   display: flex;
   justify-content: space-between;
+}
+
+.flex-item {
+  flex: 1;
 }

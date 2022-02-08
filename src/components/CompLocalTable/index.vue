@@ -49,6 +49,9 @@
           show-overflow-tooltip
           v-bind="col"
         >
+          <template #header="config">
+            <slot name="column-header" v-bind="config"></slot>
+          </template>
         </el-table-column>
       </template>
     </el-table>

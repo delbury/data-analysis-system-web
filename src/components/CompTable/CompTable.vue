@@ -159,6 +159,7 @@
     <ImportPreview
       v-if="showImportBtn || importExcel.visible"
       v-model="importExcel.visible"
+      :form-items="formItems"
     ></ImportPreview>
   </div>
 </template>

@@ -8,10 +8,38 @@
 
 @each $name, $color in $color-map {
   .color-#{$name} {
-    color: $color;
+    color: $color !important;
   }
 }
 
 .fs-s {
-  font-size: 12px;
+  font-size: $fs-s !important;
+}
+
+.fs-n {
+  font-size: $fs-n !important;
+}
+
+.pd {
+  padding: 10px !important;
+}
+
+.pd-v {
+  padding: 10px 0 !important;
+}
+
+.pd-h {
+  padding: 0 10px !important;
+}
+
+.mg {
+  margin: 10px !important;
+}
+
+.mg-v {
+  margin: 10px 0 !important;
+}
+
+.mg-h {
+  margin: 0 10px !important;
 }
