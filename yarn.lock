@@ -452,18 +452,18 @@
   resolved "https://registry.npmmirror.com/@vue/shared/download/@vue/shared-3.2.26.tgz#7acd1621783571b9a82eca1f041b4a0a983481d9"
   integrity sha512-vPV6Cq+NIWbH5pZu+V+2QHE9y1qfuTq49uNWw4f7FDEeZaDU2H2cx5jcUZOAKW7qTrUS4k6qZPbMy1x4N96nbA==
 
-"@vueuse/core@^7.5.4":
-  version "7.5.4"
-  resolved "https://registry.npmmirror.com/@vueuse/core/download/@vueuse/core-7.5.4.tgz#c515c6795f1b8ab9a50e62e2f1aa75aac5f1ca14"
-  integrity sha512-PKmyHN2lZuttGgKmsoMMqiSojSYYKraszilP0gpQIGcLt2YoLABaG3VFjdPs2tY6DM+HG3o70HuzOMEQCY8fqQ==
+"@vueuse/core@^7.5.5":
+  version "7.5.5"
+  resolved "https://registry.npmmirror.com/@vueuse/core/-/core-7.5.5.tgz#c2f2a8783de0884acfb0be25e71ec3c6d1f9c42e"
+  integrity sha512-RBDqmIoGfak4h3xdXa/Av+ibkb8NY044wEy6+PG2FAWNaID8/FkqmSFjbxogrbmpSX1yZ1PBHrM8DUp/FrIpbg==
   dependencies:
-    "@vueuse/shared" "7.5.4"
+    "@vueuse/shared" "7.5.5"
     vue-demi "*"
 
-"@vueuse/shared@7.5.4":
-  version "7.5.4"
-  resolved "https://registry.npmmirror.com/@vueuse/shared/download/@vueuse/shared-7.5.4.tgz#4285e5c47fe5f2d608f115bf2aa26154f474e881"
-  integrity sha512-750RnGUEgg1+K4jGVkv7M5UOStAa/IjAInV6BugyBOvRYL2l1lcIDUi4V/qIKTlhd2oUAByCEnlqIpFD2a3tfw==
+"@vueuse/shared@7.5.5":
+  version "7.5.5"
+  resolved "https://registry.npmmirror.com/@vueuse/shared/-/shared-7.5.5.tgz#0e5c16b848b4a19e5b9ee9199a997e1f6dd39679"
+  integrity sha512-mzzTsotHQRPnPAChy8iCv6ek/90CKYhAFyMRgNsMxpT0afZJkbMO/X0OaOu/1NuGbgb8UVjlsWKmCUgKTOF5hA==
   dependencies:
     vue-demi "*"
 
@@ -981,15 +981,15 @@ electron-to-chromium@^1.3.886:
   resolved "https://registry.npmmirror.com/electron-to-chromium/download/electron-to-chromium-1.3.895.tgz?cache=0&sync_timestamp=1636687289988&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Felectron-to-chromium%2Fdownload%2Felectron-to-chromium-1.3.895.tgz#9b0f8f2e32d8283bbb200156fd5d8dfd775f31ed"
   integrity sha512-9Ww3fB8CWctjqHwkOt7DQbMZMpal2x2reod+/lU4b9axO1XJEDUpPMBxs7YnjLhhqpKXIIB5SRYN/B4K0QpvyQ==
 
-element-plus@^1.3.0-beta.9:
-  version "1.3.0-beta.9"
-  resolved "https://registry.npmmirror.com/element-plus/download/element-plus-1.3.0-beta.9.tgz#eb182f30b56003b5b89b2174e6f78b603e246364"
-  integrity sha512-h+I6VVtJNwjVkNhfhXp2oCYjgBN7kWQ2Y6nWzwc0wiphAlQDhGuBXAGj9eYpf1uOrMgIpFFwbRhvK7C6sOJsWg==
+element-plus@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmmirror.com/element-plus/-/element-plus-2.0.1.tgz#0ac58a45454bc17558f66b477e0233bddc18b7be"
+  integrity sha512-Cdx3JhbMNGwVsU12DUewIltJ1hUYVSgx2iBB8AuNzzOxAqcxSA9e7p2lfNp8oCBQeh4ThRSaOkdLnJyO4mS3qQ==
   dependencies:
     "@ctrl/tinycolor" "^3.4.0"
     "@element-plus/icons-vue" "^0.2.6"
     "@popperjs/core" "^2.11.2"
-    "@vueuse/core" "^7.5.4"
+    "@vueuse/core" "^7.5.5"
     async-validator "^4.0.7"
     dayjs "^1.10.7"
     lodash "^4.17.21"
