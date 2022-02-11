@@ -176,7 +176,7 @@ import { ElDialogProps } from '~/components/CompDialog/interface';
 import { FetchersType } from '~/service/tools';
 import TableSearch from './TableSearch.vue';
 import ColumnConfig from './ColumnConfig.vue';
-import ImportPreview from './ImportPreview.vue';
+import ImportPreview from './ImportPreview/index.vue';
 
 const icons = {
   Plus, Refresh, Upload, Download,
