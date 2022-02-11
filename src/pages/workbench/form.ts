@@ -69,6 +69,7 @@ export const FORM_ITEMS: FormItemSection[] = [
             date: moment(value).format('YYYY-MM-DD HH:mm:ss'),
           };
         },
+        importDefaultCol: 'B',
       },
       {
         label: '培训时间',
@@ -90,6 +91,7 @@ export const FORM_ITEMS: FormItemSection[] = [
           };
         },
         formValueChangeHandler: totalHourHandler,
+        importDefaultCol: { start_time: 'C', end_time: 'D' },
       },
       {
         label: '培训方式1',
@@ -100,6 +102,7 @@ export const FORM_ITEMS: FormItemSection[] = [
           options: common.opts.TRAIN_WAY1_OPTIONS,
         },
         formValueChangeHandler: totalHourHandler,
+        importDefaultCol: 'L',
       },
       {
         label: '理论课时',
@@ -112,6 +115,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         // disabled: (form: WorkbenchTable) => form.train_way1 !== '理论',
         disabled: true,
         // formValueChangeHandler: totalHourHandler,
+        importDefaultCol: 'AC',
       },
       {
         label: '实操课时',
@@ -124,6 +128,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         // disabled: (form: WorkbenchTable) => form.train_way1 !== '实操',
         disabled: true,
         // formValueChangeHandler: totalHourHandler,
+        importDefaultCol: 'AD',
       },
       {
         label: '总课时',
@@ -137,6 +142,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         },
         ruleNames: ['required', 'notZero'],
         formValueChangeHandler: salaryHandler,
+        importDefaultCol: 'AE',
       },
     ],
   },
@@ -149,6 +155,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         disabled: true,
         ruleNames: ['required'],
         default: '运营一分公司',
+        importDefaultCol: 'E',
       },
       {
         label: '组织部门',
@@ -156,6 +163,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         disabled: true,
         ruleNames: ['required'],
         default: '机电三车间',
+        importDefaultCol: 'F',
       },
       {
         label: '培训开展班组',
@@ -182,6 +190,7 @@ export const FORM_ITEMS: FormItemSection[] = [
             form.project_code = '';
           }
         },
+        importDefaultCol: 'H',
       },
       {
         label: '项目编号',
@@ -190,11 +199,13 @@ export const FORM_ITEMS: FormItemSection[] = [
         customOption: {
           placeholder: '选择培训项目名称自动生成',
         },
+        importDefaultCol: 'G',
       },
       {
         label: '培训课程名称',
         prop: 'train_course_name',
         ruleNames: ['required'],
+        importDefaultCol: 'I',
       },
       {
         label: '培训层级',
@@ -204,6 +215,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         customOption: {
           options: common.opts.TRAIN_LEVEL_OPTIONS,
         },
+        importDefaultCol: 'J',
       },
       {
         label: '培训内容',
@@ -213,6 +225,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         customOption: {
           options: common.opts.TRAIN_CONTENT_OPTIONS,
         },
+        importDefaultCol: 'K',
       },
       {
         label: '培训方式2',
@@ -222,6 +235,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         customOption: {
           options: common.opts.TRAIN_WAY2_OPTIONS,
         },
+        importDefaultCol: 'M',
       },
       {
         label: '培训形式',
@@ -231,6 +245,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         customOption: {
           options: common.opts.TRAIN_TYPE_OPTION,
         },
+        importDefaultCol: 'N',
       },
       {
         label: '培训线别',
@@ -241,21 +256,25 @@ export const FORM_ITEMS: FormItemSection[] = [
           options: common.opts.TRAIN_CLASS_OPTIONS,
 
         },
+        importDefaultCol: 'O',
       },
       {
         label: '培训项目负责人',
         prop: 'maintainer',
         ruleNames: ['required'],
+        importDefaultCol: 'P',
       },
       {
         label: '培训负责人工号',
         prop: 'maintainer_code',
         ruleNames: ['required'],
+        importDefaultCol: 'Q',
       },
       {
         label: '培训地点',
         prop: 'train_place',
         ruleNames: ['required'],
+        importDefaultCol: 'R',
       },
     ],
   },
@@ -266,11 +285,13 @@ export const FORM_ITEMS: FormItemSection[] = [
         label: '培训师',
         prop: 'trainer',
         ruleNames: ['required'],
+        importDefaultCol: 'S',
       },
       {
         label: '培训师工号/外部师资编号',
         prop: 'trainer_code',
         ruleNames: ['required'],
+        importDefaultCol: 'T',
       },
       {
         label: '培训师星级',
@@ -281,6 +302,7 @@ export const FORM_ITEMS: FormItemSection[] = [
           options: common.opts.TRAINER_LEVEL_OPTIONS,
         },
         formValueChangeHandler: salaryHandler,
+        importDefaultCol: 'U',
       },
       {
         label: '培训师所属单位',
@@ -288,6 +310,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         default: '机电三车间',
         disabled: true,
         ruleNames: ['required'],
+        importDefaultCol: 'V',
       },
     ],
   },
@@ -300,6 +323,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         customType: 'int',
         tip: '管理和业务技术',
         formValueChangeHandler: totalTrainedHandler,
+        importDefaultCol: 'W',
       },
       {
         label: '培训人数',
@@ -307,6 +331,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         customType: 'int',
         tip: '行车关键岗位：司机、行车值班员',
         formValueChangeHandler: totalTrainedHandler,
+        importDefaultCol: 'X',
       },
       {
         label: '培训人数',
@@ -314,6 +339,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         customType: 'int',
         tip: '生产人员：非行车关键岗位',
         formValueChangeHandler: totalTrainedHandler,
+        importDefaultCol: 'Y',
       },
       {
         label: '培训人数',
@@ -321,6 +347,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         customType: 'int',
         tip: '未持证人员：新员工、实习生等',
         formValueChangeHandler: totalTrainedHandler,
+        importDefaultCol: 'Z',
       },
       {
         label: '培训人数',
@@ -328,6 +355,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         customType: 'int',
         tip: '工勤',
         formValueChangeHandler: totalTrainedHandler,
+        importDefaultCol: 'AA',
       },
       {
         label: '培训总人数',
@@ -339,6 +367,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         },
         disabled: true,
         ruleNames: ['required', 'notZero'],
+        importDefaultCol: 'AB',
       },
     ],
   },
@@ -362,6 +391,7 @@ export const FORM_ITEMS: FormItemSection[] = [
             return cb();
           },
         }],
+        importDefaultCol: 'AF',
       },
       {
         label: '学员评价得分',
@@ -369,6 +399,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         customType: 'float',
         ruleNames: ['floatUnsigned', 'required'],
         formValueChangeHandler: trainEffectScore,
+        importDefaultCol: 'AG',
       },
       {
         label: '项目负责人评价得分',
@@ -376,6 +407,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         customType: 'float',
         ruleNames: ['floatUnsigned', 'required'],
         formValueChangeHandler: trainEffectScore,
+        importDefaultCol: 'AH',
       },
       {
         label: '培训效果评价得分',
@@ -387,6 +419,7 @@ export const FORM_ITEMS: FormItemSection[] = [
           controls: false,
         },
         disabled: true,
+        importDefaultCol: 'AI',
       },
       {
         label: '培训课酬',
@@ -394,8 +427,8 @@ export const FORM_ITEMS: FormItemSection[] = [
         customType: 'float',
         ruleNames: ['floatUnsigned', 'required'],
         info: '培训师星级系数 * 培训课时',
+        importDefaultCol: 'AJ',
       },
-
     ],
   },
   {
@@ -406,6 +439,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         prop: 'remark',
         span: 24,
         customType: 'textarea',
+        importDefaultCol: 'AK',
       },
     ],
   },

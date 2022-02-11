@@ -50,7 +50,8 @@
             <div>导入时默认过滤所有合并单元格存在的行/列，以及空行</div>
             <div>
               当前表单需要字段数量：<span class="color-primary">{{ counts.total }}</span>个，未分配：
-              <span class="color-error">{{ counts.unassigned }}</span>个
+              <span class="color-error">{{ counts.unassigned }}</span>个，未分配必填：
+              <span class="color-error">{{ counts.unassignedRequired }}</span>个
 
               <!-- 查看映射关系 -->
               <el-popover
@@ -162,12 +163,12 @@ import { defineComponent, shallowRef, ref, computed, nextTick, PropType, reactiv
 import { Upload, Warning, Right, Link } from '@element-plus/icons';
 import { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults';
 import { UploadFile } from 'element-plus/es/components/upload/src/upload.type';
-import { resolveFile, ResolvedTable } from './xlsx/import';
+import { resolveFile, ResolvedTable } from '../xlsx/import';
 import { ElMessage, ElTable, ElMessageBox } from 'element-plus';
 import _cloneDeep from 'lodash/cloneDeep';
-import _difference from 'lodash/difference';
-import { FormItemSection, FormItem } from './interface';
-import FormLabel from './FormLabel.vue';
+import { FormItemSection, FormItem } from '../interface';
+import FormLabel from '../FormLabel.vue';
+import { useConfigCol } from './useConfigCol';
 type TableColumn = Partial<TableColumnCtx<Record<string, unknown>>>;
 type TableInstance = InstanceType<typeof ElTable>;
 
@@ -177,6 +178,7 @@ const icons = {
 };
 
 export default defineComponent({
+  name: 'ImportPreview',
   components: { Warning, Right, FormLabel },
   props: {
     value: {
@@ -267,29 +269,8 @@ export default defineComponent({
       }
     };
 
-    // 创建表单的所需要的字段列表
-    // 数据字段(1) -> 表格列(1)，映射关系
-    const formFieldColMap = reactive<Record<string, { colkey: string; }>>({});
-    const formFieldColMapBak = shallowRef<Record<string, { colkey: string; }>>({});
-    // 表格列(1) -> 数据字段(n)，映射关系
-    const formColFieldsMap = reactive<Record<string, string[]>>({});
-    const formColFieldsMapBak = shallowRef<Record<string, string[]>>({});
-    // form-item 展平列表
-    const formItemFlatList = computed(() => props.formItems.flatMap(it => it.formItems));
-
     return {
-      // 计数信息
-      counts: computed(() => {
-        const total = formItemFlatList.value.length;
-        const assigned = Object.values(formFieldColMap).filter(it => it).length;
-        return {
-          unassigned: total - assigned,
-          total,
-        };
-      }),
-      formFieldColMap,
-      formColFieldsMap,
-      formItemFlatList,
+      ...useConfigCol(props.formItems),
       localTableRef,
       currentStep,
       isMergedCell,
@@ -348,35 +329,6 @@ export default defineComponent({
           default: return '导入数据';
         }
       }),
-      // 是否是必选的字段
-      isRequired: (item: FormItem): boolean => {
-        if(item.ruleNames?.length && item.ruleNames.includes('required')) {
-          return true;
-        }
-        if(item.rules) {
-          if(Array.isArray(item.rules)) {
-            return item.rules.findIndex(it => it.required) > -1;
-          } else {
-            return !!item.rules.required;
-          }
-        }
-        return false;
-      },
-      // 数据字段 -> 表格列，改变时同步改变，表格列 -> 数据字段
-      handleFieldColMapChange: (curVal: string, key: string) => {
-        // formFieldColMap[key]
-        // console.log(val, key);
-      },
-      // 表格列-> 数据字段，改变时同步改变，数据字段 ->  表格列
-      handleColFieldsMapChange: (curVal: string, key: string) => {
-        // formColFieldsMap --> formFieldColMap
-        const oldVal = formColFieldsMapBak.value[key] ?? [];
-        const addList = _difference(curVal, oldVal);
-        const removeList = _difference(oldVal, curVal);
-        console.log(oldVal, curVal);
-        console.log(addList, removeList);
-        formColFieldsMapBak.value = _cloneDeep(formColFieldsMap);
-      },
     };
   },
 });
