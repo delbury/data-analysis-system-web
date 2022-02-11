@@ -2,8 +2,12 @@ import { FormItemSection } from '~/components/CompTable/interface';
 import moment from 'moment';
 import { getFormItemInitValues } from '~/components/CompTable/util';
 import common from '~/pages/common';
-import { WorkbenchTable } from '~types/db-table-type/Workbench';
+import { WorkbenchTable as RawWorkbenchTable } from '~types/db-table-type/Workbench';
 import { apis } from '~/service';
+
+interface WorkbenchTable extends RawWorkbenchTable {
+  start_end_time?: [Date, Date];
+}
 
 const DEFAULT_DATE = '1970-01-01';
 
@@ -17,9 +21,22 @@ const TRAINER_LEVEL_SALARY_MAP: Record<number, number> = {
 };
 // 总培训课时
 const totalHourHandler = (current: number, form: WorkbenchTable) => {
-  const total = +((form.trained_hours_practice ?? 0) + (form.trained_hours_theory ?? 0)).toFixed(2);
-  form.trained_hours_total = total;
-  form.course_pay = total * (TRAINER_LEVEL_SALARY_MAP[form.trainer_level] ?? 0);
+  if(!form.start_end_time) {
+    form.trained_hours_practice = 0;
+    form.trained_hours_theory = 0;
+  }
+  let duration: number = (form.start_end_time?.[1].valueOf() ?? 0) - (form.start_end_time?.[0].valueOf() ?? 0);
+  duration = +(duration / 1000 / 3600).toFixed(2);
+
+  if(form.train_way1 === '理论') {
+    form.trained_hours_practice = 0;
+    form.trained_hours_theory = duration;
+  } else if(form.train_way1 === '实操') {
+    form.trained_hours_theory = 0;
+    form.trained_hours_practice = duration;
+  }
+  form.trained_hours_total = duration;
+  form.course_pay = duration * (TRAINER_LEVEL_SALARY_MAP[form.trainer_level] ?? 0);
 };
 // 总培训人数
 const totalTrainedHandler = (current: number, form: WorkbenchTable) => {
@@ -35,7 +52,7 @@ const salaryHandler = (current: number, form: WorkbenchTable) => {
 // 表单字段配置
 export const FORM_ITEMS: FormItemSection[] = [
   {
-    title: '培训计划',
+    title: '时间信息',
     formItems: [
       {
         label: '日期',
@@ -67,7 +84,60 @@ export const FORM_ITEMS: FormItemSection[] = [
             ],
           };
         },
+        formValueChangeHandler: totalHourHandler,
       },
+      {
+        label: '培训方式1',
+        prop: 'train_way1',
+        ruleNames: ['required'],
+        customType: 'select',
+        customOption: {
+          options: common.opts.TRAIN_WAY1_OPTIONS,
+        },
+        formValueChangeHandler: totalHourHandler,
+      },
+      {
+        label: '理论课时',
+        prop: 'trained_hours_theory',
+        tip: '小时',
+        customType: 'float',
+        customOption: {
+          precision: 1,
+        },
+        // disabled: (form: WorkbenchTable) => form.train_way1 !== '理论',
+        disabled: true,
+        // formValueChangeHandler: totalHourHandler,
+      },
+      {
+        label: '实操课时',
+        prop: 'trained_hours_practice',
+        tip: '小时',
+        customType: 'float',
+        customOption: {
+          precision: 1,
+        },
+        // disabled: (form: WorkbenchTable) => form.train_way1 !== '实操',
+        disabled: true,
+        // formValueChangeHandler: totalHourHandler,
+      },
+      {
+        label: '总课时',
+        prop: 'trained_hours_total',
+        tip: '小时',
+        info: '等于理论课时与实操课时之和',
+        customType: 'float',
+        disabled: true,
+        customOption: {
+          precision: 1,
+        },
+        ruleNames: ['required', 'notZero'],
+        formValueChangeHandler: salaryHandler,
+      },
+    ],
+  },
+  {
+    title: '培训主体',
+    formItems: [
       {
         label: '开展单位',
         prop: 'company',
@@ -140,22 +210,6 @@ export const FORM_ITEMS: FormItemSection[] = [
         },
       },
       {
-        label: '培训方式1',
-        prop: 'train_way1',
-        ruleNames: ['required'],
-        customType: 'select',
-        customOption: {
-          options: common.opts.TRAIN_WAY1_OPTIONS,
-        },
-        formValueChangeHandler: (current, form: WorkbenchTable) => {
-          if(form.train_way1 === '理论') {
-            form.trained_hours_practice = 0;
-          } else if(form.train_way1 === '实操') {
-            form.trained_hours_theory = 0;
-          }
-        },
-      },
-      {
         label: '培训方式2',
         prop: 'train_way2',
         ruleNames: ['required'],
@@ -198,6 +252,11 @@ export const FORM_ITEMS: FormItemSection[] = [
         prop: 'train_place',
         ruleNames: ['required'],
       },
+    ],
+  },
+  {
+    title: '培训师信息',
+    formItems: [
       {
         label: '培训师',
         prop: 'trainer',
@@ -225,6 +284,11 @@ export const FORM_ITEMS: FormItemSection[] = [
         disabled: true,
         ruleNames: ['required'],
       },
+    ],
+  },
+  {
+    title: '培训人数',
+    formItems: [
       {
         label: '培训人数',
         prop: 'trained_count_manage',
@@ -270,41 +334,6 @@ export const FORM_ITEMS: FormItemSection[] = [
         },
         disabled: true,
         ruleNames: ['required', 'notZero'],
-      },
-      {
-        label: '理论课时',
-        prop: 'trained_hours_theory',
-        tip: '小时',
-        customType: 'float',
-        customOption: {
-          precision: 1,
-        },
-        disabled: (form: WorkbenchTable) => form.train_way1 !== '理论',
-        formValueChangeHandler: totalHourHandler,
-      },
-      {
-        label: '实操课时',
-        prop: 'trained_hours_practice',
-        tip: '小时',
-        customType: 'float',
-        customOption: {
-          precision: 1,
-        },
-        disabled: (form: WorkbenchTable) => form.train_way1 !== '实操',
-        formValueChangeHandler: totalHourHandler,
-      },
-      {
-        label: '总课时',
-        prop: 'trained_hours_total',
-        tip: '小时',
-        info: '等于理论课时与实操课时之和',
-        customType: 'float',
-        disabled: true,
-        customOption: {
-          precision: 1,
-        },
-        ruleNames: ['required', 'notZero'],
-        formValueChangeHandler: salaryHandler,
       },
     ],
   },
@@ -361,6 +390,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         prop: 'course_pay',
         customType: 'float',
         ruleNames: ['floatUnsigned', 'required'],
+        info: '培训师星级系数 * 培训课时',
       },
 
     ],
