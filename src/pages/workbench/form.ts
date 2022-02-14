@@ -25,7 +25,7 @@ const totalHourHandler = (current: number, form: WorkbenchTable) => {
     form.trained_hours_practice = 0;
     form.trained_hours_theory = 0;
   }
-  let duration: number = (form.start_end_time?.[1].valueOf() ?? 0) - (form.start_end_time?.[0].valueOf() ?? 0);
+  let duration: number = (form.start_end_time?.[1]?.valueOf() ?? 0) - (form.start_end_time?.[0]?.valueOf() ?? 0);
   duration = +(duration / 1000 / 3600).toFixed(2);
 
   if(form.train_way1 === '理论') {
@@ -85,13 +85,13 @@ export const FORM_ITEMS: FormItemSection[] = [
         valueRebuildHandler: ({ params }) => {
           return {
             start_end_time: [
-              `${params.date ?? DEFAULT_DATE} ${params.start_time}`,
-              `${params.date ?? DEFAULT_DATE} ${params.end_time}`,
+              new Date(`${params.date ?? DEFAULT_DATE} ${params.start_time}`),
+              new Date(`${params.date ?? DEFAULT_DATE} ${params.end_time}`),
             ],
           };
         },
         formValueChangeHandler: totalHourHandler,
-        importDefaultCol: { start_time: 'C', end_time: 'D' },
+        importDefaultCol: { start_time: { col: 'C', label: '开始时间' }, end_time: { col: 'D', label: '结束时间' }},
       },
       {
         label: '培训方式1',

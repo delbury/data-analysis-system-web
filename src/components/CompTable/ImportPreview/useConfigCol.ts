@@ -21,7 +21,8 @@ export const useConfigCol = (sections: FormItemSection[]) => {
     const res = sections.flatMap(section =>
       section.formItems.map(item => {
         if(!item.importDefaultCol || typeof item.importDefaultCol === 'string') return item;
-        return Object.entries(item.importDefaultCol).map(([fld, col]) => ({ ...item, prop: fld, importDefaultCol: col }));
+        return Object.entries(item.importDefaultCol).map(([fld, col]) =>
+          ({ ...item, label: col.label, prop: fld, importDefaultCol: col.col }));
       }),
     ).flat();
     return res;
@@ -47,7 +48,7 @@ export const useConfigCol = (sections: FormItemSection[]) => {
         setMap(item.prop, item.importDefaultCol);
       } else {
         // 一对多，手动映射关系
-        Object.entries(item.importDefaultCol).forEach(([fld, col]) => setMap(fld, col));
+        Object.entries(item.importDefaultCol).forEach(([fld, col]) => setMap(fld, col.col));
       }
     });
     backupFieldColMap();
@@ -136,4 +137,19 @@ export const useConfigCol = (sections: FormItemSection[]) => {
       backupFieldColMap();
     },
   };
+};
+
+
+// 构造编辑数据
+export const createEditData = (source: Record<string, string>[], colFieldsMap: Record<string, string[]>) => {
+  const newData = source.map(row => {
+    const newRow: Record<string, string> = {};
+    Object.entries(row).forEach(([col, val]) => {
+      if(col in colFieldsMap) {
+        colFieldsMap[col].forEach(it => (newRow[it] = val));
+      }
+    });
+    return newRow;
+  });
+  return newData;
 };

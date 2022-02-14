@@ -97,14 +97,23 @@
           </div>
         </div>
 
+        <!-- 编辑预览 -->
         <comp-local-table
           v-if="currentStep === 'edit'"
           key="edit"
           v-model:data="editData"
-          :columns="columns"
+          :columns="formItemFlatList"
           show-operation
         >
+          <template #column-header="config">
+            <div class="flex-center-v">
+              <span>{{ `(${formFieldColMap[config.column.property] ?? '-'})` }}</span>
+              <span> {{ config.column.label }}</span>
+            </div>
+          </template>
         </comp-local-table>
+
+        <!-- 导入预览 -->
         <comp-local-table
           v-else
           key="preview"
@@ -165,10 +174,9 @@ import { TableColumnCtx } from 'element-plus/es/components/table/src/table-colum
 import { UploadFile } from 'element-plus/es/components/upload/src/upload.type';
 import { resolveFile, ResolvedTable } from '../xlsx/import';
 import { ElMessage, ElTable, ElMessageBox } from 'element-plus';
-import _cloneDeep from 'lodash/cloneDeep';
 import { FormItemSection, FormItem } from '../interface';
 import FormLabel from '../FormLabel.vue';
-import { useConfigCol } from './useConfigCol';
+import { useConfigCol, createEditData } from './useConfigCol';
 type TableColumn = Partial<TableColumnCtx<Record<string, unknown>>>;
 type TableInstance = InstanceType<typeof ElTable>;
 
@@ -260,7 +268,8 @@ export default defineComponent({
           // length > 1，因为至少存在一个 __rowNum__ 字段
             (!mergedRows?.size || !mergedRows.has(index)) && Object.keys(row).length > 1,
           );
-          editData.value = _cloneDeep(willEditData);
+          // 处理映射关系
+          editData.value = createEditData(willEditData, formConfig.formColFieldsMap);
           // 进入编辑阶段
           currentStep.value = 'edit';
         } catch(e) {
@@ -269,8 +278,10 @@ export default defineComponent({
       }
     };
 
+    const formConfig = useConfigCol(props.formItems);
+
     return {
-      ...useConfigCol(props.formItems),
+      ...formConfig,
       localTableRef,
       currentStep,
       isMergedCell,
@@ -292,7 +303,7 @@ export default defineComponent({
             tables.value = resolvedTables;
             currentTableName.value = resolvedTables[0]?.name ?? '';
             currentStep.value = 'preview';
-            // handleNext();
+            handleNext();
           } catch(e) {
             ElMessage.error('解析文件出错');
           } finally {

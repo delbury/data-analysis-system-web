@@ -50,7 +50,9 @@
           v-bind="col"
         >
           <template #header="config">
-            <slot name="column-header" v-bind="config"></slot>
+            <slot name="column-header" v-bind="config">
+              {{ col.label }}
+            </slot>
           </template>
         </el-table-column>
       </template>

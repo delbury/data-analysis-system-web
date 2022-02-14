@@ -93,7 +93,7 @@ export type FormItem = Omit<ElFormItemProps, 'rules'> & {
   // 表单值改变是否 immediate，默认 false
   immediate?: boolean;
   // 导入 excel 预览时，默认的列映射，一对一，或一对多 (field, column)
-  importDefaultCol?: string | Record<string, string>;
+  importDefaultCol?: string | Record<string, { label: string; col: string; }>;
 }
 
 // 表单字段组
