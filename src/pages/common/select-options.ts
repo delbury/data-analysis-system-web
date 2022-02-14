@@ -56,6 +56,6 @@ export const TRAIN_PROJECT_NAME: Options<{ code: number }> = [
   { label: '消防专业知识培训', value: '消防专业知识培训', other: { code: 120 }},
   { label: '屏蔽门专业知识培训', value: '屏蔽门专业知识培训', other: { code: 121 }},
   { label: '电扶梯专业知识培训', value: '电扶梯专业知识培训', other: { code: 122 }},
-  { label: '风水点专业知识培训', value: '风水点专业知识培训', other: { code: 123 }},
+  { label: '风水电专业知识培训', value: '风水电专业知识培训', other: { code: 123 }},
   { label: 'AFC专业知识培训', value: 'AFC专业知识培训', other: { code: 124 }},
 ];
