@@ -171,7 +171,7 @@ import { ColumnProps, FormItemSection, DialogStatus, ElFormProps, RowBtn } from 
 import CompTableColumn from './CompTableColumn.vue';
 import { ElMessageBox } from 'element-plus';
 import { Plus, Refresh, Upload, Download } from '@element-plus/icons';
-import DialogForm from './DialogForm.vue';
+import DialogForm from './DialogForm/index.vue';
 import { ElDialogProps } from '~/components/CompDialog/interface';
 import { FetchersType } from '~/service/tools';
 import TableSearch from './TableSearch.vue';

@@ -58,128 +58,12 @@
                   <form-label :item="item"></form-label>
                 </template>
 
-                <!-- 开关 -->
-                <el-switch
-                  v-if="item.customType === 'bool'"
+                <dialog-form-item
                   v-model="form[item.prop ?? '']"
-                  :disabled="formItemDisabled(item.disabled)"
-                  inline-prompt
-                  active-text="是"
-                  inactive-text="否"
-                  :active-value="1"
-                  :inactive-value="0"
-                  v-bind="item.customOption ?? {}"
-                ></el-switch>
-                <!-- 选择 -->
-                <el-select-v2
-                  v-else-if="item.customType === 'select'"
-                  v-model="form[item.prop ?? '']"
-                  style="width: 100%;"
-                  clearable
-                  :disabled="formItemDisabled(item.disabled)"
-                  v-bind="item.customOption ?? {}"
-                ></el-select-v2>
-                <!-- 远程选择 -->
-                <el-select-v2
-                  v-else-if="item.customType === 'remote-select' || item.customType === 'remote-select-multi'"
-                  v-model="form[item.prop ?? '']"
-                  style="width: 100%;"
-                  clearable
-                  :disabled="formItemDisabled(item.disabled)"
-                  filterable
-                  remote
-                  :multiple="item.customType === 'remote-select-multi'"
-                  v-bind="item.customOption ?? {}"
-                  :remote-method="(text) => item.customOption?.remoteMethod?.(text, item.customOption)"
-                  @visible-change="(visible) => {
-                    if(visible) {
-                      item.customOption?.remoteMethod?.('', item.customOption)
-                    }
-                  }"
-                ></el-select-v2>
-                <!-- tags -->
-                <el-select
-                  v-else-if="item.customType === 'tags'"
-                  v-model="form[item.prop ?? '']"
-                  style="width: 100%;"
-                  clearable
-                  allow-create
-                  filterable
-                  multiple
-                  default-first-option
-                  placeholder="请输入后按回车或选择确定"
-                  :disabled="formItemDisabled(item.disabled)"
-                  v-bind="item.customOption ?? {}"
-                ></el-select>
-                <!-- 日期 -->
-                <el-date-picker
-                  v-else-if="item.customType === 'date'"
-                  v-model="form[item.prop ?? '']"
-                  style="width: 100%;"
-                  type="date"
-                  :placeholder="readonly ? '' : '请选择日期'"
-                  clearable
-                  :disabled="formItemDisabled(item.disabled)"
-                  v-bind="item.customOption ?? {}"
-                ></el-date-picker>
-                <!-- 时间 -->
-                <el-time-picker
-                  v-else-if="item.customType === 'timerange'"
-                  v-model="form[item.prop ?? '']"
-                  style="width: 100%;"
-                  is-range
-                  :start-placeholder="readonly ? '' : '开始时间'"
-                  :end-placeholder="readonly ? '' : '结束时间'"
-                  clearable
-                  :disabled="formItemDisabled(item.disabled)"
-                  v-bind="item.customOption ?? {}"
-                ></el-time-picker>
-                <!-- 整数 -->
-                <el-input-number
-                  v-else-if="item.customType === 'int'"
-                  v-model.number="form[item.prop ?? '']"
-                  style="width: 100%;"
-                  clearable
-                  :disabled="formItemDisabled(item.disabled)"
-                  :min="0"
-                  :step="1"
-                  step-strictly
-                  controls-position="right"
-                  v-bind="item.customOption ?? {}"
-                ></el-input-number>
-                <!-- 浮点数 -->
-                <el-input-number
-                  v-else-if="item.customType === 'float'"
-                  v-model.number="form[item.prop ?? '']"
-                  style="width: 100%;"
-                  clearable
-                  :disabled="formItemDisabled(item.disabled)"
-                  :min="0"
-                  :precision="2"
-                  controls-position="right"
-                  v-bind="item.customOption ?? {}"
-                ></el-input-number>
-                <!-- 长文本 -->
-                <el-input
-                  v-else-if="item.customType === 'textarea'"
-                  v-model="form[item.prop ?? '']"
-                  style="width: 100%;"
-                  type="textarea"
-                  :autosize="{ minRows: 2 }"
-                  :placeholder="readonly ? '' : '请输入'"
-                  clearable
-                  :disabled="formItemDisabled(item.disabled)"
-                  v-bind="item.customOption ?? {}"
-                ></el-input>
-                <!-- 文本输入 -->
-                <el-input
-                  v-else
-                  v-model="form[item.prop ?? '']"
-                  :placeholder="readonly ? '' : '请输入'"
-                  clearable
-                  :disabled="formItemDisabled(item.disabled)"
-                  v-bind="item.customOption ?? {}"
-                ></el-input>
+                  :item="item"
+                  :form="form"
+                  :readonly="readonly"
+                ></dialog-form-item>
               </el-form-item>
             </el-col>
           </template>
@@ -192,13 +76,15 @@
 <script lang="ts">
 import { defineComponent, reactive, PropType, ref, computed, watch, nextTick, shallowReactive, toRef } from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
-import { DialogStatus, FormItemSection, FormInstance, ElFormProps, FormItem } from './interface';
+import { DialogStatus, FormItemSection, FormInstance, ElFormProps, FormItem } from '../interface';
 import { ElDialogProps } from '~/components/CompDialog/interface';
-import { formRules } from './form-rules';
-import FormLabel from './FormLabel.vue';
+import { formRules } from '../form-rules';
+import FormLabel from '../FormLabel.vue';
+import DialogFormItem from './DialogFormItem.vue';
 
 export default defineComponent({
-  components: { FormLabel },
+  name: 'CompTableDialogForm',
+  components: { FormLabel, DialogFormItem },
   props: {
     title: {
       type: String,
