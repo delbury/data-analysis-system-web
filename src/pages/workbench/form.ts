@@ -48,6 +48,11 @@ const totalTrainedHandler = (current: number, form: WorkbenchTable) => {
 const salaryHandler = (current: number, form: WorkbenchTable) => {
   form.course_pay = (TRAINER_LEVEL_SALARY_MAP[form.trainer_level] ?? 0) * (form.trained_hours_total ?? 0);
 };
+// 培训效果评价得分
+const trainEffectScore = (current, form: WorkbenchTable) => {
+  form.effect_evaluation_score = +((form.student_evaluation_score * 0.7 +
+      form.maintainer_evaluation_score * 0.3) as number).toFixed(2);
+};
 
 // 表单字段配置
 export const FORM_ITEMS: FormItemSection[] = [
@@ -363,12 +368,14 @@ export const FORM_ITEMS: FormItemSection[] = [
         prop: 'student_evaluation_score',
         customType: 'float',
         ruleNames: ['floatUnsigned', 'required'],
+        formValueChangeHandler: trainEffectScore,
       },
       {
         label: '项目负责人评价得分',
         prop: 'maintainer_evaluation_score',
         customType: 'float',
         ruleNames: ['floatUnsigned', 'required'],
+        formValueChangeHandler: trainEffectScore,
       },
       {
         label: '培训效果评价得分',
@@ -380,10 +387,6 @@ export const FORM_ITEMS: FormItemSection[] = [
           controls: false,
         },
         disabled: true,
-        formValueChangeHandler: (current, form: WorkbenchTable) => {
-          form.effect_evaluation_score = +((current.student_evaluation_score * 0.7 +
-              current.maintainer_evaluation_score * 0.3) as number).toFixed(2);
-        },
       },
       {
         label: '培训课酬',
