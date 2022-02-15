@@ -94,6 +94,8 @@ export type FormItem = Omit<ElFormItemProps, 'rules'> & {
   immediate?: boolean;
   // 导入 excel 预览时，默认的列映射，一对一，或一对多 (field, column)
   importDefaultCol?: string | Record<string, { label: string; col: string; }>;
+  // 该字段由多个字段组合而成
+  importMergeCols?: string[];
 }
 
 // 表单字段组

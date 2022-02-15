@@ -99,8 +99,8 @@ export default defineComponent({
   }
 
   :global(.el-dialog__body) {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: $gap-n;
+    padding-bottom: $gap-n;
   }
 }
 </style>

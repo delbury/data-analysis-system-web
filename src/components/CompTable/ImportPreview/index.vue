@@ -97,71 +97,95 @@
           </div>
         </div>
 
-        <!-- 编辑预览 -->
-        <comp-local-table
+        <template
           v-if="currentStep === 'edit'"
-          key="edit"
-          v-model:data="editData"
-          :columns="formItemFlatList"
-          show-operation
         >
-          <template #column-header="config">
-            <div class="flex-center-v">
-              <span>{{ `(${formFieldColMap[config.column.property] ?? '-'})` }}</span>
-              <span> {{ config.column.label }}</span>
-            </div>
-          </template>
-        </comp-local-table>
+          <!-- 编辑预览 -->
+          <comp-local-table
+            key="edit"
+            :data="editData"
+            :columns="formItemFlatList"
+            :show-operation="['delete']"
+            :show-overflow-tooltip="false"
+          >
+            <template #column-header="config">
+              <div class="flex-center-v">
+                <span>{{ `(${formFieldColMap[config.column.property] ?? '-'})` }}</span>
+                <span>{{ config.column.label }}</span>
+              </div>
+            </template>
 
-        <!-- 导入预览 -->
-        <comp-local-table
-          v-else
-          key="preview"
-          ref="localTableRef"
-          :data="currentTableData"
-          :columns="columns"
-          :table-props="{
-            spanMethod,
-            stripe: false,
-          }"
-        >
-          <template #column-header="config">
-            <div class="flex-center-h">
-              <span class="line label">{{ config.column.label }}</span>
-
-              <el-popover
-                placement="bottom"
-                trigger="click"
-                width="fit-content"
+            <template #column-content="config">
+              <!-- 当前值 -->
+              <el-tooltip
+                :content="`${config.row[config.column.property]}`"
+                placement="left"
+                :enterable="false"
+                :disabled="!config.row[config.column.property]"
               >
-                <template #reference>
-                  <el-button
-                    :class="[formColFieldsMap[config.column.property]?.length ? 'color-primary' : 'color-info']"
-                    type="text"
-                    :icon="icons.Link"
-                  >
-                    {{ formColFieldsMap[config.column.property]?.length }}
-                  </el-button>
-                </template>
-
-                <el-select
-                  v-model="formColFieldsMap[config.column.property]"
-                  multiple
-                  clearable
-                  style="width: 240px;"
-                  :teleported="false"
-                  @change="(val) => handleColFieldsMapChange(val, config.column.property)"
+                <edit-cell
+                  v-model="config.row[config.column.property]"
+                  :data="config"
+                  :form-item="formItemFlatMap[config.column.property]"
+                  :col="formFieldColMap[config.column.property]"
                 >
-                  <template v-for="item in formItemFlatList" :key="item.prop">
-                    <el-option :value="item.prop" :label="item.label">
-                      <span class="label fs-n" :class="{ required: isRequired(item) }">{{ item.label }}</span>
-                    </el-option>
+                </edit-cell>
+              </el-tooltip>
+            </template>
+          </comp-local-table>
+        </template>
+
+        <template v-else>
+          <!-- 导入预览 -->
+          <comp-local-table
+
+            key="preview"
+            ref="localTableRef"
+            :data="currentTableData"
+            :columns="columns"
+            :table-props="{
+              spanMethod,
+              stripe: false,
+            }"
+          >
+            <template #column-header="config">
+              <div class="flex-center-h">
+                <span class="line label">{{ config.column.label }}</span>
+
+                <el-popover
+                  placement="bottom"
+                  trigger="click"
+                  width="fit-content"
+                >
+                  <template #reference>
+                    <el-button
+                      :class="[formColFieldsMap[config.column.property]?.length ? 'color-primary' : 'color-info']"
+                      type="text"
+                      :icon="icons.Link"
+                    >
+                      {{ formColFieldsMap[config.column.property]?.length }}
+                    </el-button>
                   </template>
-                </el-select>
-              </el-popover>
-            </div>
-          </template>
-        </comp-local-table>
+
+                  <el-select
+                    v-model="formColFieldsMap[config.column.property]"
+                    multiple
+                    clearable
+                    style="width: 240px;"
+                    :teleported="false"
+                    @change="(val) => handleColFieldsMapChange(val, config.column.property)"
+                  >
+                    <template v-for="item in formItemFlatList" :key="item.prop">
+                      <el-option :value="item.prop" :label="item.label">
+                        <span class="label fs-n" :class="{ required: isRequired(item) }">{{ item.label }}</span>
+                      </el-option>
+                    </template>
+                  </el-select>
+                </el-popover>
+              </div>
+            </template>
+          </comp-local-table>
+        </template>
       </template>
     </div>
   </CompDialog>
@@ -177,6 +201,8 @@ import { ElMessage, ElTable, ElMessageBox } from 'element-plus';
 import { FormItemSection, FormItem } from '../interface';
 import FormLabel from '../FormLabel.vue';
 import { useConfigCol, createEditData } from './useConfigCol';
+import EditCell from './EditCell.vue';
+import _cloneDeep from 'lodash/cloneDeep';
 type TableColumn = Partial<TableColumnCtx<Record<string, unknown>>>;
 type TableInstance = InstanceType<typeof ElTable>;
 
@@ -187,7 +213,7 @@ const icons = {
 
 export default defineComponent({
   name: 'ImportPreview',
-  components: { Warning, Right, FormLabel },
+  components: { Warning, Right, FormLabel, EditCell },
   props: {
     value: {
       type: Boolean,
@@ -219,6 +245,7 @@ export default defineComponent({
     })) ?? []);
     // 数据
     const currentTableData = computed(() => currentTable.value?.data ?? []);
+    // 正在编辑中的数据
     const editData = shallowRef<ResolvedTable['data']>([]);
 
     // 单元格合并函数
@@ -270,6 +297,7 @@ export default defineComponent({
           );
           // 处理映射关系
           editData.value = createEditData(willEditData, formConfig.formColFieldsMap);
+
           // 进入编辑阶段
           currentStep.value = 'edit';
         } catch(e) {
@@ -340,6 +368,9 @@ export default defineComponent({
           default: return '导入数据';
         }
       }),
+      handleReset: (config) => {
+        console.log(config);
+      },
     };
   },
 });
@@ -347,7 +378,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .tools-row {
-  margin-bottom: 10px;
+  margin-bottom: $gap-n;
 }
 
 .tips {

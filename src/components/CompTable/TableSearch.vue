@@ -189,12 +189,12 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .comp-table_table-search {
-  padding: 10px 20px;
+  padding: $gap-n $gap-l;
   padding-bottom: 0;
 
   .el-form-item {
     padding-right: 0;
-    margin-bottom: 10px;
+    margin-bottom: $gap-n;
   }
 }
 </style>

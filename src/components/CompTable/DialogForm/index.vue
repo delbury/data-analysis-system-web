@@ -320,10 +320,9 @@ export default defineComponent({
 
     .comp-table__form-section {
       width: 100%;
-      // margin-bottom: 10px;
 
       .comp-table__form-section-title {
-        padding: 10px 0;
+        padding: $gap-n 0;
         font-size: 16px;
         font-weight: bold;
       }

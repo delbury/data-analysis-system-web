@@ -17,6 +17,20 @@
   white-space: nowrap;
 }
 
+// 超出显示省略号
+.text-ell {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 文本居中
+.text-center {
+  text-align: center;
+}
+
 // 禁用
 .cna {
   cursor: not-allowed !important;
@@ -49,4 +63,22 @@
 
 .flex-item {
   flex: 1;
+}
+
+.flex-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.full-w {
+  width: 100%;
+}
+
+.full-h {
+  height: 100%;
+}
+
+.full {
+  @extend .full-w;
+  @extend .full-h;
 }
