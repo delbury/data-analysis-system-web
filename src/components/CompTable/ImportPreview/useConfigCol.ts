@@ -20,13 +20,31 @@ export const useConfigCol = (sections: FormItemSection[]) => {
     // 将 importDefaultCol 类型为 Record 的列拆分
     const res = sections.flatMap(section =>
       section.formItems.map(item => {
-        if(!item.importDefaultCol || typeof item.importDefaultCol === 'string') return item;
-        return Object.entries(item.importDefaultCol).map(([fld, col]) =>
-          ({ ...item, label: col.label, prop: fld, importDefaultCol: col.col }));
+        if(!item.importDefaultCol || typeof item.importDefaultCol === 'string') return { ...item, minWidth: 120 };
+        return Object.entries(item.importDefaultCol).map(([fld, col]) => {
+          const newItem = {
+            ...item,
+            minWidth: 120,
+            label: col.label,
+            prop: fld,
+            importDefaultCol: col.col,
+          };
+          if(newItem.customType === 'timerange') {
+            newItem.customType = 'time';
+          }
+          return newItem;
+        });
       }),
     ).flat();
     return res;
   });
+
+  const formItemFlatMap = computed(() => {
+    const map: Record<string, FormItem> = {};
+    formItemFlatList.value.forEach(it => it.prop ? (map[it.prop] = it) : null);
+    return map;
+  });
+
 
   // 设置默认值
   const setMap = (fld: string, col: string) => {
@@ -105,6 +123,7 @@ export const useConfigCol = (sections: FormItemSection[]) => {
     formFieldColMap,
     formColFieldsMap,
     formItemFlatList,
+    formItemFlatMap,
     isRequired,
     // 数据字段 -> 表格列，改变时同步改变，表格列 -> 数据字段
     handleFieldColMapChange: (curVal: string, fld: string) => {

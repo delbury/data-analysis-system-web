@@ -66,7 +66,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         ruleNames: ['required'],
         valueSubmitHandler: ({ value }) => {
           return {
-            date: moment(value).format('YYYY-MM-DD HH:mm:ss'),
+            date: moment(value).format('YYYY-MM-DD'),
           };
         },
         importDefaultCol: 'B',
@@ -92,6 +92,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         },
         formValueChangeHandler: totalHourHandler,
         importDefaultCol: { start_time: { col: 'C', label: '开始时间' }, end_time: { col: 'D', label: '结束时间' }},
+        importMergeCols: ['start_time', 'end_time'],
       },
       {
         label: '培训方式1',

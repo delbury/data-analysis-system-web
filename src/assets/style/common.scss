@@ -21,25 +21,41 @@
 }
 
 .pd {
-  padding: 10px !important;
+  padding: $gap-n !important;
 }
 
 .pd-v {
-  padding: 10px 0 !important;
+  padding: $gap-n 0 !important;
 }
 
 .pd-h {
-  padding: 0 10px !important;
+  padding: 0 $gap-n !important;
 }
 
 .mg {
-  margin: 10px !important;
+  margin: $gap-n !important;
 }
 
 .mg-v {
-  margin: 10px 0 !important;
+  margin: $gap-n 0 !important;
 }
 
 .mg-h {
-  margin: 0 10px !important;
+  margin: 0 $gap-n !important;
+}
+
+$placement-map: (
+  l: left,
+  r: right,
+  t: top,
+  b: bottom,
+);
+
+@each $key, $val in $placement-map {
+  .pd-#{$key} {
+    padding-#{$val}: $gap-n;
+  }
+  .mg-#{$key} {
+    margin-#{$val}: $gap-n;
+  }
 }

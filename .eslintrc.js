@@ -141,5 +141,6 @@ module.exports = {
     'vue/object-curly-spacing': ['warn', 'always'],
     'vue/object-curly-newline': ['warn', { multiline: true }],
     'vue/space-in-parens': 'warn',
+    'vue/require-default-prop': 'off',
   },
 };

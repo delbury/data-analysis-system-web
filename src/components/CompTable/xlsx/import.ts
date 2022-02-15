@@ -78,7 +78,7 @@ const resolveSheet = (workbook: xlsx.WorkBook, sheetName: string) => {
 // 解析文件
 export const resolveFile = async (file: File) => {
   const fileBuffer = await file.arrayBuffer();
-  const workbook = xlsx.read(fileBuffer, { dateNF: 'yy/m/d' });
+  const workbook = xlsx.read(fileBuffer, { dateNF: 'yyyy/m/d' });
   const tables = workbook.SheetNames.map(name => resolveSheet(workbook, name));
   return tables;
 };

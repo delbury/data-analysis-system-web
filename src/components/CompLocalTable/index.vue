@@ -20,16 +20,26 @@
       >
       </el-table-column>
 
-      <el-table-column v-if="showOperation" label="操作" :width="120">
+      <el-table-column
+        v-if="showOperation"
+        label="操作"
+        align="center"
+        :width="Array.isArray(showOperation) ? showOperation.length * 65 : 120"
+      >
         <template #default="{ row, $index }">
           <el-space style="vertical-align: baseline;">
             <el-tag
+              v-if="Array.isArray(showOperation) ? showOperation.includes('edit') : showOperation"
               class="cp"
               @click="handleEdit(row, $index)"
             >
               编辑
             </el-tag>
-            <el-popconfirm title="确认移除？" @confirm="handleDelete(row, $index)">
+            <el-popconfirm
+              v-if="Array.isArray(showOperation) ? showOperation.includes('delete') : showOperation"
+              title="确认移除？"
+              @confirm="handleDelete(row, $index)"
+            >
               <template #reference>
                 <el-tag
                   class="cp"
@@ -46,12 +56,18 @@
 
       <template v-for="(col, ind) in columns" :key="col.prop + ind">
         <el-table-column
-          show-overflow-tooltip
+          :show-overflow-tooltip="showOverflowTooltip"
           v-bind="col"
         >
           <template #header="config">
             <slot name="column-header" v-bind="config">
               {{ col.label }}
+            </slot>
+          </template>
+
+          <template #default="config">
+            <slot name="column-content" v-bind="config">
+              {{ config.row[col.prop] }}
             </slot>
           </template>
         </el-table-column>
@@ -97,8 +113,12 @@ export default defineComponent({
       default: false,
     },
     showOperation: {
-      type: Boolean,
+      type: [Boolean, Array] as PropType<boolean | ('edit' | 'delete')[]>,
       default: false,
+    },
+    showOverflowTooltip: {
+      type: Boolean,
+      default: true,
     },
   },
   emits: ['update:data'],

@@ -35,7 +35,6 @@
     :remote-method="(text) => item.customOption?.remoteMethod?.(text, item.customOption)"
     :model-value="modelValue"
     @update:model-value="val => handleChange(val)"
-
     @visible-change="(visible) => {
       if(visible) {
         item.customOption?.remoteMethod?.('', item.customOption)
@@ -69,7 +68,17 @@
     :model-value="modelValue"
     @update:model-value="val => handleChange(val)"
   ></el-date-picker>
-  <!-- 时间 -->
+  <!-- 时刻 -->
+  <el-time-picker
+    v-else-if="item.customType === 'time'"
+    style="width: 100%;"
+    clearable
+    :disabled="formItemDisabled(item.disabled)"
+    v-bind="item.customOption ?? {}"
+    :model-value="modelValue"
+    @update:model-value="val => handleChange(val)"
+  ></el-time-picker>
+  <!-- 时间范围 -->
   <el-time-picker
     v-else-if="item.customType === 'timerange'"
     style="width: 100%;"
@@ -145,8 +154,8 @@ export default defineComponent({
       required: true,
     },
     form: {
-      type: Object as PropType<FormItem>,
-      required: true,
+      type: Object,
+      default: void 0,
     },
     modelValue: {
       default: '',
@@ -156,12 +165,18 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    globalDisabled: {
+      type: Boolean,
+      default: void 0,
+    },
   },
   emits: ['update:modelValue'],
   setup(props, ctx) {
     return {
       formItemDisabled: (itemDisabled: boolean | ((form: any) => boolean) = false) => {
-        return typeof itemDisabled === 'boolean' ? itemDisabled : itemDisabled(props.form);
+        if(props.globalDisabled !== void 0) return props.globalDisabled;
+
+        return typeof itemDisabled === 'boolean' ? itemDisabled : itemDisabled(props.form ?? {});
       },
       handleChange: (val: any) => {
         ctx.emit('update:modelValue', val);

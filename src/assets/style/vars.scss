@@ -9,6 +9,7 @@ $bg-blue-10: #002766;
 $bg-blue-9: #003a8c;
 $bg-blue-6: #1890ff;
 
+// 颜色
 $color-map: (
   primary: $primary-base,
   success: $success-base,
@@ -18,5 +19,11 @@ $color-map: (
   info: $info-base
 );
 
+// 字体大小
 $fs-s: 12px;
 $fs-n: 14px;
+
+// 间距大小
+$gap-s: 4px;
+$gap-n: 12px;
+$gap-l: 20px;
