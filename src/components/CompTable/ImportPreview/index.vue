@@ -107,11 +107,15 @@
             :columns="formItemFlatList"
             :show-operation="['delete']"
             :show-overflow-tooltip="false"
+            :table-props="{ cellClassName }"
           >
             <template #column-header="config">
               <div class="flex-center-v">
                 <span>{{ `(${formFieldColMap[config.column.property] ?? '-'})` }}</span>
-                <span>{{ config.column.label }}</span>
+                <span
+                  class="label"
+                  :class="{ required: isRequired(formItemFlatMap[config.column.property]) }"
+                >{{ config.column.label }}</span>
               </div>
             </template>
 
@@ -195,6 +199,7 @@
 import { defineComponent, shallowRef, ref, computed, nextTick, PropType, reactive, watch } from 'vue';
 import { Upload, Warning, Right, Link } from '@element-plus/icons';
 import { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults';
+import { TableProps } from 'element-plus/es/components/table/src/table/defaults';
 import { UploadFile } from 'element-plus/es/components/upload/src/upload.type';
 import { resolveFile, ResolvedTable } from '../xlsx/import';
 import { ElMessage, ElTable, ElMessageBox } from 'element-plus';
@@ -203,8 +208,16 @@ import FormLabel from '../FormLabel.vue';
 import { useConfigCol, createEditData } from './useConfigCol';
 import EditCell from './EditCell.vue';
 import _cloneDeep from 'lodash/cloneDeep';
+import { isEmpty } from '~/libs/utils';
+
 type TableColumn = Partial<TableColumnCtx<Record<string, unknown>>>;
 type TableInstance = InstanceType<typeof ElTable>;
+type TableCellCls<T = any> = {
+  row: T;
+  rowIndex: number;
+  column: TableColumnCtx<T>;
+  columnIndex: number;
+};
 
 const icons = {
   Upload,
@@ -262,6 +275,15 @@ export default defineComponent({
       };
     });
 
+    // 加载状态
+    const withLoading = (cb: (...arg: any[]) => void) => (...params: any[]) => {
+      loading.value = true;
+      window.setTimeout(async () => {
+        await cb(...params);
+        window.requestIdleCallback(() => loading.value = false);
+      }, 100);
+    };
+
     // 初始化
     const reset = () => {
       currentStep.value = 'upload';
@@ -271,7 +293,7 @@ export default defineComponent({
       editData.value = [];
     };
     // 上一步
-    const handlePrev = () => {
+    const handlePrev = withLoading(() => {
       if(currentStep.value === 'preview') {
         // 返回上传文件阶段
         reset();
@@ -279,9 +301,9 @@ export default defineComponent({
         editData.value = [];
         currentStep.value = 'preview';
       }
-    };
+    });
       // 下一步
-    const handleNext = async () => {
+    const handleNext = withLoading(async () => {
       if(currentStep.value === 'preview') {
         try {
           // await ElMessageBox.confirm(
@@ -303,10 +325,33 @@ export default defineComponent({
         } catch(e) {
           //
         }
+      } else if(currentStep.value === 'edit') {
+        // TODO 继续完成导入功能
+        return ElMessage.warning('导入功能暂未完成，敬请期待');
+
+        // 校验参数
+        const hasError = formConfig.formItemFlatList.value.some(item => {
+          const prop = item.prop;
+          if(!prop) return false;
+          return editData.value.some(row => validateCell(prop, row[prop]));
+        });
+        if(hasError) {
+          return ElMessage.warning('部分参数不符合规则，请修改');
+        }
       }
-    };
+    });
 
     const formConfig = useConfigCol(props.formItems);
+
+    // 校验数据
+    const validateCell = (prop: string, value: any) => {
+      const { isRequired, formItemFlatMap } = formConfig;
+      const formItem = formItemFlatMap.value[prop];
+      if(prop && formItem) {
+        if(isRequired(formItem) && isEmpty(value)) return false;
+      }
+      return true;
+    };
 
     return {
       ...formConfig,
@@ -321,37 +366,24 @@ export default defineComponent({
       columns,
       icons,
       // 导入文件
-      handleFileChange: (file: UploadFile, fileList: UploadFile[]) => {
+      handleFileChange: withLoading(async (file: UploadFile, fileList: UploadFile[]) => {
         fileList.length = 0;
-        loading.value = true;
         // 延迟展示 loading 图标
-        setTimeout(async () => {
-          try {
-            const resolvedTables = await resolveFile(file.raw);
-            tables.value = resolvedTables;
-            currentTableName.value = resolvedTables[0]?.name ?? '';
-            currentStep.value = 'preview';
-            handleNext();
-          } catch(e) {
-            ElMessage.error('解析文件出错');
-          } finally {
-            window.requestIdleCallback(() => {
-              loading.value = false;
-            });
-          }
-        }, 100);
-      },
-      handleTableChange: (tableName: string) => {
-        loading.value = true;
+        try {
+          const resolvedTables = await resolveFile(file.raw);
+          tables.value = resolvedTables;
+          currentTableName.value = resolvedTables[0]?.name ?? '';
+          currentStep.value = 'preview';
+          handleNext();
+        } catch(e) {
+          ElMessage.error('解析文件出错');
+        }
+      }),
+      handleTableChange: withLoading((tableName: string) => {
         // 延迟展示 loading 图标
-        setTimeout(() => {
-          currentTableName.value = tableName;
-          localTableRef.value?.tableRef.doLayout();
-          window.requestIdleCallback(() => {
-            loading.value = false;
-          });
-        }, 100);
-      },
+        currentTableName.value = tableName;
+        localTableRef.value?.tableRef.doLayout();
+      }),
       spanMethod,
       // 上一步
       handlePrev,
@@ -370,6 +402,12 @@ export default defineComponent({
       }),
       handleReset: (config) => {
         console.log(config);
+      },
+      // 单元格样式
+      cellClassName: ({ column, row }: TableCellCls) => {
+        const prop = column.property;
+        const value = row[prop];
+        if(!validateCell(prop, value)) return 'bg-error';
       },
     };
   },

@@ -157,7 +157,7 @@
 
     <!-- 导入预览 -->
     <ImportPreview
-      v-if="showImportBtn || importExcel.visible"
+      v-if="showImportBtn && importExcel.visible"
       v-model="importExcel.visible"
       :form-items="formItems"
     ></ImportPreview>
@@ -380,7 +380,7 @@ function defineGenericComponent<T = any>() {
       const permission = usePermission(props.dbTable);
 
       // 导入
-      const importExcel = reactive({ visible: true });
+      const importExcel = reactive({ visible: false });
 
       return {
         table,

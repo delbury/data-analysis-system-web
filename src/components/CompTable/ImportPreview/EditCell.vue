@@ -3,7 +3,8 @@
     <el-icon class="color-primary" @click="visible = true">
       <edit></edit>
     </el-icon>
-    <span class="text-ell">{{ eachValue ?? '-' }}</span>
+    <span v-if="eachValue" class="text-ell">{{ eachValue }}</span>
+    <span v-else class="text-ell color-info">-</span>
 
     <comp-dialog
       v-model="visible"

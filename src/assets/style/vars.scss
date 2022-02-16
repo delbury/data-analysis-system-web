@@ -1,3 +1,4 @@
+// 主颜色
 $primary-base: #409eff;
 $success-base: #67c23a;
 $warning-base: #e6a23c;
@@ -5,11 +6,20 @@ $danger-base: #f56c6c;
 $error-base: #f56c6c;
 $info-base: #909399;
 
+// 次级颜色
+$primary-secondary: #a0cfff;
+$success-secondary: #e0f3d7;
+$warning-secondary: #faecd8;
+$danger-secondary: #fde2e2;
+$error-secondary: #fde2e2;
+$info-secondary: #e9e9eb;
+
+// 背景色
 $bg-blue-10: #002766;
 $bg-blue-9: #003a8c;
 $bg-blue-6: #1890ff;
 
-// 颜色
+// 颜色 map
 $color-map: (
   primary: $primary-base,
   success: $success-base,
@@ -17,6 +27,14 @@ $color-map: (
   danger: $danger-base,
   error: $error-base,
   info: $info-base
+);
+$color-secondary-map: (
+  primary: $primary-secondary,
+  success: $success-secondary,
+  warning: $warning-secondary,
+  danger: $danger-secondary,
+  error: $error-secondary,
+  info: $info-secondary
 );
 
 // 字体大小
