@@ -11,6 +11,15 @@
     @opened="handleOpened"
     @closed="handleClosed"
   >
+    <template #footer-left>
+      <slot
+        name="form-footer-left"
+        :status="status"
+        :readonly="readonly"
+        :form="form"
+      ></slot>
+    </template>
+
     <el-form
       v-bind="formProps"
       ref="formRef"
@@ -78,7 +87,7 @@ import { defineComponent, reactive, PropType, ref, computed, watch, nextTick, sh
 import cloneDeep from 'lodash/cloneDeep';
 import { DialogStatus, FormItemSection, FormInstance, ElFormProps, FormItem } from '../interface';
 import { ElDialogProps } from '~/components/CompDialog/interface';
-import { formRules } from '../form-rules';
+import { formRules } from './form-rules';
 import FormLabel from '../FormLabel.vue';
 import DialogFormItem from './DialogFormItem.vue';
 

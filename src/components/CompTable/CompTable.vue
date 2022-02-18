@@ -153,7 +153,11 @@
       :confirm-action="confirmAction"
       :loading="table.fetching"
       :form-props="formProps"
-    ></DialogForm>
+    >
+      <template #form-footer-left="data">
+        <slot name="form-footer-left" v-bind="data"></slot>
+      </template>
+    </DialogForm>
 
     <!-- 导入预览 -->
     <ImportPreview

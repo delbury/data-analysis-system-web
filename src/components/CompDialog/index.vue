@@ -9,24 +9,33 @@
     <template #title>
       <slot name="title"></slot>
     </template>
+
     <slot></slot>
 
     <template #footer>
-      <el-button
-        @click="close()"
-      >
-        {{ readonly ? '关闭' : '取消' }}
-      </el-button>
-      <slot name="footer">
-        <el-button
-          v-if="!readonly && !hiddenDefaultConfirmBtn"
-          type="primary"
-          :loading="submitting"
-          @click="handleSubmit"
-        >
-          {{ confirmText }}
-        </el-button>
-      </slot>
+      <div class="flex-sb">
+        <div>
+          <slot name="footer-left"></slot>
+        </div>
+
+        <div>
+          <el-button
+            @click="close()"
+          >
+            {{ readonly ? '关闭' : '取消' }}
+          </el-button>
+          <slot name="footer">
+            <el-button
+              v-if="!readonly && !hiddenDefaultConfirmBtn"
+              type="primary"
+              :loading="submitting"
+              @click="handleSubmit"
+            >
+              {{ confirmText }}
+            </el-button>
+          </slot>
+        </div>
+      </div>
     </template>
   </el-dialog>
 </template>

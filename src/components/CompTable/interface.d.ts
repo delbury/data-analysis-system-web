@@ -1,5 +1,5 @@
 import { ElTableColumn, ElFormItem, ElForm } from 'element-plus';
-import { FormRuleNames } from './form-rules';
+import { FormRuleNames } from './DialogForm/form-rules';
 import { FormItemRule } from 'element-plus/es/components/form/src/form.type';
 import type CompTable from './CompTable.vue';
 

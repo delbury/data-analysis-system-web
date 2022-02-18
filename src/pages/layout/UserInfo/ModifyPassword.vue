@@ -60,7 +60,7 @@
 import { defineComponent, reactive, ref, PropType } from 'vue';
 import { AccountTable } from '~types/db-table-type/Account';
 import { FormInstance, FormItemRule } from '~/components/CompTable/interface';
-import { formRules } from '~/components/CompTable/form-rules';
+import { formRules } from '~/components/CompTable/DialogForm/form-rules';
 import { apis } from '~/service';
 
 export default defineComponent({

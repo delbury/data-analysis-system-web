@@ -1,4 +1,4 @@
-import { FormItemRule } from './interface';
+import { FormItemRule } from '../interface';
 
 const CHAR_LENGTH_SHORT = 20;
 const CHAR_LENGTH_NORMAL = 100;
@@ -64,7 +64,7 @@ export const notZeroRule = createRule((rule, value: number, cb) => {
 });
 
 // 手机号码校验
-const phoneReg = /^1\d{10}/;
+const phoneReg = /^1\d{10}$/;
 const phoneRule = createRule((rule, value: string, cb) => {
   const phone = String(value);
   if(phone && !phoneReg.test(phone)) {
