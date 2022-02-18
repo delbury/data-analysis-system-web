@@ -59,3 +59,8 @@ export const TRAIN_PROJECT_NAME: Options<{ code: number }> = [
   { label: '风水电专业知识培训', value: '风水电专业知识培训', other: { code: 123 }},
   { label: 'AFC专业知识培训', value: 'AFC专业知识培训', other: { code: 124 }},
 ];
+
+export const TRAINER_TYPE_OPTIONS: Options = [
+  { label: '内部', value: 1 },
+  { label: '外部', value: 2 },
+];

@@ -22,7 +22,7 @@ import { getFormItemInitValues } from '~/components/CompTable/util';
 import common from '~/pages/common';
 
 export default defineComponent({
-  name: 'PageBasedataTeamGroup',
+  name: 'PageBasedataAccount',
   setup() {
     const columns: ColumnProps[] = [
       {

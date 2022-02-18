@@ -24,3 +24,8 @@ export const WORKBENCH_STATUS_MAP: FormatMapType = {
   1: '计划',
   2: { text: '完成', className: 'color-success' },
 };
+
+export const TRAINER_TYPE_MAP: FormatMapType = {
+  1: '内部',
+  2: '外部',
+};
