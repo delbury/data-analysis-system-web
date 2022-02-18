@@ -386,8 +386,12 @@ export const FORM_ITEMS: FormItemSection[] = [
         rules: [{
           validatorWithForm: (form: WorkbenchTable) => (r, val, cb) => {
             const min = Math.ceil(+form.trained_count_total * 2 / 3);
+            const max = +form.trained_count_total;
             if(val < min) {
               return cb(`需要不少于${min}（培训总人数的2/3）人`);
+            }
+            if(val > max) {
+              return cb(`人数不能大于${max}（培训总人数）人`);
             }
             return cb();
           },
