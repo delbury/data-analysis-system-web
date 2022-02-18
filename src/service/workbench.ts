@@ -5,4 +5,5 @@ import { apiCreater } from './tools';
 export default {
   ...createRESTfulAPI<WorkbenchTable>('workbench'),
   getProjectCode: apiCreater.get<{ code: number; project: string; }>('/workbench/projectcode'),
+  postComplete: apiCreater.post<{ id: number; }>('/workbench/complete'),
 };

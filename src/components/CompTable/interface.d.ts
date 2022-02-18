@@ -1,6 +1,9 @@
 import { ElTableColumn, ElFormItem, ElForm } from 'element-plus';
 import { FormRuleNames } from './form-rules';
 import { FormItemRule } from 'element-plus/es/components/form/src/form.type';
+import type CompTable from './CompTable.vue';
+
+export type CompTableInstance = InstanceType<typeof CompTable>;
 
 export type FormInstance = InstanceType<typeof ElForm>
 export type ElFormProps = InstanceType<typeof ElForm>['$props'];

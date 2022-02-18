@@ -34,15 +34,15 @@
 
         <!-- 操作列 -->
         <el-table-column
-          v-if="rowBtns?.length"
+          v-if="currentRowBtns?.length"
           label="操作"
-          :width="rowBtns.length * 55"
+          :width="currentRowBtns.length * 55"
           fixed="left"
         >
           <template #default="{ row, $index }">
             <el-space style="vertical-align: baseline;">
               <template
-                v-for="btn in rowBtns"
+                v-for="btn in currentRowBtns"
                 :key="btn.key"
               >
                 <el-tooltip
@@ -215,7 +215,7 @@ function defineGenericComponent<T = any>() {
         type: Boolean,
       },
       // 操作列配置
-      rowBtns: {
+      defaultRowBtns: {
         default: () => [
           { label: '详情', key: 'default-detail' },
           {
@@ -234,6 +234,10 @@ function defineGenericComponent<T = any>() {
           },
         ],
         type: Array as PropType<RowBtn[] | null>,
+      },
+      rowBtns: {
+        type: Array as PropType<RowBtn[]>,
+        default: () => [],
       },
       // 表单初始值
       formInitValues: {
@@ -396,6 +400,7 @@ function defineGenericComponent<T = any>() {
         handleExport,
         permission,
         importExcel,
+        currentRowBtns: computed(() => [...(props.defaultRowBtns ?? []), ...props.rowBtns]),
       };
     },
   });
