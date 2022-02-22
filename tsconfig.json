@@ -16,7 +16,8 @@
       "~types/*": ["types/*"]
     },
     "types": ["element-plus/global"],
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*.ts",

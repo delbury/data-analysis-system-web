@@ -21,6 +21,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
+        charset: false, // // TODO 暂时解决打包问题
         additionalData: '@use "./src/assets/style/vars.scss" as *;', // 全局引入变量
       },
     },
@@ -49,5 +50,6 @@ export default defineConfig({
   build: {
     sourcemap: false,
     outDir: './output',
+    minify: false, // TODO 暂时解决打包问题
   },
 });
