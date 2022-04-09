@@ -3,7 +3,7 @@
     <el-icon class="color-primary" @click="visible = true">
       <edit></edit>
     </el-icon>
-    <span v-if="eachValue" class="text-ell">{{ eachValue }}</span>
+    <span v-if="eachValue != null || eachValue !== ''" class="text-ell">{{ eachValue }}</span>
     <span v-else class="text-ell color-info">-</span>
 
     <comp-dialog
@@ -38,8 +38,8 @@ import DialogFormItem from '~/components/CompTable/DialogForm/DialogFormItem.vue
 import { RenderRowData } from 'element-plus/es/components/table/src/table/defaults';
 import { Edit } from '@element-plus/icons';
 import moment from 'moment';
+import { DEFAULT_DATE } from '~/components/CompTable/util';
 
-const DEFAULT_DATE = '1970-01-01';
 const getInitValue = (val: any, { column, row }: RenderRowData<Record<string, any>>, item?: FormItem) => {
   if(!item) return val;
   switch(item.customType) {

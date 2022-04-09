@@ -1,6 +1,5 @@
 <template>
   <CompDialog
-    :model-value="value"
     :title="title"
     :dialog-props="{ width: '90%' }"
     hidden-default-confirm-btn
@@ -103,7 +102,7 @@
           <!-- 编辑预览 -->
           <comp-local-table
             key="edit"
-            :data="editData"
+            v-model:data="editData"
             :columns="formItemFlatList"
             :show-operation="['delete']"
             :show-overflow-tooltip="false"
@@ -209,6 +208,8 @@ import { useConfigCol, createEditData } from './useConfigCol';
 import EditCell from './EditCell.vue';
 import _cloneDeep from 'lodash/cloneDeep';
 import { isEmpty } from '~/libs/utils';
+import { validateFormValue, resolveFormValue } from './tools';
+import { FetchersType } from '~/service/tools';
 
 type TableColumn = Partial<TableColumnCtx<Record<string, unknown>>>;
 type TableInstance = InstanceType<typeof ElTable>;
@@ -228,17 +229,19 @@ export default defineComponent({
   name: 'ImportPreview',
   components: { Warning, Right, FormLabel, EditCell },
   props: {
-    value: {
-      type: Boolean,
-      default: false,
-    },
     // 表单字段
     formItems: {
       default: () => [],
       type: Array as PropType<FormItemSection[]>,
     },
+    // 表操作 api
+    apis: {
+      default: null,
+      type: Object as PropType<FetchersType>,
+    },
   },
-  setup(props) {
+  emits: ['refresh'],
+  setup(props, ctx) {
     const localTableRef = ref<{ tableRef: TableInstance }>();
     // 当前步骤
     // 上传文件(upload) -> 预览(preview) -> 编辑(preview)
@@ -279,8 +282,12 @@ export default defineComponent({
     const withLoading = (cb: (...arg: any[]) => void) => (...params: any[]) => {
       loading.value = true;
       window.setTimeout(async () => {
-        await cb(...params);
-        window.requestIdleCallback(() => loading.value = false);
+        try {
+          await cb(...params);
+          window.requestIdleCallback(() => loading.value = false);
+        } catch(e) {
+          loading.value = false;
+        }
       }, 100);
     };
 
@@ -306,11 +313,11 @@ export default defineComponent({
     const handleNext = withLoading(async () => {
       if(currentStep.value === 'preview') {
         try {
-          // await ElMessageBox.confirm(
-          //   '将会过滤当前表中所有空行以及存在合并单元格的行、列，确定执行下一步？',
-          //   '提示',
-          //   { type: 'warning' },
-          // );
+          await ElMessageBox.confirm(
+            '将会过滤当前表中所有空行以及存在合并单元格的行、列，确定执行下一步？',
+            '提示',
+            { type: 'warning' },
+          );
           // 生成即将导入的数据
           const mergedRows = currentTable.value?.mergedRows;
           const willEditData = currentTableData.value.filter((row, index) =>
@@ -326,18 +333,28 @@ export default defineComponent({
           //
         }
       } else if(currentStep.value === 'edit') {
-        // TODO 继续完成导入功能
-        return ElMessage.warning('导入功能暂未完成，敬请期待');
-
         // 校验参数
         const hasError = formConfig.formItemFlatList.value.some(item => {
           const prop = item.prop;
           if(!prop) return false;
-          return editData.value.some(row => validateCell(prop, row[prop]));
+          return editData.value.some(row => !validateCell(prop, row[prop]));
         });
         if(hasError) {
           return ElMessage.warning('部分参数不符合规则，请修改');
         }
+
+        // 参数处理
+        const submitData = editData.value.map(item => {
+          const resolvedItem = {};
+          Object.entries(item).forEach(([key, value]) => {
+            const formItem = formConfig.formItemFlatMap.value[key];
+            resolvedItem[key] = formItem ? resolveFormValue(formItem.valueType ?? formItem.customType, value) : value;
+          });
+          return resolvedItem;
+        });
+        await props.apis.import(submitData);
+        ElMessage.success('导入成功');
+        ctx.emit('refresh');
       }
     });
 
@@ -347,8 +364,12 @@ export default defineComponent({
     const validateCell = (prop: string, value: any) => {
       const { isRequired, formItemFlatMap } = formConfig;
       const formItem = formItemFlatMap.value[prop];
+
       if(prop && formItem) {
+        // 必填检验
         if(isRequired(formItem) && isEmpty(value)) return false;
+
+        return validateFormValue(formItem.valueType ?? formItem.customType, value);
       }
       return true;
     };
@@ -374,7 +395,6 @@ export default defineComponent({
           tables.value = resolvedTables;
           currentTableName.value = resolvedTables[0]?.name ?? '';
           currentStep.value = 'preview';
-          handleNext();
         } catch(e) {
           ElMessage.error('解析文件出错');
         }

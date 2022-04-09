@@ -4,12 +4,11 @@ import { getFormItemInitValues } from '~/components/CompTable/util';
 import common from '~/pages/common';
 import { WorkbenchTable as RawWorkbenchTable } from '~types/db-table-type/Workbench';
 import { apis } from '~/service';
+import { DEFAULT_DATE } from '~/components/CompTable/util';
 
 interface WorkbenchTable extends RawWorkbenchTable {
   start_end_time?: [Date, Date];
 }
-
-const DEFAULT_DATE = '1970-01-01';
 
 // 星级对应薪酬
 const TRAINER_LEVEL_SALARY_MAP: Record<number, number> = {
@@ -299,6 +298,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         prop: 'trainer_level',
         ruleNames: ['required'],
         customType: 'select',
+        valueType: 'int',
         customOption: {
           options: common.opts.TRAINER_LEVEL_OPTIONS,
         },

@@ -64,3 +64,13 @@ export const TRAINER_TYPE_OPTIONS: Options = [
   { label: '内部', value: 1 },
   { label: '外部', value: 2 },
 ];
+
+export const STAFF_SEX_OPTIONS: Options = [
+  { label: '男', value: 1 },
+  { label: '女', value: 2 },
+];
+
+export const STAFF_STATUS_OPTIONS: Options = [
+  { label: '离职', value: 0 },
+  { label: '在职', value: 1 },
+];

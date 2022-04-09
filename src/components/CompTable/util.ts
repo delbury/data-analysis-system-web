@@ -1,6 +1,9 @@
 import { ColumnProps, FormItemSection } from './interface';
 import { FetchersGetType } from '~/service/tools';
 
+// 默认日期
+export const DEFAULT_DATE = '1970-01-01';
+
 // 处理一些预设配置
 export const walkColumnConfig = (columns: ColumnProps[]): ColumnProps[] => {
   return columns.map((col) => {

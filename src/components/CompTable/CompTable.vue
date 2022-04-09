@@ -114,6 +114,7 @@
           v-if="showImportBtn"
           :icon="icons.Upload"
           tip="导入"
+          @click="() => importExcel.visible = true"
         ></comp-button>
 
         <!-- 导出 -->
@@ -164,6 +165,8 @@
       v-if="showImportBtn && importExcel.visible"
       v-model="importExcel.visible"
       :form-items="formItems"
+      :apis="apis"
+      @refresh="table.refresh()"
     ></ImportPreview>
   </div>
 </template>
@@ -267,7 +270,7 @@ function defineGenericComponent<T = any>() {
         type: Boolean,
       },
       showImportBtn: {
-        default: false,
+        default: true,
         type: Boolean,
       },
       showExportBtn: {

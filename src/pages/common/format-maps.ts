@@ -25,7 +25,20 @@ export const WORKBENCH_STATUS_MAP: FormatMapType = {
   2: { text: '完成', className: 'color-success' },
 };
 
+// 培训师类型
 export const TRAINER_TYPE_MAP: FormatMapType = {
   1: '内部',
   2: '外部',
+};
+
+// 人员状态
+export const STAFF_STATUS_MAP: FormatMapType = {
+  0: '离职',
+  1: '在职',
+};
+
+// 人员性别
+export const STAFF_SEX_MAP: FormatMapType = {
+  1: '男',
+  2: '女',
 };

@@ -1,6 +1,5 @@
 <template>
   <CompDialog
-    :model-value="value"
     :dialog-props="{
       title,
       ...dialogProps,
@@ -98,10 +97,6 @@ export default defineComponent({
     title: {
       type: String,
       default: '',
-    },
-    value: {
-      type: Boolean,
-      default: false,
     },
     formInitValues: {
       default: () => ({}),

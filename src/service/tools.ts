@@ -28,6 +28,9 @@ export const createRESTfulAPI = <R = any>(baseUrl: string) => {
     // 删除
     delete: (id: string) =>
       http.delete<any, AxiosResponse<ResponseList<Response>>>(`/${baseUrl}/list/${id}`),
+    // 导入
+    import: (datas?: Partial<R>[], config?: AxiosRequestConfig<R>) =>
+      http.post<any, AxiosResponse<ResponseList<Response>>>(`/${baseUrl}/list/import`, datas, config),
   };
 };
 

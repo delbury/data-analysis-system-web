@@ -73,6 +73,8 @@ export type FormItem = Omit<ElFormItemProps, 'rules'> & {
   span?: number;
   // 输入数据类型
   customType?: BaseCustomType | 'string' | 'select' | 'remote-select' | 'remote-select-multi' | 'timerange' | 'textarea' | 'tags';
+  // 确切的数值类型，为空则以 customType 为准
+  valueType?: BaseCustomType;
   // 输入数据类型组件可选参数
   // TODO 考虑拆成 | 形式的类型
   customOption?: CustomOption;

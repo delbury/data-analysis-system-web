@@ -1,7 +1,6 @@
 <template>
   <el-dialog
     v-bind="{ ...dialogProps, ref: void 0 }"
-    :model-value="value"
     custom-class="comp-dialog"
     destroy-on-close
     @closed="handleClose()"
