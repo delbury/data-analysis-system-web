@@ -78,7 +78,7 @@ export const getRemoteSelectFormItemOptions = (
       try {
         record.loading = true;
         const res = await fetcher({ all: 1, [labelField]: text });
-        record.options = (res.data.data.list ?? []).map((it) => ({ label: it[labelField], value: it[valueField] }));
+        record.options = (res.data.data.list ?? []).map((it) => ({ label: it[labelField], value: it[valueField], extra: it }));
       } finally {
         record.loading = false;
       }

@@ -40,7 +40,11 @@
         item.customOption?.remoteMethod?.('', item.customOption)
       }
     }"
-  ></el-select-v2>
+  >
+    <template #default="{ item: it }">
+      <div>{{ [it.label, ...(item.customOption?.optionRender?.(it) ?? [])].join(' | ') }}</div>
+    </template>
+  </el-select-v2>
   <!-- tags -->
   <el-select
     v-else-if="item.customType === 'tags'"

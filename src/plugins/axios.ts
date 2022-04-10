@@ -11,7 +11,7 @@ const instance = axios.create({
       arrayFormat: 'repeat',
       skipNulls: true,
       filter: (prefix, value) => {
-        if(value == '') return;
+        if(value === '') return;
         return value;
       },
     }),

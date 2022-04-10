@@ -46,7 +46,7 @@ type ElFormItemProps = InstanceType<typeof ElFormItem>['$props'];
 interface Rule extends FormItemRule {
   validatorWithForm?: (form: any) => NonNullable<FormItemRule['validator']>;
 }
-type CustomSelectOption = {
+export type CustomSelectOption = {
   options?: LableValue[];
   lastSearchedText?: string;
   rebuildField?: {
@@ -56,6 +56,7 @@ type CustomSelectOption = {
   }
   selectChange?: (val: string, opt: any, form: any) => void;
   remoteMethod?: (text: string, opt: CustomOption) => void;
+  optionRender?: (item: { label: string; value: string; extra: any }) => string[];
 }
 type CustomNumberOption = {
   controls?: boolean;

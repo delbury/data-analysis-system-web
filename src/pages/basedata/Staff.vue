@@ -89,7 +89,7 @@ export default defineComponent({
     const formItems: FormItemSection[] = [
       {
         formItems: [
-          { label: '名称', prop: 'name', span: 12, ruleNames: ['required', 'normalLength'] },
+          { label: '姓名', prop: 'name', span: 12, ruleNames: ['required', 'normalLength'] },
           {
             label: '性别',
             prop: 'sex',

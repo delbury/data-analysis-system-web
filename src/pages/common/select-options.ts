@@ -60,11 +60,6 @@ export const TRAIN_PROJECT_NAME: Options<{ code: number }> = [
   { label: 'AFC专业知识培训', value: 'AFC专业知识培训', other: { code: 124 }},
 ];
 
-export const TRAINER_TYPE_OPTIONS: Options = [
-  { label: '内部', value: 1 },
-  { label: '外部', value: 2 },
-];
-
 export const STAFF_SEX_OPTIONS: Options = [
   { label: '男', value: 1 },
   { label: '女', value: 2 },
