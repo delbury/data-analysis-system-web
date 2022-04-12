@@ -15,9 +15,8 @@
 import { customRef, defineComponent, reactive } from 'vue';
 import { apis } from '~/service';
 import { FormItemSection, ColumnProps } from '~/components/CompTable/interface';
-import { getFormItemInitValues } from '~/components/CompTable/util';
+import { getFormItemInitValues, formatDateValue } from '~/components/CompTable/util';
 import common from '~/pages/common';
-import moment from 'moment';
 
 export default defineComponent({
   name: 'PageBasedataStaff',
@@ -130,7 +129,7 @@ export default defineComponent({
             customType: 'date',
             valueSubmitHandler: ({ value }) => {
               return {
-                join_date: value ? moment(value).format('YYYY-MM-DD') : value,
+                join_date: value ? formatDateValue(value) : value,
               };
             },
           },
@@ -141,7 +140,7 @@ export default defineComponent({
             customType: 'date',
             valueSubmitHandler: ({ value }) => {
               return {
-                quit_date: value ? moment(value).format('YYYY-MM-DD') : value,
+                quit_date: value ? formatDateValue(value) : value,
               };
             },
           },

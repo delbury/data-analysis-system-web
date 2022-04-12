@@ -37,8 +37,7 @@ import { FormItem } from '~/components/CompTable/interface';
 import DialogFormItem from '~/components/CompTable/DialogForm/DialogFormItem.vue';
 import { RenderRowData } from 'element-plus/es/components/table/src/table/defaults';
 import { Edit } from '@element-plus/icons';
-import moment from 'moment';
-import { DEFAULT_DATE } from '~/components/CompTable/util';
+import { DEFAULT_DATE, formatDateValue, formatTimeValue } from '~/components/CompTable/util';
 
 const getInitValue = (val: any, { column, row }: RenderRowData<Record<string, any>>, item?: FormItem) => {
   if(!item) return val;
@@ -107,10 +106,10 @@ export default defineComponent({
         let newValue: any = currentValue.value;
         switch(props.formItem.customType) {
           case 'date':
-            newValue = moment(newValue).format('YYYY-MM-DD');
+            newValue = formatDateValue(newValue);
             break;
           case 'time':
-            newValue = moment(newValue).format('HH:mm:ss');
+            newValue = formatTimeValue(newValue);
             break;
           default: break;
         }

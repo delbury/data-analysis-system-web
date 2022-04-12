@@ -1,8 +1,15 @@
 import { ColumnProps, FormItemSection } from './interface';
 import { FetchersGetType } from '~/service/tools';
+import moment from 'moment';
 
 // 默认日期
 export const DEFAULT_DATE = '1970-01-01';
+
+// date 类型数据格式化
+export const formatDateValue = (date: Date | string) => moment(date).format('YYYY-MM-DD');
+
+// time 类型数据格式化
+export const formatTimeValue = (time: Date | string) => moment(time).format('HH:mm:ss');
 
 // 处理一些预设配置
 export const walkColumnConfig = (columns: ColumnProps[]): ColumnProps[] => {

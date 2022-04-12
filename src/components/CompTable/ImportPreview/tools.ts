@@ -1,5 +1,5 @@
 import { FormItemSection, FormItem } from '../interface';
-import { DEFAULT_DATE } from '~/components/CompTable/util';
+import { DEFAULT_DATE, formatDateValue, formatTimeValue } from '~/components/CompTable/util';
 import moment from 'moment';
 
 // 关闭 warning
@@ -29,9 +29,9 @@ export const validateFormValue = (type?: NonNullable<FormItem['customType']>, va
 export const resolveFormValue = (type?: NonNullable<FormItem['customType']>, value?: any) => {
   switch(type) {
     case 'date':
-      return moment(value).format('YYYY-MM-DD');
+      return formatDateValue(value);
     case 'time':
-      return moment(`${DEFAULT_DATE} ${value}`).format('HH:mm:ss');
+      return formatTimeValue(`${DEFAULT_DATE} ${value}`);
     case 'int':
     case 'float':
       return +value;

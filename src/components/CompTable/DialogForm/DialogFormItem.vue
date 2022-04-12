@@ -42,7 +42,11 @@
     }"
   >
     <template #default="{ item: it }">
-      <div>{{ [it.label, ...(item.customOption?.optionRender?.(it) ?? [])].join(' | ') }}</div>
+      <el-tooltip placement="right" :content="renderSelectOption(it, item)">
+        <div class="select-option">
+          {{ renderSelectOption(it, item) }}
+        </div>
+      </el-tooltip>
     </template>
   </el-select-v2>
   <!-- tags -->
@@ -185,7 +189,17 @@ export default defineComponent({
       handleChange: (val: any) => {
         ctx.emit('update:modelValue', val);
       },
+      renderSelectOption: (row, item) => [row.label, ...(item.customOption?.optionRender?.(row) ?? [])].join(' | '),
     };
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.select-option {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>

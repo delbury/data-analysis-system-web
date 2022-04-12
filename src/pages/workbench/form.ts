@@ -1,6 +1,5 @@
 import { FormItemSection } from '~/components/CompTable/interface';
-import moment from 'moment';
-import { getFormItemInitValues } from '~/components/CompTable/util';
+import { getFormItemInitValues, formatDateValue, formatTimeValue } from '~/components/CompTable/util';
 import common from '~/pages/common';
 import { WorkbenchTable as RawWorkbenchTable } from '~types/db-table-type/Workbench';
 import { apis } from '~/service';
@@ -65,7 +64,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         ruleNames: ['required'],
         valueSubmitHandler: ({ value }) => {
           return {
-            date: moment(value).format('YYYY-MM-DD'),
+            date: formatDateValue(value),
           };
         },
         importDefaultCol: 'B',
@@ -77,8 +76,8 @@ export const FORM_ITEMS: FormItemSection[] = [
         ruleNames: ['required'],
         valueSubmitHandler: ({ value }) => {
           return {
-            start_time: moment(value[0]).format('HH:mm:ss'),
-            end_time: moment(value[1]).format('HH:mm:ss'),
+            start_time: formatTimeValue(value[0]),
+            end_time: formatTimeValue(value[1]),
           };
         },
         valueRebuildHandler: ({ params }) => {
