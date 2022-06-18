@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
-import { SetUp, Key, Open, User, OfficeBuilding } from '@element-plus/icons';
+import { SetUp, Key, Open, User, OfficeBuilding, Setting } from '@element-plus/icons';
 
 // 构造动态路由
 export const filterRoute = (routes: RouteRecordRaw[], allowPaths: string[]): RouteRecordRaw[] => {
@@ -104,6 +104,14 @@ export const dynamicRoutes: RouteRecordRaw[] = [
         meta: {
           label: '账号管理',
           icon: Key,
+        },
+      },
+      {
+        path: 'config',
+        component: () => import('~/pages/system/Config.vue'),
+        meta: {
+          label: '系统配置',
+          icon: Setting,
         },
       },
     ],

@@ -5,6 +5,7 @@ import system_role from './system_role';
 import system_permission from './system_permission';
 import system_account from './system_account';
 import basedata_trainer from './basedata_trainer';
+import system_config from './system_config';
 import * as auth from './auth';
 
 export const apis = {
@@ -16,4 +17,5 @@ export const apis = {
   system_account,
   auth,
   basedata_trainer,
+  system_config,
 };

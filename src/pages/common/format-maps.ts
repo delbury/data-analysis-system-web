@@ -36,3 +36,10 @@ export const STAFF_SEX_MAP: FormatMapType = {
   1: '男',
   2: '女',
 };
+
+// 系统配置值类型
+export const CONFIG_TYPE_MAP: FormatMapType = {
+  1: 'int',
+  2: 'float',
+  3: 'string',
+};

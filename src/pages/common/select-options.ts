@@ -69,3 +69,9 @@ export const STAFF_STATUS_OPTIONS: Options = [
   { label: '离职', value: 0 },
   { label: '在职', value: 1 },
 ];
+
+export const CONFIG_TYPE_OPTIONS: Options = [
+  { label: 'int', value: 1 },
+  { label: 'float', value: 2 },
+  { label: 'string', value: 3 },
+];

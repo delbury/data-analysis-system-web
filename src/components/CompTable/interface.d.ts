@@ -102,6 +102,8 @@ export type FormItem = Omit<ElFormItemProps, 'rules'> & {
   importDefaultCol?: string | Record<string, { label: string; col: string; }>;
   // 该字段由多个字段组合而成
   importMergeCols?: string[];
+  // 系统创建的可编辑字段
+  systemEditable?: boolean;
 }
 
 // 表单字段组
