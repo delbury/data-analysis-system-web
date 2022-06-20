@@ -15,10 +15,16 @@
           disabled: (row, ps) => row.status !== 1,
           tip: '已完成',
         },
+        {
+          label: '参训人员',
+          key: 'record-staff',
+        },
       ]"
       @btn="handleBtnClick"
     >
     </CompTable>
+
+    <RecordStaff v-model="recordStaff.visible"></RecordStaff>
   </div>
 </template>
 
@@ -30,16 +36,22 @@ import { FORM_INIT_VALUES, FORM_ITEMS } from './form';
 import { ElMessageBox } from 'element-plus';
 import { WorkbenchTable } from '~types/db-table-type';
 import { CompTableInstance } from '~/components/CompTable/interface';
-import { table } from 'console';
+import RecordStaff from './RecordStaff.vue';
 
 export default defineComponent({
   name: 'PageWorkbench',
+  components: { RecordStaff },
   setup() {
     const tableRef = ref<CompTableInstance>();
     // table 参数
     const tableConfig = reactive({
       columns: getColumns(),
       apis: apis.workbench,
+    });
+
+    // 录入参训人员
+    const recordStaff = reactive({
+      visible: false,
     });
 
     return {
@@ -58,8 +70,12 @@ export default defineComponent({
             await apis.workbench.postComplete({ id: record.id });
             tableRef.value?.table.refresh();
           }).catch(() => {});
+        } else if(key === 'record-staff') {
+          // 录入人员
+          recordStaff.visible = true;
         }
       },
+      recordStaff,
     };
   },
 });

@@ -189,7 +189,12 @@ export default defineComponent({
       handleChange: (val: any) => {
         ctx.emit('update:modelValue', val);
       },
-      renderSelectOption: (row, item) => [row.label, ...(item.customOption?.optionRender?.(row) ?? [])].join(' | '),
+      renderSelectOption: (row, item) => [
+        row.label,
+        ...(
+          (row.extra ? item.customOption?.optionRender?.(row) : []) ?? []
+        ),
+      ].join(' | '),
     };
   },
 });

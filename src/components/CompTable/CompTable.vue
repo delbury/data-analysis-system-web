@@ -36,8 +36,9 @@
         <el-table-column
           v-if="currentRowBtns?.length"
           label="操作"
-          :width="currentRowBtns.length * 55"
+          :width="operationColWidth"
           fixed="left"
+          align="center"
         >
           <template #default="{ row, $index }">
             <el-space style="vertical-align: baseline;">
@@ -111,7 +112,7 @@
 
         <!-- 导入 -->
         <comp-button
-          v-if="showImportBtn && permission.import"
+          v-if="showImportBtn && permission?.import"
           :icon="icons.Upload"
           tip="导入"
           @click="() => importExcel.visible = true"
@@ -393,6 +394,9 @@ function defineGenericComponent<T = any>() {
       // 导入
       const importExcel = reactive({ visible: false });
 
+      // 合并后的操作
+      const currentRowBtns = computed(() => [...(props.defaultRowBtns ?? []), ...props.rowBtns]);
+
       return {
         table,
         handleBtnClick,
@@ -407,7 +411,13 @@ function defineGenericComponent<T = any>() {
         handleExport,
         permission,
         importExcel,
-        currentRowBtns: computed(() => [...(props.defaultRowBtns ?? []), ...props.rowBtns]),
+        currentRowBtns,
+        // 操作列宽度
+        operationColWidth: computed(() => {
+          const leng = currentRowBtns.value.length;
+          const txtCount = currentRowBtns.value.reduce((sum, btn) => sum + btn.label.length, 0);
+          return (leng + 1) * 8 + leng * 16 + txtCount * 12;
+        }),
       };
     },
   });
