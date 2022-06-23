@@ -46,8 +46,10 @@
             >
               编辑
             </el-tag>
+
+            <!-- 删除前需要确认 -->
             <el-popconfirm
-              v-if="Array.isArray(showOperation) ? showOperation.includes('delete') : showOperation"
+              v-if="needDeleteConfirm && (Array.isArray(showOperation) ? showOperation.includes('delete') : showOperation)"
               title="确认移除？"
               @confirm="handleDelete(row, $index)"
             >
@@ -59,6 +61,14 @@
                 </el-tag>
               </template>
             </el-popconfirm>
+            <!-- 删除无需确认 -->
+            <el-tag
+              v-if="!needDeleteConfirm && (Array.isArray(showOperation) ? showOperation.includes('delete') : showOperation)"
+              class="cp"
+              @click="handleDelete(row, $index)"
+            >
+              删除
+            </el-tag>
           </el-space>
         </template>
       </el-table-column>
@@ -76,11 +86,15 @@
           <template #header-extra>
             <el-popover trigger="click" :hide-after="0" placement="top">
               <template #reference>
-                <el-link
-                  :icon="icons.Search"
-                  :underline="false"
-                  :style="filters[item.prop] ? { color: 'var(--el-link-default-active-color)' } : void 0"
-                ></el-link>
+                <span>
+                  <el-tooltip :content="getTooltip(item)">
+                    <el-link
+                      :icon="icons.Search"
+                      :underline="false"
+                      :style="!isEmpty(filters[item.prop]) ? { color: 'var(--el-link-default-active-color)' } : void 0"
+                    ></el-link>
+                  </el-tooltip>
+                </span>
               </template>
 
               <el-select-v2
@@ -88,7 +102,7 @@
                 v-model="filters[item.prop]"
                 placeholder="请选择搜索条件"
                 clearable
-                :options="Object.entries(item.formatMap).map(([value, label]) => ({ label, value }))"
+                :options="getOptions(item)"
                 :teleported="false"
               ></el-select-v2>
               <el-input
@@ -98,6 +112,8 @@
                 clearable
               ></el-input>
             </el-popover>
+
+            <slot name="header-extra" :data="item"></slot>
           </template>
         </CompTableColumn>
       </template>
@@ -119,10 +135,11 @@
 
 <script lang="ts">
 import { defineComponent, PropType, reactive, computed, ref, watch } from 'vue';
-import ElTableColumn from 'element-plus/es/components/table/src/tableColumn';
+import { ColumnProps } from '~/components/CompTable/interface';
 import { TableProps } from 'element-plus/es/components/table/src/table/defaults';
 import CompTableColumn from '~/components/CompTable/CompTableColumn.vue';
 import { Search } from '@element-plus/icons';
+import { isEmpty } from '~/libs/utils';
 
 export default defineComponent({
   name: 'CompLocalTable',
@@ -133,7 +150,7 @@ export default defineComponent({
       default: () => [],
     },
     columns: {
-      type: Array as PropType<typeof ElTableColumn[]>,
+      type: Array as PropType<ColumnProps[]>,
       default: () => [],
     },
     tableProps: {
@@ -162,6 +179,11 @@ export default defineComponent({
       type: String,
       default: 'id',
     },
+    // 删除前确认
+    needDeleteConfirm: {
+      type: Boolean,
+      default: true,
+    },
   },
   emits: ['update:data', 'selection-change'],
   setup(props, ctx) {
@@ -176,7 +198,7 @@ export default defineComponent({
 
     // 当前页数据
     const filteredData = computed(() => {
-      const filterKvs = Object.entries(filters).filter(([k, v]) => !!v).map(([k, v]) => [k, v.toLowerCase()]);
+      const filterKvs = Object.entries(filters).filter(([k, v]) => !isEmpty(v)).map(([k, v]) => [k, v.toLowerCase()]);
       return props.data.filter(item => {
         let flag = true;
         for(const [k, v] of filterKvs) {
@@ -219,6 +241,28 @@ export default defineComponent({
       },
       icons: { Search },
       filters,
+      isEmpty,
+      getTooltip: (item: ColumnProps) => {
+        if(item.prop && !isEmpty(filters[item.prop])) {
+          let val = filters[item.prop];
+          if(item.formatMap) {
+            const label = item.formatMap[val];
+            val = typeof label === 'string' ? label : label.text;
+          }
+          return '当前过滤：' + val;
+        }
+        return '过滤条件';
+      },
+      getOptions: (item: ColumnProps) => {
+        if(!item.formatMap) return [];
+
+        return Object.entries(item.formatMap).map(([value, label]) => {
+          return {
+            label: typeof label === 'string' ? label : label.text,
+            value,
+          };
+        });
+      },
     };
   },
 });

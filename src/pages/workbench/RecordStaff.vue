@@ -4,6 +4,7 @@
       ref="selectRef"
       :data="tableData"
       :columns="columns"
+      :batch-select-fields="['name', 'code']"
       @selection-change="handleSelectionChange"
     ></CompLocalSelectTable>
   </CompDialog>
