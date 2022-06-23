@@ -7,9 +7,20 @@
       ref="tableRef"
       stripe
       border
-      v-bind="{ ...tableProps }"
       :data="currentData"
+      :row-key="rowKey"
+      v-bind="{ ...tableProps }"
+      @selection-change="(...args) => $emit('selection-change', ...args)"
     >
+      <!-- 多选列 -->
+      <el-table-column
+        v-if="hasSelection"
+        type="selection"
+        width="40px"
+        align="center"
+        reserve-selection
+      ></el-table-column>
+
       <el-table-column
         label="序号"
         type="index"
@@ -54,23 +65,41 @@
 
       <slot name="column"></slot>
 
-      <template v-for="(col, ind) in columns" :key="col.prop + ind">
-        <el-table-column
-          :show-overflow-tooltip="showOverflowTooltip"
-          v-bind="col"
+      <template
+        v-for="(item, index) in columns"
+        :key="(item.prop ?? item.label) + index"
+      >
+        <CompTableColumn
+          :column-prop="{ ...item }"
+          :children="item.subColumns"
         >
-          <template #header="config">
-            <slot name="column-header" v-bind="config">
-              {{ col.label }}
-            </slot>
-          </template>
+          <template #header-extra>
+            <el-popover trigger="click" :hide-after="0" placement="top">
+              <template #reference>
+                <el-link
+                  :icon="icons.Search"
+                  :underline="false"
+                  :style="filters[item.prop] ? { color: 'var(--el-link-default-active-color)' } : void 0"
+                ></el-link>
+              </template>
 
-          <template #default="config">
-            <slot name="column-content" v-bind="config">
-              {{ config.row[col.prop] }}
-            </slot>
+              <el-select-v2
+                v-if="item.formatMap"
+                v-model="filters[item.prop]"
+                placeholder="请选择搜索条件"
+                clearable
+                :options="Object.entries(item.formatMap).map(([value, label]) => ({ label, value }))"
+                :teleported="false"
+              ></el-select-v2>
+              <el-input
+                v-else
+                v-model="filters[item.prop]"
+                placeholder="请输入搜索条件"
+                clearable
+              ></el-input>
+            </el-popover>
           </template>
-        </el-table-column>
+        </CompTableColumn>
       </template>
     </el-table>
 
@@ -80,7 +109,7 @@
         v-model:current-page="table.pageNumber"
         background
         layout="total, sizes, prev, pager, next, jumper"
-        :total="data.length"
+        :total="filteredData.length"
         :default-page-size="table.pageSize"
         :page-sizes="[10, 20, 50]"
       ></el-pagination>
@@ -89,12 +118,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive, computed, ref } from 'vue';
+import { defineComponent, PropType, reactive, computed, ref, watch } from 'vue';
 import ElTableColumn from 'element-plus/es/components/table/src/tableColumn';
 import { TableProps } from 'element-plus/es/components/table/src/table/defaults';
+import CompTableColumn from '~/components/CompTable/CompTableColumn.vue';
+import { Search } from '@element-plus/icons';
 
 export default defineComponent({
   name: 'CompLocalTable',
+  components: { CompTableColumn },
   props: {
     data: {
       type: Array as PropType<any[]>,
@@ -120,19 +152,46 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+    // 多选
+    hasSelection: {
+      type: Boolean,
+      default: false,
+    },
+    // 主键
+    rowKey: {
+      type: String,
+      default: 'id',
+    },
   },
-  emits: ['update:data'],
+  emits: ['update:data', 'selection-change'],
   setup(props, ctx) {
+    // 分页
     const table = reactive({
       pageSize: 10,
       pageNumber: 1,
     });
 
+    // 查询条件
+    const filters = reactive<Record<string, string>>({});
+
     // 当前页数据
+    const filteredData = computed(() => {
+      const filterKvs = Object.entries(filters).filter(([k, v]) => !!v).map(([k, v]) => [k, v.toLowerCase()]);
+      return props.data.filter(item => {
+        let flag = true;
+        for(const [k, v] of filterKvs) {
+          if(k in item && !`${item[k]}`.toLowerCase().includes(v)) {
+            flag = false;
+            break;
+          }
+        }
+        return flag;
+      });
+    });
     const currentData = computed(() => {
       const start = (table.pageNumber - 1) * table.pageSize;
       const end = start + table.pageSize;
-      return props.data.slice(start, end);
+      return filteredData.value.slice(start, end);
     });
 
     const tableRef = ref();
@@ -141,6 +200,7 @@ export default defineComponent({
       tableRef,
       table,
       currentData,
+      filteredData,
       // 每页递增索引
       indexMethod: (index: number) => {
         return (table.pageNumber - 1) * table.pageSize + index + 1;
@@ -155,8 +215,10 @@ export default defineComponent({
         const realindex = (table.pageNumber - 1) * table.pageSize + index;
         const newData = [...props.data];
         newData.splice(realindex, 1);
-        ctx.emit('update:data', newData);
+        ctx.emit('update:data', newData, row, index);
       },
+      icons: { Search },
+      filters,
     };
   },
 });

@@ -9,6 +9,7 @@ import CompTable from '~/components/CompTable';
 import CompDialog from '~/components/CompDialog/index.vue';
 import CompButton from '~/components/CompButton/index.vue';
 import CompLocalTable from '~/components/CompLocalTable/index.vue';
+import CompLocalSelectTable from '~/components/CompLocalSelectTable/index.vue';
 // 引入自定义指令
 import Directives from '~/plugins/directives';
 // 引入状态管理
@@ -24,6 +25,7 @@ const comps = [
   CompDialog,
   CompButton,
   CompLocalTable,
+  CompLocalSelectTable,
 ];
 comps.forEach(comp => app.component(comp.name, comp));
 

@@ -11,6 +11,13 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
     search: true,
   },
   {
+    label: '已录人数',
+    prop: 'trained_staffs',
+    width: 70,
+    customType: 'int',
+    customFormatter: (val) => val?.length ?? 0,
+  },
+  {
     label: '日期',
     prop: 'date',
     customType: 'date',

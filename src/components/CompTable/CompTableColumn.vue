@@ -8,9 +8,10 @@
         :content="columnProp.tip"
         :disabled="!columnProp.tip || columnProp.tip.length <= 4"
       >
-        <span>
+        <span class="comp-table-column__header">
           {{ columnProp.label }}
           {{ formatTip(columnProp.tip) }}
+          <slot name="header-extra"></slot>
         </span>
       </el-tooltip>
     </template>
@@ -65,6 +66,10 @@ export default defineComponent({
     return {
       // 格式化显示单元格
       formatCell: (val: any, row: any) => {
+        if(props.columnProp.customFormatter) {
+          return props.columnProp.customFormatter(val, row) ?? '-';
+        }
+
         if(props.columnProp.formatMap) {
           const opt = props.columnProp.formatMap[val];
           if(opt !== void 0) {
@@ -103,3 +108,11 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.comp-table-column__header {
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+}
+</style>

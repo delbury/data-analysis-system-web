@@ -50,6 +50,7 @@ export default defineComponent({
         searchAttach: {
           ...common.remote.GROUP_ID_REMOTE_OPTIONS,
         },
+        width: 150,
       },
       {
         label: '班组类型',

@@ -28,6 +28,8 @@ export type ColumnProps = Writeable<InstanceType<typeof ElTableColumn>['$props']
   tip?: string;
   // 格式化展示
   formatMap?: FormatMapType;
+  // 自定义格式化函数
+  customFormatter?: (val: any, row: Record<string, any>) => string | number;
   // 远程搜索条件配置
   search?: SearchType;
   // 查询的字段名

@@ -47,6 +47,8 @@ import {
   ElTag,
   ElEmpty,
   ElUpload,
+  ElTabs,
+  ElTabPane,
 } from 'element-plus';
 
 // import 'element-plus/dist/index.css';
@@ -100,6 +102,8 @@ const Coms = [
   ElTag,
   ElEmpty,
   ElUpload,
+  ElTabs,
+  ElTabPane,
 ];
 
 // 设置组件默认值

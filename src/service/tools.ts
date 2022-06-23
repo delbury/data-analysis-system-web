@@ -38,18 +38,30 @@ export type FetchersType = ReturnType<typeof createRESTfulAPI>;
 export type FetchersGetType =
   (params?: SearchParams | Record<string, any>, config?: AxiosRequestConfig<any> | undefined)=> Promise<AxiosResponse<ResponseList<any>, any>>;
 
+// 处理 id
+const resolvePath = (path: string, id?: string | number) => {
+  if(path.includes(':id') && id != void 0) {
+    return path.replace(':id', `${id}`);
+  }
+  return path;
+};
+
+interface BaseRequestParams {
+  id?: string | number;
+  [key: string]: unknown;
+}
 // 创建请求函数
-const createGetApi = <T = any, R = any>(path: string) =>
+const createGetApi = <T extends BaseRequestParams, R = any>(path: string) =>
   (params?: T, config?: AxiosRequestConfig) =>
-    http.get<any, AxiosResponse<Response<R>>>(path, config ? { ...config, params } : { params });
+    http.get<any, AxiosResponse<Response<R>>>(resolvePath(path, params?.id), config ? { ...config, params } : { params });
 
-const createPostApi = <T = any, R = any>(path: string) =>
+const createPostApi = <T extends BaseRequestParams, R = any>(path: string) =>
   (data?: T, config?: AxiosRequestConfig<T>) =>
-    http.post<any, AxiosResponse<Response<R>>>(path, data, config);
+    http.post<any, AxiosResponse<Response<R>>>(resolvePath(path, data?.id), data, config);
 
-const createPutApi = <T = any, R = any>(path: string) =>
+const createPutApi = <T extends BaseRequestParams, R = any>(path: string) =>
   (data?: T, config?: AxiosRequestConfig<T>) =>
-    http.put<any, AxiosResponse<Response<R>>>(path, data, config);
+    http.put<any, AxiosResponse<Response<R>>>(resolvePath(path, data?.id), data, config);
 
 export const apiCreater = {
   get: createGetApi,

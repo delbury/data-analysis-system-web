@@ -24,7 +24,7 @@
     >
     </CompTable>
 
-    <RecordStaff v-model="recordStaff.visible"></RecordStaff>
+    <RecordStaff v-model="recordStaff.visible" :detail="currentRow" @refresh="handleRefresh"></RecordStaff>
   </div>
 </template>
 
@@ -48,6 +48,9 @@ export default defineComponent({
       columns: getColumns(),
       apis: apis.workbench,
     });
+
+    // 当前行
+    const currentRow = ref<WorkbenchTable>();
 
     // 录入参训人员
     const recordStaff = reactive({
@@ -73,9 +76,14 @@ export default defineComponent({
         } else if(key === 'record-staff') {
           // 录入人员
           recordStaff.visible = true;
+          currentRow.value = record;
         }
       },
       recordStaff,
+      currentRow,
+      handleRefresh: () => {
+        tableRef.value?.table.refresh();
+      },
     };
   },
 });
