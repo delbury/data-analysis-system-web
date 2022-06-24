@@ -11,12 +11,18 @@
       <span class="user-info-name">
         {{ userInfo?.name ?? '-' }}
       </span>
+      <el-icon>
+        <arrow-down />
+      </el-icon>
     </div>
 
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item command="detail">
           查看信息
+        </el-dropdown-item>
+        <el-dropdown-item command="config">
+          客户端配置
         </el-dropdown-item>
         <el-dropdown-item command="modify">
           修改密码
@@ -41,14 +47,21 @@
     v-model="visibility.modify"
     :user-info="userInfo"
   ></ModifyPassword>
+
+  <!-- 客户端配置 -->
+  <ModifyClientConfig
+    v-if="visibility.config"
+    v-model="visibility.config"
+  ></ModifyClientConfig>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, reactive, nextTick } from 'vue';
-import { Avatar } from '@element-plus/icons';
+import { Avatar, ArrowDown } from '@element-plus/icons';
 import { useStore } from '~/store';
 import UserInfoDetail from './UserInfoDetail.vue';
 import ModifyPassword from './ModifyPassword.vue';
+import ModifyClientConfig from './ModifyClientConfig.vue';
 import { useRouter } from 'vue-router';
 import { apis } from '~/service';
 import { ElMessageBox } from 'element-plus';
@@ -57,7 +70,7 @@ const icons = { Avatar };
 
 export default defineComponent({
   name: 'UserInfo',
-  components: { UserInfoDetail, ModifyPassword },
+  components: { UserInfoDetail, ModifyPassword, ArrowDown, ModifyClientConfig },
   setup() {
     const store = useStore();
     const userInfo = computed(() => store.state.userInfo);
@@ -66,6 +79,7 @@ export default defineComponent({
     const visibility = reactive({
       detail: false,
       modify: false,
+      config: false,
     });
 
     // 登出
@@ -85,7 +99,7 @@ export default defineComponent({
       }
     };
 
-    const handleCommand = (cmd: 'detail' | 'modify' | 'logout') => {
+    const handleCommand = (cmd: 'detail' | 'modify' | 'logout' | 'config') => {
       switch(cmd) {
         case 'detail':
           visibility.detail = true;
@@ -95,6 +109,9 @@ export default defineComponent({
           break;
         case 'logout':
           logout();
+          break;
+        case 'config':
+          visibility.config = true;
           break;
         default:
           return;
@@ -119,12 +136,12 @@ export default defineComponent({
   .user-info_wrapper {
     display: flex;
     align-items: center;
+    color: #fff;
   }
 
   .user-info-name {
     margin-left: 0.5em;
     font-size: var(--el-font-size-base);
-    color: #fff;
   }
 }
 </style>

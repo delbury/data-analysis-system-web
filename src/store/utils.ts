@@ -19,3 +19,28 @@ export const createLinks = (routes: RouteRecordRaw[]): RouteNode[] => {
   };
   return walk(routes);
 };
+
+// 保存到本地
+export const saveToLocal = (key: string, data: Record<string, any>) => {
+  window.localStorage.setItem(key, JSON.stringify(data));
+};
+
+// 从本地获取默认数据并合并
+export const initWithLocal = <T = any>(key: string, initData: T) => {
+  const text = window.localStorage.getItem(key);
+  if(!text) return initData;
+
+  try {
+    const localData = JSON.parse(text) as T;
+    const mergedData = { ...initData };
+    // 本地设置覆盖默认设置
+    for(const key in localData) {
+      if(key in mergedData) {
+        mergedData[key] = localData[key];
+      }
+    }
+    return mergedData;
+  } catch(e) {
+    return initData;
+  }
+};

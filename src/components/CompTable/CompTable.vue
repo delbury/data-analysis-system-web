@@ -138,7 +138,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="table.total"
         :default-page-size="table.pageSize"
-        :page-sizes="[10, 20, 50]"
+        :page-sizes="pageSizes"
       ></el-pagination>
     </div>
 
@@ -173,7 +173,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, reactive, computed, watch } from 'vue';
+import { defineComponent, ref, PropType, reactive, computed, unref } from 'vue';
 import { useTableFetcher, usePermission, PermissionType } from './hooks';
 import { ColumnProps, FormItemSection, DialogStatus, ElFormProps, RowBtn } from './interface';
 import CompTableColumn from './CompTableColumn.vue';
@@ -185,6 +185,7 @@ import { FetchersType } from '~/service/tools';
 import TableSearch from './TableSearch.vue';
 import ColumnConfig from './ColumnConfig.vue';
 import ImportPreview from './ImportPreview/index.vue';
+import { useStore } from '~/store';
 
 const icons = {
   Plus, Refresh, Upload, Download,
@@ -286,6 +287,8 @@ function defineGenericComponent<T = any>() {
     },
     emits: ['btn'],
     setup(props, ctx) {
+      const store = useStore();
+
       // 表格
       const table = useTableFetcher(props.apis, { columns: props.columns, tableName: props.tableName });
       const dialogFormRef = ref<DialogFormInstance>();
@@ -418,6 +421,7 @@ function defineGenericComponent<T = any>() {
           const txtCount = currentRowBtns.value.reduce((sum, btn) => sum + btn.label.length, 0);
           return (leng + 1) * 8 + leng * 16 + txtCount * 12;
         }),
+        pageSizes: unref(store.state.clientConfig.tablePageSizes),
       };
     },
   });

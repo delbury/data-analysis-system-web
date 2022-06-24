@@ -127,19 +127,20 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="filteredData.length"
         :default-page-size="table.pageSize"
-        :page-sizes="[10, 20, 50]"
+        :page-sizes="pageSizes"
       ></el-pagination>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive, computed, ref, watch } from 'vue';
+import { defineComponent, PropType, reactive, computed, ref, unref } from 'vue';
 import { ColumnProps } from '~/components/CompTable/interface';
 import { TableProps } from 'element-plus/es/components/table/src/table/defaults';
 import CompTableColumn from '~/components/CompTable/CompTableColumn.vue';
 import { Search } from '@element-plus/icons';
 import { isEmpty } from '~/libs/utils';
+import { useStore } from '~/store';
 
 export default defineComponent({
   name: 'CompLocalTable',
@@ -187,9 +188,10 @@ export default defineComponent({
   },
   emits: ['update:data', 'selection-change'],
   setup(props, ctx) {
+    const store = useStore();
     // 分页
     const table = reactive({
-      pageSize: 10,
+      pageSize: unref(store.state.clientConfig.defaultTablePageSize),
       pageNumber: 1,
     });
 
@@ -219,6 +221,7 @@ export default defineComponent({
     const tableRef = ref();
 
     return {
+      pageSizes: unref(store.state.clientConfig.tablePageSizes),
       tableRef,
       table,
       currentData,

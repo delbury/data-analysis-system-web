@@ -7,16 +7,17 @@
         :columns="columns"
         :row-key="rowKey"
         has-selection
+        :table-props="{ height: height }"
         @selection-change="handleSelectionChange"
       >
-        <template #header-extra="{ data }">
+        <template #header-extra="{ data: da }">
           <el-tooltip content="批量选择">
             <span>
               <el-link
-                v-if="batchSelectFieldsSet.has(data.prop)"
+                v-if="batchSelectFieldsSet.has(da.prop)"
                 :icon="icons.DocumentAdd"
                 @click="() => {
-                  currentBatchKey = data.prop;
+                  currentBatchKey = da.prop;
                   batchSelectVisible = true;
                 }"
               >
@@ -40,6 +41,7 @@
         :columns="columns"
         :show-operation="['delete']"
         :need-delete-confirm="false"
+        :table-props="{ height: height }"
         @update:data="handleDelete"
       ></CompLocalTable>
     </el-tab-pane>
@@ -74,6 +76,9 @@ export default defineComponent({
     batchSelectFields: {
       type: Array as PropType<string[]>,
       default: () => [],
+    },
+    height: {
+      type: [Number, String],
     },
   },
   emits: ['selection-change'],

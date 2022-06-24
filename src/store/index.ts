@@ -3,6 +3,7 @@ import { createStore, Store, useStore as _useStore } from 'vuex';
 import { AccountTable } from '~types/db-table-type/Account';
 import { apis } from '~/service';
 import { RouteNode } from './interface';
+import { saveToLocal, initWithLocal } from './utils';
 
 export interface IState {
   // 登录后的用户信息
@@ -13,8 +14,15 @@ export interface IState {
   globalLoading: boolean;
   // 动态路由树
   routeTree: RouteNode[];
-  // 权限列表
+  // 用户权限列表集合
   permissionsSet: Set<string>;
+  // 默认客户端设置
+  clientConfig: {
+    // 表格可选分页 size
+    tablePageSizes: number[];
+    // 表格默认分页 size
+    defaultTablePageSize: number;
+  };
 }
 
 export const key: InjectionKey<Store<IState>> = Symbol();
@@ -26,6 +34,10 @@ export const store = createStore<IState>({
     globalLoading: false,
     routeTree: [],
     permissionsSet: new Set(),
+    clientConfig: initWithLocal('clientConfig', {
+      tablePageSizes: [10, 20, 50, 100],
+      defaultTablePageSize: 20,
+    }),
   },
   mutations: {
     clearUserInof(state) {
@@ -46,6 +58,14 @@ export const store = createStore<IState>({
     },
     setRouteTree(state, tree: RouteNode[]) {
       state.routeTree = tree;
+    },
+    setClientConfig(state, config: Partial<IState['clientConfig']>) {
+      for(const key in config) {
+        if(key in state.clientConfig) {
+          state.clientConfig[key] = config[key];
+        }
+      }
+      saveToLocal('clientConfig', state.clientConfig);
     },
   },
   actions: {

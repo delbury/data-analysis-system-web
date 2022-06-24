@@ -1,4 +1,4 @@
-import { markRaw, shallowReactive, onMounted, watch, toRef, nextTick, ref } from 'vue';
+import { markRaw, shallowReactive, onMounted, watch, toRef, nextTick, ref, unref } from 'vue';
 import { FetchersType } from '~/service/tools';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { ColumnProps } from './interface';
@@ -56,11 +56,6 @@ interface TableResult {
   export: () => void;
 }
 
-// 初始设置
-const INIT_PARAMS = {
-  pageSize: 10,
-  pageNumber: 1,
-};
 // 获取有自定义渲染配置的列
 const getColumnRenderMap = (columns?: ColumnProps[]) => {
   if(!columns) return null;
@@ -83,6 +78,7 @@ const getColumnRenderMap = (columns?: ColumnProps[]) => {
 // hook
 type HookConfig = { columns: ColumnProps[]; tableName?: string };
 export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
+  const store = useStore();
   const { columns, tableName } = config;
   // 刷新表格节流
   const willRefresh = ref(false);
@@ -103,8 +99,8 @@ export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
   };
 
   const table = shallowReactive<TableResult>({
-    pageSize: INIT_PARAMS.pageSize,
-    pageNumber: INIT_PARAMS.pageNumber,
+    pageSize: unref(store.state.clientConfig.defaultTablePageSize),
+    pageNumber: 1,
     list: [],
     total: 0,
     loading: false,
@@ -117,8 +113,8 @@ export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
     // 刷新表格，是否完全刷新
     refresh: markRaw(async (params?: {}, reset?: boolean) => {
       // 是否刷新到第一页
-      if((reset || params) && table.pageNumber !== INIT_PARAMS.pageNumber) {
-        table.pageNumber = INIT_PARAMS.pageNumber;
+      if((reset || params) && table.pageNumber !== 1) {
+        table.pageNumber = 1;
         return;
       }
       try {
@@ -225,7 +221,6 @@ export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
     if(!willRefresh.value) {
       willRefresh.value = true;
       nextTick(() => {
-        console.log('watch');
         table.refresh();
         willRefresh.value = false;
       });

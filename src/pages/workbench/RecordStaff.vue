@@ -1,10 +1,15 @@
 <template>
-  <CompDialog title="录入参训人员" :submit-action="submitAction">
+  <CompDialog
+    title="录入参训人员"
+    :submit-action="submitAction"
+    :dialog-props="{ width: '800px' }"
+  >
     <CompLocalSelectTable
       ref="selectRef"
       :data="tableData"
       :columns="columns"
       :batch-select-fields="['name', 'code']"
+      height="40vh"
       @selection-change="handleSelectionChange"
     ></CompLocalSelectTable>
   </CompDialog>
@@ -22,15 +27,18 @@ const columns: ColumnProps[] = [
   {
     label: '姓名',
     prop: 'name',
+    width: '120px',
   },
   {
     label: '工号',
     prop: 'code',
+    width: '120px',
   },
   {
     label: '性别',
     prop: 'sex',
     formatMap: common.maps.STAFF_SEX_MAP,
+    width: '120px',
   },
   {
     label: '班组',
