@@ -1,5 +1,10 @@
 <template>
-  <el-tabs type="card" :model-value="activeTab" @tab-change="(v) => activeTab = v">
+  <el-tabs
+    v-loading="loading"
+    type="card"
+    :model-value="activeTab"
+    @tab-change="(v) => activeTab = v"
+  >
     <el-tab-pane label="全部列表" name="all">
       <CompLocalTable
         ref="listRef"
@@ -79,6 +84,10 @@ export default defineComponent({
     },
     height: {
       type: [Number, String],
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ['selection-change'],

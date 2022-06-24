@@ -24,7 +24,12 @@
     >
     </CompTable>
 
-    <RecordStaff v-if="recordStaff.visible" v-model="recordStaff.visible" :detail="currentRow" @refresh="handleRefresh"></RecordStaff>
+    <RecordStaff
+      v-if="recordStaff.visible"
+      v-model="recordStaff.visible"
+      :detail="currentRow"
+      @refresh="handleRefresh"
+    ></RecordStaff>
   </div>
 </template>
 

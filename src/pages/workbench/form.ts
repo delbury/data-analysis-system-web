@@ -291,6 +291,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         prop: 'trainer_code',
         ruleNames: ['required'],
         importDefaultCol: 'T',
+        disabled: true,
       },
       {
         label: '培训师星级',
@@ -303,6 +304,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         },
         formValueChangeHandler: salaryHandler,
         importDefaultCol: 'U',
+        disabled: true,
       },
       {
         label: '培训师所属单位',
