@@ -7,11 +7,16 @@ import { useStore } from '~/store';
 import { computed } from 'vue';
 
 // 获取 table 权限
-export type PermissionType = { read?: boolean; write?: boolean; export?: boolean; import?: boolean; } | null;
+export type PermissionType = { read?: boolean; write?: boolean; export?: boolean; import?: boolean; };
 export const usePermission = (dbTable?: string) => {
   const store = useStore();
   return computed((): PermissionType => {
-    if(!dbTable) return null;
+    if(!dbTable) return {
+      read: true,
+      write: true,
+      export: true,
+      import: true,
+    };
     const set = store.state.permissionsSet;
     const write = set.has('all') || set.has(dbTable);
     const read = set.has(`${dbTable}.read`) || write || set.has('all.read');

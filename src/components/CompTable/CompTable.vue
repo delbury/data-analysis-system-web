@@ -112,7 +112,7 @@
 
         <!-- 导入 -->
         <comp-button
-          v-if="showImportBtn && permission?.import"
+          v-if="showImportBtn && permission.import"
           :icon="icons.Upload"
           tip="导入"
           @click="() => importExcel.visible = true"
