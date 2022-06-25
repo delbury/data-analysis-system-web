@@ -67,6 +67,7 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
   {
     label: '项目编号',
     prop: 'project_code',
+    search: true,
   },
   {
     label: '培训项目名称',

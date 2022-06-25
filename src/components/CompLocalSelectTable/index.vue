@@ -48,17 +48,30 @@
         :need-delete-confirm="false"
         :table-props="{ height: height }"
         @update:data="handleDelete"
-      ></CompLocalTable>
+      >
+        <template #footer>
+          <div>
+            <comp-button
+              :icon="icons.Download"
+              tip="导出已选列表"
+              :button-props="{ loading: loadings.export }"
+              @click="handleExport"
+            ></comp-button>
+          </div>
+        </template>
+      </CompLocalTable>
     </el-tab-pane>
   </el-tabs>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, shallowRef, ref, computed } from 'vue';
-import ElTableColumn from 'element-plus/es/components/table/src/tableColumn';
+import { defineComponent, PropType, shallowRef, ref, computed, reactive } from 'vue';
 import { ElMessage } from 'element-plus';
-import { DocumentAdd } from '@element-plus/icons';
+import { DocumentAdd, Download } from '@element-plus/icons';
 import TextInput from './TextInput.vue';
+import { getColumnRenderMap } from '~/components/CompTable/hooks';
+import { ColumnProps } from '~/components/CompTable/interface';
+import { saveFile } from '~/components/CompTable/xlsx/export';
 
 export default defineComponent({
   name: 'CompLocalSelectTable',
@@ -69,7 +82,7 @@ export default defineComponent({
       default: () => [],
     },
     columns: {
-      type: Array as PropType<typeof ElTableColumn[]>,
+      type: Array as PropType<ColumnProps[]>,
       default: () => [],
     },
     // 主键
@@ -89,12 +102,19 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    // 导出文件名称
+    exportFileName: {
+      type: String,
+    },
   },
   emits: ['selection-change'],
   setup(props, ctx) {
     const activeTab = ref<'all' | 'selected'>('all');
     const listRef = ref();
-    const selectedData = shallowRef<any[]>([]);
+    const selectedData = shallowRef<Record<string, any>[]>([]);
+    const loadings = reactive({
+      export: false,
+    });
 
     // 批量选择
     const batchSelectVisible = ref(false);
@@ -102,6 +122,7 @@ export default defineComponent({
     const currentBatchKey = ref<string>();
 
     return {
+      loadings,
       batchSelectVisible,
       currentBatchKey,
       activeTab,
@@ -139,6 +160,7 @@ export default defineComponent({
       batchSelectFieldsSet: computed(() => new Set(props.batchSelectFields)),
       icons: {
         DocumentAdd,
+        Download,
       },
       // 批量选择
       handleBatchSelect: (valsSet: Set<string>) => {
@@ -151,6 +173,33 @@ export default defineComponent({
           }
         }
         ElMessage.success(`输入有效数据 ${valsSet.size} 条，匹配选中 ${count} 条`);
+      },
+      // 导出已选名单
+      handleExport: async () => {
+        loadings.export = true;
+        const list = selectedData.value;
+        const columnRenderMap = getColumnRenderMap(props.columns);
+
+        // 数据处理，自定义渲染
+        if(columnRenderMap) {
+          list.forEach((item) => {
+            Object.entries(item).forEach(([key, val]) => {
+              const config = columnRenderMap[key];
+              if(!config) return;
+
+              if(config.formatMap) {
+                const v = config.formatMap[val];
+                item[key] = typeof v === 'string' ? v : v.text;
+              }
+            });
+          });
+        }
+        try {
+          // 保存文件
+          await saveFile(list, props.columns, props.exportFileName ?? '已选列表');
+        } finally {
+          loadings.export = false;
+        }
       },
     };
   },

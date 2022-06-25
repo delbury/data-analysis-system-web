@@ -57,7 +57,7 @@ interface TableResult {
 }
 
 // 获取有自定义渲染配置的列
-const getColumnRenderMap = (columns?: ColumnProps[]) => {
+export const getColumnRenderMap = (columns?: ColumnProps[]) => {
   if(!columns) return null;
 
   const temp: Record<string, ColumnProps> = {};

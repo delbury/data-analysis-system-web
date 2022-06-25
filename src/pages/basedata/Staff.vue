@@ -26,21 +26,29 @@ export default defineComponent({
         label: '姓名',
         prop: 'name',
         search: true,
+        width: '100px',
       },
       {
         label: '性别',
         prop: 'sex',
         formatMap: common.maps.STAFF_SEX_MAP,
         search: true,
+        width: '80px',
       },
       {
         label: '工号',
         prop: 'code',
         search: true,
+        width: '100px',
       },
       {
         label: '手机号码',
         prop: 'phone',
+        width: '120px',
+      },
+      {
+        label: '岗位',
+        prop: 'position',
       },
       {
         label: '班组',
@@ -53,38 +61,44 @@ export default defineComponent({
         width: 150,
       },
       {
-        label: '培训师星级',
-        prop: 'level',
-        formatMap: common.maps.TRAINER_LEVEL_MAP,
-        search: true,
-      },
-      {
         label: '班组类型',
         prop: 'group_type',
         formatMap: common.maps.GROUP_TYPE_MAP,
         search: true,
+        width: '80px',
+      },
+      {
+        label: '培训师星级',
+        prop: 'level',
+        formatMap: common.maps.TRAINER_LEVEL_MAP,
+        search: true,
+        width: '80px',
       },
       {
         label: '是否取证',
         prop: 'has_cert',
         tip: '上岗资格证书',
         customType: 'bool',
+        width: '100px',
       },
       {
         label: '人员状态',
         prop: 'status',
         formatMap: common.maps.STAFF_STATUS_MAP,
         search: true,
+        width: '100px',
       },
       {
         label: '入职时间',
         prop: 'join_date',
         customType: 'date',
+        width: '100px',
       },
       {
         label: '离职时间',
         prop: 'quit_date',
         customType: 'date',
+        width: '100px',
       },
       {
         label: '备注',
@@ -108,6 +122,7 @@ export default defineComponent({
           },
           { label: '工号', prop: 'code', span: 12, ruleNames: ['required'] },
           { label: '手机号码', prop: 'phone', span: 12, ruleNames: ['required', 'phone'] },
+          { label: '岗位', prop: 'position', span: 12, ruleNames: ['normalLength'] },
           {
             label: '班组',
             prop: 'group_id',

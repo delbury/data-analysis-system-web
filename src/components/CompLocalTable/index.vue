@@ -120,6 +120,11 @@
     </el-table>
 
     <div class="comp-local-table__pagination">
+      <!-- 左下角插槽 -->
+      <div class="comp-local-table__footer">
+        <slot name="footer"></slot>
+      </div>
+
       <el-pagination
         v-model:page-size="table.pageSize"
         v-model:current-page="table.pageNumber"
@@ -278,7 +283,8 @@ export default defineComponent({
 
   .comp-local-table__pagination {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
     margin-top: 20px;
   }
 }

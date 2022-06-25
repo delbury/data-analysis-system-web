@@ -2,7 +2,7 @@
   <CompDialog
     title="录入参训人员"
     :submit-action="submitAction"
-    :dialog-props="{ width: '800px' }"
+    :dialog-props="{ width: '1000px' }"
   >
     <CompLocalSelectTable
       ref="selectRef"
@@ -11,13 +11,14 @@
       :batch-select-fields="['name', 'code']"
       height="40vh"
       :loading="loading"
+      :export-file-name="exportFileName"
       @selection-change="handleSelectionChange"
     ></CompLocalSelectTable>
   </CompDialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, shallowRef, PropType, ref, nextTick } from 'vue';
+import { defineComponent, onMounted, shallowRef, PropType, ref, nextTick, computed } from 'vue';
 import { apis } from '~/service';
 import { ColumnProps } from '~/components/CompTable/interface';
 import { SafeStaffInfo } from '~/service/basedata_staff';
@@ -40,6 +41,10 @@ const columns: ColumnProps[] = [
     prop: 'sex',
     formatMap: common.maps.STAFF_SEX_MAP,
     width: '100px',
+  },
+  {
+    label: '岗位',
+    prop: 'position',
   },
   {
     label: '班组类型',
@@ -96,6 +101,7 @@ export default defineComponent({
       },
       selectRef,
       loading,
+      exportFileName: computed(() => `${props.detail?.project_code ?? ''}_参训人员名单`),
     };
   },
 });
