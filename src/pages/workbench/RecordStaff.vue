@@ -12,7 +12,7 @@
       height="40vh"
       :loading="loading"
       :export-file-name="exportFileName"
-      :need-export-fields="['name', 'code', 'position']"
+      :need-export-fields="['code', 'name', 'position']"
       @selection-change="handleSelectionChange"
     ></CompLocalSelectTable>
   </CompDialog>

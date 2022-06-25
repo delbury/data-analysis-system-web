@@ -72,7 +72,6 @@ import TextInput from './TextInput.vue';
 import { getColumnRenderMap } from '~/components/CompTable/hooks';
 import { ColumnProps } from '~/components/CompTable/interface';
 import { saveFile } from '~/components/CompTable/xlsx/export';
-import pickBy from 'lodash/pickBy';
 
 export default defineComponent({
   name: 'CompLocalSelectTable',
@@ -183,9 +182,17 @@ export default defineComponent({
       handleExport: async () => {
         loadings.export = true;
         const list = selectedData.value;
-        const columns = props.needExportFields ?
-          props.columns.filter(c => c.prop && props.needExportFields?.includes(c.prop))
-          : props.columns;
+        const columns = [...props.columns];
+        // 过滤并排序
+        if(props.needExportFields) {
+          columns.length = 0;
+          props.needExportFields.forEach(field => {
+            const col = props.columns.find(it => it.prop === field);
+            if(col) {
+              columns.push(col);
+            }
+          });
+        }
         const columnRenderMap = getColumnRenderMap(columns);
 
         // 数据处理，自定义渲染
