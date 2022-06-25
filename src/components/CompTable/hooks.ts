@@ -182,7 +182,7 @@ export const useTableFetcher = (fetchers: FetchersType, config: HookConfig) => {
             // 导出
             try {
               table.exporting = true;
-              const list = (await fetch()).list as Record<string, string>[];
+              const list = (await fetch({ all: 1 })).list as Record<string, string>[];
 
               // 数据处理，自定义渲染
               if(columnRenderMap) {
