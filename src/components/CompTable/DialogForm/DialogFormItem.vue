@@ -40,6 +40,9 @@
         item.customOption?.remoteMethod?.('', item.customOption)
       }
     }"
+    @change="(val) => {
+      item.customOption?.selectChange?.(val, item.customOption?.options?.find(it => it.value === val), form);
+    }"
   >
     <template #default="{ item: it }">
       <el-tooltip placement="right" :content="renderSelectOption(it, item)">

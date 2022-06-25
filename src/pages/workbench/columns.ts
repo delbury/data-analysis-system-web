@@ -125,7 +125,7 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
   },
   {
     label: '培训项目负责人',
-    prop: 'maintainer',
+    prop: 'maintainer_name',
   },
   {
     label: '培训负责人工号',
@@ -138,7 +138,7 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
   },
   {
     label: '培训师',
-    prop: 'trainer',
+    prop: 'trainer_name',
     minWidth: 80,
   },
   {

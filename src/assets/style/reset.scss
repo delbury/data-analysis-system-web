@@ -45,6 +45,12 @@ ul {
   font-size: var(--el-font-size-extra-small);
 }
 
+// select-v2 disabled 时 placeholder 的问题
+.is-disabled > *:not(.el-input__prefix):not(.el-input__suffix).el-select-v2__placeholder {
+  // color: var(--el-text-color-placeholder) !important;
+  background-color: unset !important;
+}
+
 // 表单校验失败时的样式
 .el-form-item.is-error .el-select-v2__wrapper {
   border-color: var(--el-color-danger);

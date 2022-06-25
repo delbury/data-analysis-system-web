@@ -7,7 +7,6 @@ import { getRemoteSelectFormItemOptions } from '~/components/CompTable/util';
 import { CustomSelectOption } from '~/components/CompTable/interface';
 import { GROUP_TYPE_MAP, TRAINER_LEVEL_MAP } from './format-maps';
 
-
 // 班组
 export const GROUP_ID_REMOTE_OPTIONS: CustomSelectOption = {
   ...getRemoteSelectFormItemOptions(apis.basedata_teamgroup.get, {
@@ -34,26 +33,31 @@ export const ROLE_REMOTE_OPTIONS: CustomSelectOption =
   });
 
 // 人员
-export const STAFF_ID_REMOTE_OPTIONS: CustomSelectOption = {
-  ...getRemoteSelectFormItemOptions(apis.basedata_staff.get, {
+type GetParams = Parameters<typeof getRemoteSelectFormItemOptions>[1]
+export const getStaffIdRemoteOptions = (params?: GetParams): CustomSelectOption => ({
+  ...getRemoteSelectFormItemOptions(apis.basedata_staff.getAllList, {
     rebuildLabelField: 'staff_name',
     rebuildValueField: 'staff_id',
+    ...params,
   }),
   optionRender: (item) => {
     const groupName = item.extra.group_name;
     const code = item.extra.code;
     return [code, groupName];
   },
-};
+});
+export const STAFF_ID_REMOTE_OPTIONS = getStaffIdRemoteOptions();
 
 // 培训师
 export const TRAINER_ID_REMOTE_OPTIONS: CustomSelectOption = {
-  ...getRemoteSelectFormItemOptions(apis.basedata_trainer.get, {
+  ...getRemoteSelectFormItemOptions(apis.basedata_trainer.getAllList, {
     rebuildLabelField: 'trainer_name',
     rebuildValueField: 'trainer_id',
+    labelField: 'staff_name',
+    valueField: 'id',
   }),
   optionRender: (item) => {
-    const level = TRAINER_LEVEL_MAP[item.extra.trainer_level];
+    const level = TRAINER_LEVEL_MAP[item.extra.level];
     const code = item.extra.staff_code;
     return [code, level];
   },

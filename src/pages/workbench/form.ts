@@ -4,6 +4,8 @@ import common from '~/pages/common';
 import { WorkbenchTable as RawWorkbenchTable } from '~types/db-table-type/Workbench';
 import { apis } from '~/service';
 import { DEFAULT_DATE } from '~/components/CompTable/util';
+import { SafeTrainerInfo } from '~/service/basedata_trainer';
+import { SafeStaffInfo } from '~/service/basedata_staff';
 
 interface WorkbenchTable extends RawWorkbenchTable {
   start_end_time?: [Date, Date];
@@ -258,23 +260,36 @@ export const FORM_ITEMS: FormItemSection[] = [
         importDefaultCol: 'O',
       },
       {
+        label: '培训地点',
+        prop: 'train_place',
+        ruleNames: ['required'],
+        importDefaultCol: 'R',
+      },
+      {
         label: '培训项目负责人',
-        prop: 'maintainer',
+        prop: 'maintainer_id',
         ruleNames: ['required'],
         importDefaultCol: 'P',
+        customType: 'remote-select',
+        customOption: {
+          ...common.remote.getStaffIdRemoteOptions({
+            rebuildLabelField: 'maintainer_name',
+            rebuildValueField: 'maintainer_id',
+          }),
+          selectChange: (val, opt: { extra: SafeStaffInfo; }, form: WorkbenchTable) => {
+            form.maintainer_code = opt?.extra?.code;
+            form.maintainer_name = opt?.extra?.name;
+          },
+        },
       },
       {
         label: '培训负责人工号',
         prop: 'maintainer_code',
         ruleNames: ['required'],
         importDefaultCol: 'Q',
+        disabled: true,
       },
-      {
-        label: '培训地点',
-        prop: 'train_place',
-        ruleNames: ['required'],
-        importDefaultCol: 'R',
-      },
+
     ],
   },
   {
@@ -282,9 +297,18 @@ export const FORM_ITEMS: FormItemSection[] = [
     formItems: [
       {
         label: '培训师',
-        prop: 'trainer',
+        prop: 'trainer_id',
         ruleNames: ['required'],
         importDefaultCol: 'S',
+        customType: 'remote-select',
+        customOption: {
+          ...common.remote.TRAINER_ID_REMOTE_OPTIONS,
+          selectChange: (val, opt: { extra: SafeTrainerInfo; }, form: WorkbenchTable) => {
+            form.trainer_code = opt?.extra?.staff_code;
+            form.trainer_level = opt?.extra?.level;
+            form.trainer_name = opt?.extra?.staff_name;
+          },
+        },
       },
       {
         label: '培训师工号/外部师资编号',
