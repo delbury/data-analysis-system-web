@@ -56,14 +56,15 @@ export const dynamicRoutes: RouteRecordRaw[] = [
           icon: User,
         },
       },
-      {
-        path: 'trainer',
-        component: () => import('~/pages/basedata/Trainer.vue'),
-        meta: {
-          label: '培训师管理',
-          icon: User,
-        },
-      },
+      // 合并到人员管理
+      // {
+      //   path: 'trainer',
+      //   component: () => import('~/pages/basedata/Trainer.vue'),
+      //   meta: {
+      //     label: '培训师管理',
+      //     icon: User,
+      //   },
+      // },
       {
         path: 'teamgroup',
         component: () => import('~/pages/basedata/TeamGroup.vue'),

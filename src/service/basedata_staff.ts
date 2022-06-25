@@ -10,6 +10,7 @@ export interface SafeStaffInfo {
   id: number;
   name: string;
   sex: number;
+  level: number;
 }
 
 export default {

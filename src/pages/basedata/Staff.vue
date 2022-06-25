@@ -53,6 +53,12 @@ export default defineComponent({
         width: 150,
       },
       {
+        label: '培训师星级',
+        prop: 'level',
+        formatMap: common.maps.TRAINER_LEVEL_MAP,
+        search: true,
+      },
+      {
         label: '班组类型',
         prop: 'group_type',
         formatMap: common.maps.GROUP_TYPE_MAP,
@@ -112,6 +118,17 @@ export default defineComponent({
               ...common.remote.GROUP_ID_REMOTE_OPTIONS,
             },
           },
+          {
+            label: '星级',
+            prop: 'level',
+            span: 12,
+            customType: 'select',
+            customOption: {
+              options: common.opts.TRAINER_LEVEL_OPTIONS,
+            },
+            default: 0,
+            ruleNames: ['required'],
+          },
           { label: '是否取证', info: '上岗资格证书', prop: 'has_cert', span: 12, customType: 'bool' },
           {
             label: '状态',
@@ -122,6 +139,7 @@ export default defineComponent({
             customOption: {
               options: common.opts.STAFF_STATUS_OPTIONS,
             },
+            default: 1,
           },
           {
             label: '入职时间',

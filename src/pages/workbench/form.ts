@@ -4,7 +4,6 @@ import common from '~/pages/common';
 import { WorkbenchTable as RawWorkbenchTable } from '~types/db-table-type/Workbench';
 import { apis } from '~/service';
 import { DEFAULT_DATE } from '~/components/CompTable/util';
-import { SafeTrainerInfo } from '~/service/basedata_trainer';
 import { SafeStaffInfo } from '~/service/basedata_staff';
 
 interface WorkbenchTable extends RawWorkbenchTable {
@@ -302,11 +301,14 @@ export const FORM_ITEMS: FormItemSection[] = [
         importDefaultCol: 'S',
         customType: 'remote-select',
         customOption: {
-          ...common.remote.TRAINER_ID_REMOTE_OPTIONS,
-          selectChange: (val, opt: { extra: SafeTrainerInfo; }, form: WorkbenchTable) => {
-            form.trainer_code = opt?.extra?.staff_code;
+          ...common.remote.getStaffIdRemoteOptions({
+            rebuildLabelField: 'trainer_name',
+            rebuildValueField: 'trainer_id',
+          }, { showLevel: true }),
+          selectChange: (val, opt: { extra: SafeStaffInfo; }, form: WorkbenchTable) => {
+            form.trainer_code = opt?.extra?.code;
             form.trainer_level = opt?.extra?.level;
-            form.trainer_name = opt?.extra?.staff_name;
+            form.trainer_name = opt?.extra?.name;
           },
         },
       },

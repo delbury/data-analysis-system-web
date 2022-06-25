@@ -34,7 +34,7 @@ export const ROLE_REMOTE_OPTIONS: CustomSelectOption =
 
 // 人员
 type GetParams = Parameters<typeof getRemoteSelectFormItemOptions>[1]
-export const getStaffIdRemoteOptions = (params?: GetParams): CustomSelectOption => ({
+export const getStaffIdRemoteOptions = (params?: GetParams, opt?: { showLevel?: boolean }): CustomSelectOption => ({
   ...getRemoteSelectFormItemOptions(apis.basedata_staff.getAllList, {
     rebuildLabelField: 'staff_name',
     rebuildValueField: 'staff_id',
@@ -43,22 +43,8 @@ export const getStaffIdRemoteOptions = (params?: GetParams): CustomSelectOption 
   optionRender: (item) => {
     const groupName = item.extra.group_name;
     const code = item.extra.code;
-    return [code, groupName];
+    const level = TRAINER_LEVEL_MAP[item.extra.level];
+    return opt?.showLevel ? [code, level, groupName] : [code, groupName];
   },
 });
 export const STAFF_ID_REMOTE_OPTIONS = getStaffIdRemoteOptions();
-
-// 培训师
-export const TRAINER_ID_REMOTE_OPTIONS: CustomSelectOption = {
-  ...getRemoteSelectFormItemOptions(apis.basedata_trainer.getAllList, {
-    rebuildLabelField: 'trainer_name',
-    rebuildValueField: 'trainer_id',
-    labelField: 'staff_name',
-    valueField: 'id',
-  }),
-  optionRender: (item) => {
-    const level = TRAINER_LEVEL_MAP[item.extra.level];
-    const code = item.extra.staff_code;
-    return [code, level];
-  },
-};
