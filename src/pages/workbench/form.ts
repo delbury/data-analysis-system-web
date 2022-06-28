@@ -401,8 +401,9 @@ export const FORM_ITEMS: FormItemSection[] = [
   },
   {
     title: '培训完成情况',
+    // 只有完成才展示
     sectionDisabled: (detail) => {
-      return detail?.status === void 0;
+      return detail?.status !== 2;
     },
     formItems: [
       {
