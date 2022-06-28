@@ -24,8 +24,16 @@
         <el-dropdown-item command="config">
           客户端配置
         </el-dropdown-item>
-        <el-dropdown-item command="modify">
+
+        <el-dropdown-item v-if="isAdmin" command="devops" divided>
+          运维操作
+        </el-dropdown-item>
+
+        <el-dropdown-item command="modify" divided>
           修改密码
+        </el-dropdown-item>
+        <el-dropdown-item command="switch">
+          切换账号
         </el-dropdown-item>
         <el-dropdown-item command="logout">
           退出登录
@@ -53,6 +61,9 @@
     v-if="visibility.config"
     v-model="visibility.config"
   ></ModifyClientConfig>
+
+  <!-- 运维操作 -->
+  <DevOps v-if="visibility.devops" v-model="visibility.devops"></DevOps>
 </template>
 
 <script lang="ts">
@@ -62,24 +73,29 @@ import { useStore } from '~/store';
 import UserInfoDetail from './UserInfoDetail.vue';
 import ModifyPassword from './ModifyPassword.vue';
 import ModifyClientConfig from './ModifyClientConfig.vue';
+import DevOps from './DevOps.vue';
 import { useRouter } from 'vue-router';
 import { apis } from '~/service';
 import { ElMessageBox } from 'element-plus';
 
 const icons = { Avatar };
 
+type Cmds = 'detail' | 'modify' | 'logout' | 'config' | 'devops' | 'switch';
+
 export default defineComponent({
   name: 'UserInfo',
-  components: { UserInfoDetail, ModifyPassword, ArrowDown, ModifyClientConfig },
+  components: { UserInfoDetail, ModifyPassword, ArrowDown, ModifyClientConfig, DevOps },
   setup() {
     const store = useStore();
     const userInfo = computed(() => store.state.userInfo);
+    const isAdmin = computed(() => store.state.permissionsSet.has('all'));
     const router = useRouter();
 
     const visibility = reactive({
       detail: false,
       modify: false,
       config: false,
+      devops: false,
     });
 
     // 登出
@@ -99,7 +115,7 @@ export default defineComponent({
       }
     };
 
-    const handleCommand = (cmd: 'detail' | 'modify' | 'logout' | 'config') => {
+    const handleCommand = (cmd: Cmds) => {
       switch(cmd) {
         case 'detail':
           visibility.detail = true;
@@ -113,6 +129,12 @@ export default defineComponent({
         case 'config':
           visibility.config = true;
           break;
+        case 'devops':
+          visibility.devops = true;
+          break;
+        case 'switch':
+          router.push('/login');
+          break;
         default:
           return;
       }
@@ -123,6 +145,7 @@ export default defineComponent({
       userInfo,
       handleCommand,
       visibility,
+      isAdmin,
     };
   },
 });
