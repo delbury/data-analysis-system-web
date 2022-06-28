@@ -182,24 +182,26 @@ export const FORM_ITEMS: FormItemSection[] = [
         customOption: {
           options: common.opts.TRAIN_PROJECT_NAME,
         },
-        formValueChangeHandler: async (val, form: WorkbenchTable, opt?: { other: { code: number } }) => {
-          if(val) {
-            const res = apis.workbench.getProjectCode({ project: val, code: opt?.other?.code ?? 0 });
-            form.project_code = (await res).data.data ?? '';
-          } else {
-            form.project_code = '';
-          }
-        },
+        // formValueChangeHandler: async (val, form: WorkbenchTable, opt?: { other: { code: number } }) => {
+        //   if(val) {
+        //     const res = apis.workbench.getProjectCode({ project: val, code: opt?.other?.code ?? 0 });
+        //     form.project_code = (await res).data.data ?? '';
+        //   } else {
+        //     form.project_code = '';
+        //   }
+        // },
         importDefaultCol: 'H',
+        editable: false,
       },
       {
         label: '项目编号',
         prop: 'project_code',
-        ruleNames: ['required'],
+        // ruleNames: ['required'],
         customOption: {
-          placeholder: '选择培训项目名称自动生成',
+          placeholder: '创建单据后自动生成',
         },
         importDefaultCol: 'G',
+        disabled: true,
       },
       {
         label: '培训课程名称',

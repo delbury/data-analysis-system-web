@@ -73,6 +73,7 @@
                   :item="item"
                   :form="form"
                   :readonly="readonly"
+                  :status="status"
                 ></dialog-form-item>
               </el-form-item>
             </el-col>

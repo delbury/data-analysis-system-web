@@ -87,6 +87,8 @@ export type FormItem = Omit<ElFormItemProps, 'rules'> & {
   info?: string | string[];
   readonly?: boolean;
   disabled?: boolean | ((form: any) => boolean);
+  // 编辑时，是否可修改，默认为 true
+  editable?: boolean;
   // 字段规则，预设的规则
   ruleNames?: FormRuleNames[];
   rules?: Rule | Rule[];

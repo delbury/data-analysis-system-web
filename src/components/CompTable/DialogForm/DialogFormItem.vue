@@ -2,7 +2,7 @@
   <!-- 开关 -->
   <el-switch
     v-if="item.customType === 'bool'"
-    :disabled="formItemDisabled(item.disabled)"
+    :disabled="formItemDisabled(item.disabled) || notEditable"
     inline-prompt
     active-text="是"
     inactive-text="否"
@@ -17,7 +17,7 @@
     v-else-if="item.customType === 'select'"
     style="width: 100%;"
     clearable
-    :disabled="formItemDisabled(item.disabled)"
+    :disabled="formItemDisabled(item.disabled) || notEditable"
     v-bind="item.customOption ?? {}"
     :model-value="modelValue"
     @update:model-value="val => handleChange(val)"
@@ -27,7 +27,7 @@
     v-else-if="item.customType === 'remote-select' || item.customType === 'remote-select-multi'"
     style="width: 100%;"
     clearable
-    :disabled="formItemDisabled(item.disabled)"
+    :disabled="formItemDisabled(item.disabled) || notEditable"
     filterable
     remote
     :multiple="item.customType === 'remote-select-multi'"
@@ -62,7 +62,7 @@
     multiple
     default-first-option
     placeholder="请输入后按回车或选择确定"
-    :disabled="formItemDisabled(item.disabled)"
+    :disabled="formItemDisabled(item.disabled) || notEditable"
     v-bind="item.customOption ?? {}"
     :model-value="modelValue"
     @update:model-value="val => handleChange(val)"
@@ -74,7 +74,7 @@
     type="date"
     :placeholder="readonly ? '' : '请选择日期'"
     clearable
-    :disabled="formItemDisabled(item.disabled)"
+    :disabled="formItemDisabled(item.disabled) || notEditable"
     v-bind="item.customOption ?? {}"
     :model-value="modelValue"
     @update:model-value="val => handleChange(val)"
@@ -84,7 +84,7 @@
     v-else-if="item.customType === 'time'"
     style="width: 100%;"
     clearable
-    :disabled="formItemDisabled(item.disabled)"
+    :disabled="formItemDisabled(item.disabled) || notEditable"
     v-bind="item.customOption ?? {}"
     :model-value="modelValue"
     @update:model-value="val => handleChange(val)"
@@ -97,7 +97,7 @@
     :start-placeholder="readonly ? '' : '开始时间'"
     :end-placeholder="readonly ? '' : '结束时间'"
     clearable
-    :disabled="formItemDisabled(item.disabled)"
+    :disabled="formItemDisabled(item.disabled) || notEditable"
     v-bind="item.customOption ?? {}"
     :model-value="modelValue"
     @update:model-value="val => handleChange(val)"
@@ -107,7 +107,7 @@
     v-else-if="item.customType === 'int'"
     style="width: 100%;"
     clearable
-    :disabled="formItemDisabled(item.disabled)"
+    :disabled="formItemDisabled(item.disabled) || notEditable"
     :min="0"
     :step="1"
     step-strictly
@@ -121,7 +121,7 @@
     v-else-if="item.customType === 'float'"
     style="width: 100%;"
     clearable
-    :disabled="formItemDisabled(item.disabled)"
+    :disabled="formItemDisabled(item.disabled) || notEditable"
     :min="0"
     :precision="2"
     controls-position="right"
@@ -137,7 +137,7 @@
     :autosize="{ minRows: 2 }"
     :placeholder="readonly ? '' : '请输入'"
     clearable
-    :disabled="formItemDisabled(item.disabled)"
+    :disabled="formItemDisabled(item.disabled) || notEditable"
     v-bind="item.customOption ?? {}"
     :model-value="modelValue"
     @update:model-value="val => handleChange(val)"
@@ -147,7 +147,7 @@
     v-else
     :placeholder="readonly ? '' : '请输入'"
     clearable
-    :disabled="formItemDisabled(item.disabled)"
+    :disabled="formItemDisabled(item.disabled) || notEditable"
     v-bind="item.customOption ?? {}"
     :model-value="modelValue"
     @update:model-value="val => handleChange(val)"
@@ -155,8 +155,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, watch } from 'vue';
-import { FormItem } from '../interface';
+import { defineComponent, PropType, ref, computed } from 'vue';
+import { DialogStatus, FormItem } from '../interface';
 
 export default defineComponent({
   props: {
@@ -180,14 +180,22 @@ export default defineComponent({
       type: Boolean,
       default: void 0,
     },
+    // 状态
+    status: {
+      type: String as PropType<DialogStatus>,
+      default: 'create',
+    },
   },
   emits: ['update:modelValue'],
   setup(props, ctx) {
     return {
+      notEditable: computed(() => props.item.editable === false && props.status === 'edit'),
       formItemDisabled: (itemDisabled: boolean | ((form: any) => boolean) = false) => {
         if(props.globalDisabled !== void 0) return props.globalDisabled;
 
-        return typeof itemDisabled === 'boolean' ? itemDisabled : itemDisabled(props.form ?? {});
+        return typeof itemDisabled === 'boolean'
+          ? itemDisabled
+          : itemDisabled(props.form ?? {});
       },
       handleChange: (val: any) => {
         ctx.emit('update:modelValue', val);
