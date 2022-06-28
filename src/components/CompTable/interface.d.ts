@@ -84,7 +84,7 @@ export type FormItem = Omit<ElFormItemProps, 'rules'> & {
   // tip，同label，超长显示省略号
   tip?: string;
   // info，显示图标，hover显示
-  info?: string;
+  info?: string | string[];
   readonly?: boolean;
   disabled?: boolean | ((form: any) => boolean);
   // 字段规则，预设的规则
@@ -111,6 +111,8 @@ export type FormItem = Omit<ElFormItemProps, 'rules'> & {
 // 表单字段组
 export interface FormItemSection {
   title?: string;
+  // 用来标记当前表单 section
+  key?: string;
   formItems: FormItem[];
   // 禁用该 section 内容
   sectionDisabled?: (detail?: Record<string, any>) => boolean;

@@ -25,11 +25,18 @@
     </CompTable>
 
     <RecordStaff
-      v-if="recordStaff.visible"
-      v-model="recordStaff.visible"
+      v-if="visibility.staffs"
+      v-model="visibility.staffs"
       :detail="currentRow"
       @refresh="handleRefresh"
     ></RecordStaff>
+
+    <CompleteModal
+      v-if="visibility.complete"
+      v-model="visibility.complete"
+      :detail="currentRow"
+      @refresh="handleRefresh"
+    ></CompleteModal>
   </div>
 </template>
 
@@ -42,10 +49,11 @@ import { ElMessageBox } from 'element-plus';
 import { WorkbenchTable } from '~types/db-table-type';
 import { CompTableInstance } from '~/components/CompTable/interface';
 import RecordStaff from './RecordStaff.vue';
+import CompleteModal from './CompleteModal.vue';
 
 export default defineComponent({
   name: 'PageWorkbench',
-  components: { RecordStaff },
+  components: { RecordStaff, CompleteModal },
   setup() {
     const tableRef = ref<CompTableInstance>();
     // table 参数
@@ -57,9 +65,11 @@ export default defineComponent({
     // 当前行
     const currentRow = ref<WorkbenchTable>();
 
-    // 录入参训人员
-    const recordStaff = reactive({
-      visible: false,
+    const visibility = reactive({
+      // 录入参训人员
+      staffs: false,
+      // 完成情况
+      complete: false,
     });
 
     return {
@@ -68,23 +78,16 @@ export default defineComponent({
       formInitValues: FORM_INIT_VALUES,
       formItems: reactive(FORM_ITEMS),
       handleBtnClick: ({ key, record }: { key: string, record: WorkbenchTable }) => {
+        currentRow.value = record;
         if(key === 'complete') {
-          ElMessageBox.confirm(
-            '确认完成该项？',
-            '提示',
-            { type: 'warning' },
-          ).then(async () => {
-            // 请求并刷新
-            await apis.workbench.postComplete({ id: record.id });
-            tableRef.value?.table.refresh();
-          }).catch(() => {});
+          // 完成信息
+          visibility.complete = true;
         } else if(key === 'record-staff') {
           // 录入人员
-          recordStaff.visible = true;
-          currentRow.value = record;
+          visibility.staffs = true;
         }
       },
-      recordStaff,
+      visibility,
       currentRow,
       handleRefresh: () => {
         tableRef.value?.table.refresh();

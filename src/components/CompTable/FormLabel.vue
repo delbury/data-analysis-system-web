@@ -16,9 +16,15 @@
     >
       <el-tooltip
         v-if="!!item.info"
-        :content="item.info"
+        :content="Array.isArray(item.info) ? void 0 :item.info"
       >
         <el-icon class="info-icon"><warning /></el-icon>
+
+        <template v-if="Array.isArray(item.info)" #content>
+          <div v-for="(str, index) in item.info" :key="index">
+            {{ str }}
+          </div>
+        </template>
       </el-tooltip>
     </span>
   </span>

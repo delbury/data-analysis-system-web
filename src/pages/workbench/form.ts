@@ -11,7 +11,7 @@ interface WorkbenchTable extends RawWorkbenchTable {
 }
 
 // 星级对应薪酬
-const TRAINER_LEVEL_SALARY_MAP: Record<number, number> = {
+export const TRAINER_LEVEL_SALARY_MAP: Record<number, number> = {
   0: 0,
   1: 0,
   2: 50,
@@ -344,6 +344,7 @@ export const FORM_ITEMS: FormItemSection[] = [
   },
   {
     title: '培训人数',
+    key: 'complete',
     formItems: [
       {
         label: '培训人数',
@@ -401,6 +402,7 @@ export const FORM_ITEMS: FormItemSection[] = [
   },
   {
     title: '培训完成情况',
+    key: 'complete',
     // 只有完成才展示
     sectionDisabled: (detail) => {
       return detail?.status !== 2;
@@ -461,6 +463,7 @@ export const FORM_ITEMS: FormItemSection[] = [
         ruleNames: ['floatUnsigned', 'required'],
         info: '培训师星级系数 * 培训课时',
         importDefaultCol: 'AJ',
+        disabled: true,
       },
     ],
   },

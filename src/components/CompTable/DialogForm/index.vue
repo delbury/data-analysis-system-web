@@ -19,6 +19,8 @@
       ></slot>
     </template>
 
+    <slot name="info"></slot>
+
     <el-form
       v-bind="formProps"
       ref="formRef"
@@ -48,7 +50,7 @@
             v-for="item in section.formItems"
             :key="item.prop"
           >
-            <el-col :span="item.span ?? 6">
+            <el-col :span="item.span ?? colSpan ?? 6">
               <el-form-item
                 v-bind="{ ...item, ref: void 0 }"
                 :rules="[
@@ -63,7 +65,7 @@
                 ]"
               >
                 <template #label>
-                  <form-label :item="item"></form-label>
+                  <FormLabel :item="item"></FormLabel>
                 </template>
 
                 <dialog-form-item
@@ -128,6 +130,11 @@ export default defineComponent({
     loading: {
       type: Boolean,
       default: false,
+    },
+    // 表单列宽
+    colSpan: {
+      type: Number,
+      default: 6,
     },
   },
   setup(props, ctx) {
@@ -327,7 +334,7 @@ export default defineComponent({
 
       .comp-table__form-section-title {
         padding: $gap-n 0;
-        font-size: 16px;
+        font-size: $fs-l;
         font-weight: bold;
       }
     }
