@@ -155,6 +155,7 @@
       :confirm-action="confirmAction"
       :loading="table.fetching"
       :form-props="formProps"
+      :row="currentRow"
     >
       <template #form-footer-left="data">
         <slot name="form-footer-left" v-bind="data"></slot>
@@ -299,7 +300,7 @@ function defineGenericComponent<T = any>() {
         dialog.visible = true;
 
         if(record && (status === 'detail' || status === 'edit')) {
-        // 查询详情
+          // 查询详情
           const res = await table.detail(record.id);
           dialogFormRef.value?.setFormValues(res);
         } else {
@@ -307,7 +308,9 @@ function defineGenericComponent<T = any>() {
       };
 
       // 操作按钮点击回调
+      const currentRow = ref();
       const handleBtnClick = (key: string, record: any, index: number) => {
+        currentRow.value = record;
         switch(key) {
           case 'default-detail':
             openDialog('detail', record);
@@ -415,6 +418,7 @@ function defineGenericComponent<T = any>() {
         permission,
         importExcel,
         currentRowBtns,
+        currentRow,
         // 操作列宽度
         operationColWidth: computed(() => {
           const leng = currentRowBtns.value.length;

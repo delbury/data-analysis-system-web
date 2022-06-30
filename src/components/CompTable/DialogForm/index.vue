@@ -57,7 +57,7 @@
                   ...(Array.isArray(item.rules) ? item.rules : (item.rules ? [item.rules] : [])).map(it => {
                     // 传入 form
                     if(it.validatorWithForm) {
-                      it.validator = it.validatorWithForm(form)
+                      it.validator = it.validatorWithForm(form, status, row)
                     }
                     return it;
                   }),
@@ -136,6 +136,10 @@ export default defineComponent({
     colSpan: {
       type: Number,
       default: 6,
+    },
+    // 当前的行数据
+    row: {
+      type: Object,
     },
   },
   setup(props, ctx) {

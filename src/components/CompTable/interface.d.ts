@@ -46,7 +46,7 @@ export type ColumnProps = Writeable<InstanceType<typeof ElTableColumn>['$props']
  */
 type ElFormItemProps = InstanceType<typeof ElFormItem>['$props'];
 interface Rule extends FormItemRule {
-  validatorWithForm?: (form: any) => NonNullable<FormItemRule['validator']>;
+  validatorWithForm?: (form: any, status: DialogStatus, row: any) => NonNullable<FormItemRule['validator']>;
 }
 export type CustomSelectOption = {
   options?: LableValue[];

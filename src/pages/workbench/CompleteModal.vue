@@ -8,24 +8,28 @@
     :confirm-action="confirmAction"
     :col-span="8"
     :dialog-props="{ width: '1200px' }"
+    :row="detail"
   >
     <template #info>
       <el-row class="train-info">
         培训信息
       </el-row>
       <el-row class="fs-s mg-b">
-        <el-col :span="6">
+        <el-col :span="4">
           培训师：{{ detail?.trainer_name }}
         </el-col>
-        <el-col :span="6">
+        <el-col :span="4">
           培训师工号：{{ detail?.trainer_code }}
         </el-col>
-        <el-col :span="6">
+        <el-col :span="4">
           <FormLabel :item="{ label: '培训师星级', info: levelInfo }"></FormLabel>
           ：{{ getLevelInfo(detail?.trainer_level) }}
         </el-col>
-        <el-col :span="6">
+        <el-col :span="4">
           培训总课时：{{ detail?.trained_hours_total }}
+        </el-col>
+        <el-col :span="4">
+          培训总人数：{{ detail?.trained_staffs?.length ?? 0 }}
         </el-col>
       </el-row>
     </template>

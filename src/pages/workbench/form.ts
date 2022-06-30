@@ -344,64 +344,64 @@ export const FORM_ITEMS: FormItemSection[] = [
       },
     ],
   },
-  {
-    title: '培训人数',
-    key: 'complete',
-    formItems: [
-      {
-        label: '培训人数',
-        prop: 'trained_count_manage',
-        customType: 'int',
-        tip: '管理和业务技术',
-        formValueChangeHandler: totalTrainedHandler,
-        importDefaultCol: 'W',
-      },
-      {
-        label: '培训人数',
-        prop: 'trained_count_key',
-        customType: 'int',
-        tip: '行车关键岗位：司机、行车值班员',
-        formValueChangeHandler: totalTrainedHandler,
-        importDefaultCol: 'X',
-      },
-      {
-        label: '培训人数',
-        prop: 'trained_count_product',
-        customType: 'int',
-        tip: '生产人员：非行车关键岗位',
-        formValueChangeHandler: totalTrainedHandler,
-        importDefaultCol: 'Y',
-      },
-      {
-        label: '培训人数',
-        prop: 'trained_count_new',
-        customType: 'int',
-        tip: '未持证人员：新员工、实习生等',
-        formValueChangeHandler: totalTrainedHandler,
-        importDefaultCol: 'Z',
-      },
-      {
-        label: '培训人数',
-        prop: 'trained_count_work',
-        customType: 'int',
-        tip: '工勤',
-        formValueChangeHandler: totalTrainedHandler,
-        importDefaultCol: 'AA',
-      },
-      {
-        label: '培训总人数',
-        prop: 'trained_count_total',
-        info: '等于管理和业务技术、行车关键岗位、生产人员、未持证人员、工勤等培训人数之和',
-        customType: 'int',
-        customOption: {
-          controls: false,
-        },
-        disabled: true,
-        ruleNames: ['required', 'notZero'],
-        importDefaultCol: 'AB',
-      },
-    ],
-  },
+  // {
+  //   title: '培训人数',
+  //   key: 'complete',
+  //   formItems: [
+  //     {
+  //       label: '培训人数',
+  //       prop: 'trained_count_manage',
+  //       customType: 'int',
+  //       tip: '管理和业务技术',
+  //       formValueChangeHandler: totalTrainedHandler,
+  //       importDefaultCol: 'W',
+  //     },
+  //     {
+  //       label: '培训人数',
+  //       prop: 'trained_count_key',
+  //       customType: 'int',
+  //       tip: '行车关键岗位：司机、行车值班员',
+  //       formValueChangeHandler: totalTrainedHandler,
+  //       importDefaultCol: 'X',
+  //     },
+  //     {
+  //       label: '培训人数',
+  //       prop: 'trained_count_product',
+  //       customType: 'int',
+  //       tip: '生产人员：非行车关键岗位',
+  //       formValueChangeHandler: totalTrainedHandler,
+  //       importDefaultCol: 'Y',
+  //     },
+  //     {
+  //       label: '培训人数',
+  //       prop: 'trained_count_new',
+  //       customType: 'int',
+  //       tip: '未持证人员：新员工、实习生等',
+  //       formValueChangeHandler: totalTrainedHandler,
+  //       importDefaultCol: 'Z',
+  //     },
+  //     {
+  //       label: '培训人数',
+  //       prop: 'trained_count_work',
+  //       customType: 'int',
+  //       tip: '工勤',
+  //       formValueChangeHandler: totalTrainedHandler,
+  //       importDefaultCol: 'AA',
+  //     },
+  //     {
+  //       label: '培训总人数',
+  //       prop: 'trained_count_total',
+  //       info: '等于管理和业务技术、行车关键岗位、生产人员、未持证人员、工勤等培训人数之和',
+  //       customType: 'int',
+  //       customOption: {
+  //         controls: false,
+  //       },
+  //       disabled: true,
+  //       ruleNames: ['required', 'notZero'],
+  //       importDefaultCol: 'AB',
+  //     },
+  //   ],
+  // },
   {
     title: '培训完成情况',
     key: 'complete',
@@ -416,14 +416,17 @@ export const FORM_ITEMS: FormItemSection[] = [
         customType: 'int',
         ruleNames: ['intUnsigned', 'required'],
         rules: [{
-          validatorWithForm: (form: WorkbenchTable) => (r, val, cb) => {
-            const min = Math.ceil(+form.trained_count_total * 2 / 3);
-            const max = +form.trained_count_total;
-            if(val < min) {
-              return cb(`需要不少于${min}（培训总人数的2/3）人`);
-            }
-            if(val > max) {
-              return cb(`人数不能大于${max}（培训总人数）人`);
+          validatorWithForm: (form: WorkbenchTable, status, record: WorkbenchTable) => (r, val, cb) => {
+            if(record) {
+              const count = record.trained_staffs?.length ?? 0;
+              const min = Math.ceil(count * 2 / 3);
+              const max = count;
+              if(val < min) {
+                return cb(`不少于${min}（总人数：${count}的三分之二）人`);
+              }
+              if(val > max) {
+                return cb(`不能大于${max}（总人数）人`);
+              }
             }
             return cb();
           },
