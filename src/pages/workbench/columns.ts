@@ -11,13 +11,6 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
     search: true,
   },
   {
-    label: '参训人数',
-    prop: 'trained_staffs',
-    width: 70,
-    customType: 'int',
-    customFormatter: (val) => val?.length ?? 0,
-  },
-  {
     label: '日期',
     prop: 'date',
     customType: 'date',
@@ -158,6 +151,14 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
     label: '培训师所属单位',
     prop: 'trainer_company',
     showOverflowTooltip: true,
+  },
+  {
+    label: '参训人数',
+    prop: 'trained_staffs',
+    width: 70,
+    customType: 'int',
+    customFormatter: (val) => val?.length ?? 0,
+    clickKey: 'record-staff',
   },
   // {
   //   label: '培训人数',

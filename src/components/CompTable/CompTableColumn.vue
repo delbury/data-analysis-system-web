@@ -24,21 +24,40 @@
         <CompTableColumn
           :column-prop="item"
           :children="item.subColumns"
+          @cell-click="(...args) => $emit('cell-click', ...args)"
         ></CompTableColumn>
       </template>
     </template>
 
     <template
       v-if="!children?.length"
-      #default="{ row, column }"
+      #default="{ row, column, $index }"
     >
       <template v-if="resolveTextClassName(row[column.property], row)">
         <span :class="resolveTextClassName(row[column.property], row)">
-          {{ formatCell(row[column.property], row) }}
+          <el-link
+            v-if="columnProp.clickKey"
+            type="primary"
+            @click="() => $emit('cell-click', columnProp.clickKey, row, $index)"
+          >
+            {{ formatCell(row[column.property], row) }}
+          </el-link>
+          <span v-else>
+            {{ formatCell(row[column.property], row) }}
+          </span>
         </span>
       </template>
       <template v-else>
-        {{ formatCell(row[column.property], row) }}
+        <el-link
+          v-if="columnProp.clickKey"
+          type="primary"
+          @click="() => $emit('cell-click', columnProp.clickKey, row, $index)"
+        >
+          {{ formatCell(row[column.property], row) }}
+        </el-link>
+        <span v-else>
+          {{ formatCell(row[column.property], row) }}
+        </span>
       </template>
     </template>
   </el-table-column>
@@ -62,6 +81,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ['cell-click'],
   setup(props, ctx) {
     return {
       // 格式化显示单元格

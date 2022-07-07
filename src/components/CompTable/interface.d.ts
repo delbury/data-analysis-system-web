@@ -38,6 +38,8 @@ export type ColumnProps = Writeable<InstanceType<typeof ElTableColumn>['$props']
   searchOptions?: LableValue[];
   // 远程搜索其他参数
   searchAttach?: Record<string, any>;
+  // 可点击后返回的 key
+  clickKey?: string;
 };
 
 

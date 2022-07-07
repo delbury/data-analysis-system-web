@@ -85,6 +85,7 @@
           <CompTableColumn
             :column-prop="{ ...item }"
             :children="item.subColumns"
+            @cell-click="handleCellClick"
           ></CompTableColumn>
         </template>
       </el-table>
@@ -426,6 +427,10 @@ function defineGenericComponent<T = any>() {
           return (leng + 1) * 8 + leng * 16 + txtCount * 12;
         }),
         pageSizes: unref(store.state.clientConfig.tablePageSizes),
+        // 单元格点击
+        handleCellClick: (key: string, row: any, index: number) => {
+          handleBtnClick(key, row, index);
+        },
       };
     },
   });
