@@ -25,7 +25,7 @@ const totalHourHandler = (current: number, form: WorkbenchTable) => {
     form.trained_hours_theory = 0;
   }
   let duration: number = (form.start_end_time?.[1]?.valueOf() ?? 0) - (form.start_end_time?.[0]?.valueOf() ?? 0);
-  duration = +(duration / 1000 / 3600).toFixed(2);
+  duration = +(duration / 1000 / 3600).toFixed(1);
 
   if(form.train_way1 === '理论') {
     form.trained_hours_practice = 0;
