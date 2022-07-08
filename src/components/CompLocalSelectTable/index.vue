@@ -110,6 +110,10 @@ export default defineComponent({
     needExportFields: {
       type: Array as PropType<string[]>,
     },
+    // 附加在导出表格前面的额外数据
+    exportExtraFontData: {
+      type: Array as PropType<string[][]>,
+    },
   },
   emits: ['selection-change'],
   setup(props, ctx) {
@@ -211,7 +215,9 @@ export default defineComponent({
         }
         try {
           // 保存文件
-          await saveFile(list, columns, props.exportFileName ?? '已选列表');
+          await saveFile(list, columns, props.exportFileName ?? '已选列表', {
+            extraFontRows: props.exportExtraFontData,
+          });
         } finally {
           loadings.export = false;
         }

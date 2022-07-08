@@ -13,6 +13,7 @@
       :loading="loading"
       :export-file-name="exportFileName"
       :need-export-fields="['code', 'name', 'position']"
+      :export-extra-font-data="exportExtraFontData"
       @selection-change="handleSelectionChange"
     ></CompLocalSelectTable>
   </CompDialog>
@@ -103,6 +104,7 @@ export default defineComponent({
       selectRef,
       loading,
       exportFileName: computed(() => `${props.detail?.project_code ?? ''}_参训人员名单`),
+      exportExtraFontData: computed(() => [[{ data: props.detail?.train_course_name, fullMerge: true }]]),
     };
   },
 });

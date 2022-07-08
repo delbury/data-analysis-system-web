@@ -54,7 +54,13 @@ const calcStringCount = (str: string, curCount = 0, maxCount = 50, minCounst = 8
   return Math.max(newCount, curCount);
 };
 
+
 // 导出保存为 excel
+interface ExtraFontRow {
+  data: string;
+  // 合并主体数据的列数
+  fullMerge?: boolean;
+}
 export const saveFile = (
   // 数据源
   data: Record<string, string>[],
@@ -62,6 +68,11 @@ export const saveFile = (
   columns: ColumnProps[],
   // 表名
   tableName = '导出',
+  // 额外参数
+  extra?: {
+    // 额外的附加在头部的数据
+    extraFontRows?: (string | ExtraFontRow)[][],
+  },
 ) => {
   // 导出的文件名
   const fileName = `${tableName}__${moment(Date.now()).format('YYYY-MM-DD_HH-mm-ss')}.xlsx`;
@@ -75,9 +86,42 @@ export const saveFile = (
   // 每列的最大字符长度
   const headerColStringMaxCounts: number[] = [];
 
+  // 额外的头部数据
+  const extraFontRowsMerges: xlsx.Range[] = [];
+  const extraFontRows = extra?.extraFontRows?.map((rows, rIndex) => {
+    const obj = {};
+    rows.forEach((r, cIndex) => {
+      const rData = typeof r === 'string' ? r : r.data;
+
+      if(header.list[cIndex]) {
+        obj[header.list[cIndex]] = rData;
+      } else {
+        // 超出主体数据长度的额外数据，自定义临时 key
+        const key = `__extra_col_${cIndex}`;
+        obj[key] = rData;
+      }
+
+      // 是否有合并单元格
+      if(typeof r !== 'string' && r.fullMerge) {
+        extraFontRowsMerges.push({
+          s: {
+            c: cIndex,
+            r: rIndex,
+          },
+          e: {
+            c: cIndex + header.list.length - 1,
+            r: rIndex,
+          },
+        });
+      }
+    });
+    return obj;
+  }) ?? [];
+
   // 创建表
   const sheet = xlsx.utils.json_to_sheet(
     [
+      ...extraFontRows,
       header.row,
       ...data.map(item =>
         // 格式化导出数据
@@ -100,6 +144,8 @@ export const saveFile = (
   // 列宽
   const colInfos: xlsx.ColInfo[] = headerColStringMaxCounts.map(it => ({ wch: it + 2 }));
   sheet['!cols'] = colInfos;
+  // 列合并
+  sheet['!merges'] = extraFontRowsMerges;
 
   // 添加表到工作簿
   xlsx.utils.book_append_sheet(workbook, sheet, tableName);
