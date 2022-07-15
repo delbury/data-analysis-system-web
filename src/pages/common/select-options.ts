@@ -9,9 +9,9 @@ export const GROUP_TYPE_OPTIONS: Options = [
   { label: '委外', value: 2 },
 ];
 export const TRAIN_LEVEL_OPTIONS: Options = [
-  { label: '分部级', value: '分部级' },
-  { label: '车间级', value: '车间级' },
-  { label: '站区级', value: '站区级' },
+  { label: '分公司级', value: '分公司级' },
+  { label: '分部/车间/站区级', value: '分部/车间/站区级' },
+  { label: '班组级', value: '班组级' },
 ];
 export const TRAIN_CONTENT_OPTIONS: Options = [
   { label: '管理才能类', value: '管理才能类' },
