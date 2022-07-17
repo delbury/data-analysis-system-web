@@ -18,14 +18,19 @@ export const TRAINER_LEVEL_SALARY_MAP: Record<number, number> = {
   3: 100,
   4: 150,
 };
+// 获取时分秒并转换成秒
+const getHmsFromDate = (date?: Date) => {
+  if(!date) return 0;
+  return (date.getHours() * 60 + date.getMinutes()) * 60 + date.getSeconds();
+};
 // 总培训课时
 const totalHourHandler = (current: number, form: WorkbenchTable) => {
   if(!form.start_end_time) {
     form.trained_hours_practice = 0;
     form.trained_hours_theory = 0;
   }
-  let duration: number = (form.start_end_time?.[1]?.valueOf() ?? 0) - (form.start_end_time?.[0]?.valueOf() ?? 0);
-  duration = +(duration / 1000 / 3600).toFixed(1);
+  let duration: number = getHmsFromDate(form.start_end_time?.[1]) - getHmsFromDate(form.start_end_time?.[0]);
+  duration = +(duration / 3600).toFixed(1);
 
   if(form.train_way1 === '理论') {
     form.trained_hours_practice = 0;
