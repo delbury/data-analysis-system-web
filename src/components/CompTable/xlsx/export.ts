@@ -63,7 +63,7 @@ interface ExtraFontRow {
 }
 export const saveFile = (
   // 数据源
-  data: Record<string, string>[],
+  data: {}[],
   // 列配置
   columns: ColumnProps[],
   // 表名
@@ -72,10 +72,12 @@ export const saveFile = (
   extra?: {
     // 额外的附加在头部的数据
     extraFontRows?: (string | ExtraFontRow)[][],
+    // 文件名不需要时间
+    hideExportTime?: boolean;
   },
 ) => {
   // 导出的文件名
-  const fileName = `${tableName}__${moment(Date.now()).format('YYYY-MM-DD_HH-mm-ss')}.xlsx`;
+  const fileName = extra?.hideExportTime ? `${tableName}.xlsx` : `${tableName}__${moment(Date.now()).format('YYYY-MM-DD_HH-mm-ss')}.xlsx`;
   // 创建工作簿
   const workbook = xlsx.utils.book_new();
   // 构造表头

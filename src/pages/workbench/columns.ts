@@ -270,3 +270,37 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
     showOverflowTooltip: true,
   },
 ]);
+
+
+export const recordStaffColumns = [
+  {
+    label: '姓名',
+    prop: 'name',
+    width: '100px',
+  },
+  {
+    label: '工号',
+    prop: 'code',
+    width: '100px',
+  },
+  {
+    label: '性别',
+    prop: 'sex',
+    formatMap: common.maps.STAFF_SEX_MAP,
+    width: '100px',
+  },
+  {
+    label: '岗位',
+    prop: 'position',
+  },
+  {
+    label: '班组类型',
+    prop: 'group_type',
+    width: '100px',
+    formatMap: common.maps.GROUP_TYPE_MAP,
+  },
+  {
+    label: '班组',
+    prop: 'group_name',
+  },
+];

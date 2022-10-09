@@ -2,7 +2,7 @@
   <el-tooltip
     placement="top"
     v-bind="{ ...tooltipProps, ref: void 0 }"
-    :disabled="disabled || !tip"
+    :disabled="!tip"
     :content="tip"
   >
     <el-button

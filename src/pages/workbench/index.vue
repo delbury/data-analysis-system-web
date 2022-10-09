@@ -20,8 +20,18 @@
           key: 'record-staff',
         },
       ]"
+      selectable
       @btn="handleBtnClick"
+      @selection-change="handleSelectionChange"
     >
+      <template #footer>
+        <comp-button
+          :tip="selected.length ? '批量导出参训人员' : '请选择需要导出的数据'"
+          :button-props="{ loading: false }"
+          :icon="icons.MessageBox"
+          @click="handleBatchExport"
+        ></comp-button>
+      </template>
     </CompTable>
 
     <RecordStaff
@@ -43,13 +53,29 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
 import { getColumns } from './columns';
-import { apis } from '~/service';
 import { FORM_INIT_VALUES, FORM_ITEMS } from './form';
-import { ElMessageBox } from 'element-plus';
 import { WorkbenchTable } from '~types/db-table-type';
 import { CompTableInstance } from '~/components/CompTable/interface';
 import RecordStaff from './RecordStaff.vue';
 import CompleteModal from './CompleteModal.vue';
+import { MessageBox } from '@element-plus/icons';
+import { ElMessage } from 'element-plus';
+import { apis } from '~/service';
+import { SafeStaffInfo } from '~/service/basedata_staff';
+import { saveFile } from '~/components/CompTable/xlsx/export';
+import { recordStaffColumns } from './columns';
+
+const exportColumns = (() => {
+  const res: typeof recordStaffColumns = [];
+  ['code', 'name', 'position'].forEach(key => {
+    recordStaffColumns.forEach(it => {
+      if(it.prop === key) {
+        res.push(it);
+      }
+    });
+  });
+  return res;
+})();
 
 export default defineComponent({
   name: 'PageWorkbench',
@@ -72,6 +98,9 @@ export default defineComponent({
       complete: false,
     });
 
+    // 已选择
+    const selected = ref<WorkbenchTable[]>([]);
+
     return {
       tableRef,
       tableConfig,
@@ -91,6 +120,32 @@ export default defineComponent({
       currentRow,
       handleRefresh: () => {
         tableRef.value?.table.refresh();
+      },
+      selected,
+      handleSelectionChange: (selection: WorkbenchTable[]) => {
+        selected.value = selection;
+      },
+      handleBatchExport: async() => {
+        if(!selected.value.length) {
+          return ElMessage.warning('请选择需要导出的数据');
+        }
+        // 获取全量人员列表
+        const res = await apis.basedata_staff.getAllList();
+        const allStaffListMap: Record<number, SafeStaffInfo> = {};
+        res.data.data.list?.forEach(item => allStaffListMap[item.id] = item);
+
+        // 循环生成文件
+        for(const record of selected.value) {
+          // 当前一行数据的所有名单
+          const staffList = record.trained_staffs?.map(id => allStaffListMap[id]) ?? [];
+          // 生成并下载文件
+          saveFile(staffList, exportColumns,
+            `${record.project_code}__${record.train_project_name}`,
+          );
+        }
+      },
+      icons: {
+        MessageBox,
       },
     };
   },

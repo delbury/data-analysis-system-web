@@ -18,6 +18,9 @@
         v-bind="$attrs"
         @sort-change="handleSortChange"
       >
+        <!-- 多选 -->
+        <el-table-column v-if="selectable" type="selection" width="40" align="center" />
+
         <!-- 序号列 -->
         <el-table-column
           v-if="showIndexColumn"
@@ -127,6 +130,8 @@
           :button-props="{ loading: table.exporting }"
           @click="handleExport"
         ></comp-button>
+
+        <el-divider v-if="$slots.footer" direction="vertical" style="margin: 0 24px;"></el-divider>
 
         <slot name="footer"></slot>
       </div>
@@ -284,6 +289,10 @@ function defineGenericComponent<T = any>() {
       // 是否展示 id 列
       showId: {
         default: false,
+        type: Boolean,
+      },
+      // 多选
+      selectable: {
         type: Boolean,
       },
     },
@@ -457,6 +466,7 @@ function defineGenericComponent<T = any>() {
 
   .comp-table__footer {
     display: flex;
+    align-items: center;
   }
 }
 </style>
