@@ -61,6 +61,8 @@ interface ExtraFontRow {
   // 合并主体数据的列数
   fullMerge?: boolean;
 }
+
+// 保存为 excel 文件
 export const saveFile = (
   // 数据源
   data: {}[],
@@ -74,12 +76,13 @@ export const saveFile = (
     extraFontRows?: (string | ExtraFontRow)[][],
     // 文件名不需要时间
     hideExportTime?: boolean;
+    // 只生成并 return sheet
+    onlyEmitSheet?: boolean;
   },
 ) => {
   // 导出的文件名
   const fileName = extra?.hideExportTime ? `${tableName}.xlsx` : `${tableName}__${moment(Date.now()).format('YYYY-MM-DD_HH-mm-ss')}.xlsx`;
-  // 创建工作簿
-  const workbook = xlsx.utils.book_new();
+
   // 构造表头
   const header = createHeader(columns);
 
@@ -149,8 +152,48 @@ export const saveFile = (
   // 列合并
   sheet['!merges'] = extraFontRowsMerges;
 
+  if(extra?.onlyEmitSheet) {
+    return { sheet, sheetName: fileName };
+  }
+
+  // 创建工作簿
+  const workbook = xlsx.utils.book_new();
   // 添加表到工作簿
   xlsx.utils.book_append_sheet(workbook, sheet, tableName);
+  // 保存为文件
+  xlsx.writeFile(workbook, fileName);
+};
+
+type SaveFileParameters = Parameters<typeof saveFile>;
+// 创建多个工作簿到一个 excel 文件
+export const saveSheetsFile = (sheetParams: {
+  // 数据源
+  data: SaveFileParameters[0],
+  // 列配置
+  columns: SaveFileParameters[1],
+  // 表名
+  tableName: SaveFileParameters[2],
+  // 额外参数
+  extra: SaveFileParameters[3]
+}[], fileName: string) => {
+  fileName = `${fileName}__${moment(Date.now()).format('YYYY-MM-DD_HH-mm-ss')}.xlsx`;
+
+  // 创建工作簿
+  const workbook = xlsx.utils.book_new();
+
+  sheetParams.forEach(params => {
+    const sheet = saveFile(params.data, params.columns, params.tableName, {
+      ...params.extra,
+      hideExportTime: true,
+      onlyEmitSheet: true,
+    });
+
+    // 添加表到工作簿
+    if(sheet) {
+      xlsx.utils.book_append_sheet(workbook, sheet.sheet, sheet.sheetName);
+    }
+  });
+
   // 保存为文件
   xlsx.writeFile(workbook, fileName);
 };

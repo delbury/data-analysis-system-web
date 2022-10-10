@@ -62,7 +62,7 @@ import { MessageBox } from '@element-plus/icons';
 import { ElMessage } from 'element-plus';
 import { apis } from '~/service';
 import { SafeStaffInfo } from '~/service/basedata_staff';
-import { saveFile } from '~/components/CompTable/xlsx/export';
+import { saveSheetsFile } from '~/components/CompTable/xlsx/export';
 import { recordStaffColumns } from './columns';
 
 const exportColumns = (() => {
@@ -134,18 +134,22 @@ export default defineComponent({
         const allStaffListMap: Record<number, SafeStaffInfo> = {};
         res.data.data.list?.forEach(item => allStaffListMap[item.id] = item);
 
-        // 循环生成文件
-        for(const record of selected.value) {
-          // 当前一行数据的所有名单
+        // 循环生成 sheets
+        const sheets = selected.value.map(record => {
           const staffList = record.trained_staffs?.map(id => allStaffListMap[id]) ?? [];
-          // 生成并下载文件
-          saveFile(staffList, exportColumns,
-            `${record.project_code}__${record.train_project_name}`,
-            {
+          return {
+            data: staffList,
+            columns: exportColumns,
+            tableName: `${record.project_code}`,
+            // tableName: `${record.project_code}__${record.train_project_name}`,
+            extra: {
               extraFontRows: [[{ data: record.train_course_name, fullMerge: true }]],
             },
-          );
-        }
+          };
+        });
+
+        // 生成并下载文件
+        saveSheetsFile(sheets, '培训课程参训人员');
       },
       icons: {
         MessageBox,
