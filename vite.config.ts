@@ -6,6 +6,7 @@ import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import viteCompression from 'vite-plugin-compression';
 
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -40,7 +41,7 @@ export default defineConfig({
     hmr: true,
     proxy: {
       '^/api/.*': {
-        target: 'http://127.0.0.1:4000',
+        target: process.env.PROXY_TARGET ?? 'http://127.0.0.1:4000',
         changeOrigin: true,
         // rewrite: path => path.replace(/^\/api/, ''),
       },

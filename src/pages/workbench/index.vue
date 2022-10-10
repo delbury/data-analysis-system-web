@@ -141,6 +141,9 @@ export default defineComponent({
           // 生成并下载文件
           saveFile(staffList, exportColumns,
             `${record.project_code}__${record.train_project_name}`,
+            {
+              extraFontRows: [[{ data: record.train_course_name, fullMerge: true }]],
+            },
           );
         }
       },

@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
+    "dev-remote": "PROXY_TARGET=http://www.delbury.top vite",
     "build": "vite build",
     "serve": "vite preview",
     "lint": "eslint --fix --ext .vue --ext .js --ext .ts ./src"
