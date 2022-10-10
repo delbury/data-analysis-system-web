@@ -22,12 +22,14 @@ export const getColumns = (): ColumnProps[] => walkColumnConfig([
     prop: 'start_time',
     customType: 'time',
     sortable: 'custom',
+    customFormatter: common.formatters.timeHms2Hm,
   },
   {
     label: '培训结束时间',
     prop: 'end_time',
     customType: 'time',
     sortable: 'custom',
+    customFormatter: common.formatters.timeHms2Hm,
   },
   {
     label: '开展单位',
