@@ -143,13 +143,20 @@ export default defineComponent({
             tableName: `${record.project_code}`,
             // tableName: `${record.project_code}__${record.train_project_name}`,
             extra: {
-              extraFontRows: [[{ data: record.train_course_name, fullMerge: true }]],
+              extraFontRows: [[
+                { data: `培训项目名称及课程(${record.project_code})` },
+                { data: record.train_project_name },
+                { data: record.train_course_name },
+              ]],
             },
           };
         });
 
         // 生成并下载文件
-        saveSheetsFile(sheets, '培训课程参训人员');
+        saveSheetsFile(sheets, {
+          fileName: '培训课程参训人员',
+          mergeAllSheets: true,
+        });
       },
       icons: {
         MessageBox,

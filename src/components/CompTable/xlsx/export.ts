@@ -164,6 +164,11 @@ export const saveFile = (
   xlsx.writeFile(workbook, fileName);
 };
 
+// 合并多个 sheet 为一个
+export const mergeSheets = (sheets: xlsx.Sheet[]) => {
+
+};
+
 type SaveFileParameters = Parameters<typeof saveFile>;
 // 创建多个工作簿到一个 excel 文件
 export const saveSheetsFile = (sheetParams: {
@@ -174,9 +179,19 @@ export const saveSheetsFile = (sheetParams: {
   // 表名
   tableName: SaveFileParameters[2],
   // 额外参数
-  extra: SaveFileParameters[3]
-}[], fileName: string) => {
-  fileName = `${fileName}__${moment(Date.now()).format('YYYY-MM-DD_HH-mm-ss')}.xlsx`;
+  extra: SaveFileParameters[3],
+}[], saveOption?: {
+  // 生成的文件名
+  fileName?: string;
+  // 是否合并所有生成的 sheet
+  mergeAllSheets?: boolean;
+  // 合并生成的 sheet 表名
+  mergedSheetName?: string;
+  // 合并生成的 sheet 之间的间隔行数，默认为 1 行
+  mergedSheetGapRow?: number;
+}) => {
+  const exportTime = moment(Date.now()).format('YYYY-MM-DD_HH-mm-ss');
+  const fileName = `${saveOption?.fileName ?? '导出'}__${exportTime}.xlsx`;
 
   // 创建工作簿
   const workbook = xlsx.utils.book_new();
@@ -193,6 +208,44 @@ export const saveSheetsFile = (sheetParams: {
       xlsx.utils.book_append_sheet(workbook, sheet.sheet, sheet.sheetName);
     }
   });
+
+  // 讲生成的多个 sheet 合成到一个 sheet 中
+  if(saveOption?.mergeAllSheets) {
+    const mergedSheetName = saveOption.mergedSheetName ?? '合并总表';
+    const mergedSheet = xlsx.utils.json_to_sheet([]);
+
+    const colInfo: xlsx.ColInfo[] = [];
+    const sheetJson = workbook.SheetNames.reduce((arr, sn) => {
+      const sheet = workbook.Sheets[sn];
+      arr.push(...xlsx.utils.sheet_to_json(sheet, { header: 'A' }));
+      for(let i = 0; i < (saveOption?.mergedSheetGapRow ?? 1); i++) {
+        arr.push([]);
+      }
+
+      // 计算合并后的列宽
+      sheet['!cols']?.forEach((col, index) => {
+        if(!colInfo[index]) {
+          colInfo[index] = col;
+        } else {
+          // 全字段比较合并
+          Object.entries(col).forEach(([k, v]) => {
+            if(colInfo[index][k] === void 0 || v > colInfo[index][k]) {
+              colInfo[index][k] = v;
+            }
+          });
+        }
+      });
+
+      return arr;
+    }, [] as any[]);
+    xlsx.utils.sheet_add_json(mergedSheet, sheetJson, { skipHeader: true });
+    mergedSheet['!cols'] = colInfo;
+
+    xlsx.utils.book_append_sheet(workbook, mergedSheet, mergedSheetName);
+    // 调整合并后的表为第一张表
+    const temp = workbook.SheetNames.pop();
+    !!temp && workbook.SheetNames.unshift(temp);
+  }
 
   // 保存为文件
   xlsx.writeFile(workbook, fileName);
