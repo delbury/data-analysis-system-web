@@ -14,6 +14,8 @@
       :export-file-name="exportFileName"
       :need-export-fields="['code', 'name', 'position']"
       :export-extra-font-data="exportExtraFontData"
+      :export-data-filter="exportDataFilter"
+      export-btn-tip="导出所有已选的在职人员"
       @selection-change="handleSelectionChange"
     ></CompLocalSelectTable>
   </CompDialog>
@@ -71,6 +73,7 @@ export default defineComponent({
       loading,
       exportFileName: computed(() => `${props.detail?.project_code ?? ''}_参训人员名单`),
       exportExtraFontData: computed(() => [[{ data: props.detail?.train_course_name, fullMerge: true }]]),
+      exportDataFilter: (data: SafeStaffInfo) => !!data.status,
     };
   },
 });

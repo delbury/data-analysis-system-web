@@ -65,6 +65,7 @@ interface FormItemOptionsConfig {
   rebuildLabelField?: string; // 返回数据的label字段
   rebuildValueField?: string; // 返回数据的value字段
   rebuildListField?: string; // 返回list数据的字段
+  fetcherParams?: Record<string, any>
 }
 export const getRemoteSelectFormItemOptions = (
   fetcher: FetchersGetType, config?: FormItemOptionsConfig,
@@ -75,6 +76,7 @@ export const getRemoteSelectFormItemOptions = (
     rebuildListField,
     rebuildLabelField = 'name',
     rebuildValueField = 'id',
+    fetcherParams,
   } = config ?? {};
 
   return {
@@ -84,7 +86,7 @@ export const getRemoteSelectFormItemOptions = (
 
       try {
         record.loading = true;
-        const res = await fetcher({ all: 1, [labelField]: text });
+        const res = await fetcher({ all: 1, [labelField]: text, ...fetcherParams });
         record.options = (res.data.data.list ?? []).map((it) => ({ label: it[labelField], value: it[valueField], extra: it }));
       } finally {
         record.loading = false;

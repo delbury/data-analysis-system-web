@@ -53,7 +53,7 @@
           <div>
             <comp-button
               :icon="icons.Download"
-              tip="导出已选列表"
+              :tip="exportBtnTip"
               :button-props="{ loading: loadings.export }"
               @click="handleExport"
             ></comp-button>
@@ -113,6 +113,14 @@ export default defineComponent({
     // 附加在导出表格前面的额外数据
     exportExtraFontData: {
       type: Array as PropType<string[][]>,
+    },
+    // 导出数据过滤
+    exportDataFilter: {
+      type: Function as PropType<(data: Record<string, any>, index: number) => boolean>,
+    },
+    exportBtnTip: {
+      type: String,
+      default: '导出已选列表',
     },
   },
   emits: ['selection-change'],
@@ -185,7 +193,7 @@ export default defineComponent({
       // 导出已选名单
       handleExport: async () => {
         loadings.export = true;
-        const list = selectedData.value;
+        const list = props.exportDataFilter ? selectedData.value.filter(props.exportDataFilter) : selectedData.value;
         const columns = [...props.columns];
         // 过滤并排序
         if(props.needExportFields) {

@@ -292,6 +292,12 @@ export const recordStaffColumns = [
     width: '100px',
   },
   {
+    label: '人员状态',
+    prop: 'status',
+    formatMap: common.maps.STAFF_STATUS_MAP,
+    width: '100px',
+  },
+  {
     label: '岗位',
     prop: 'position',
   },

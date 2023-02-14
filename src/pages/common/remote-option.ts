@@ -38,6 +38,7 @@ export const getStaffIdRemoteOptions = (params?: GetParams, opt?: { showLevel?: 
   ...getRemoteSelectFormItemOptions(apis.basedata_staff.getAllList, {
     rebuildLabelField: 'staff_name',
     rebuildValueField: 'staff_id',
+    fetcherParams: { status: 1 },
     ...params,
   }),
   optionRender: (item) => {
