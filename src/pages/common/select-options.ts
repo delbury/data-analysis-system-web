@@ -49,15 +49,34 @@ export const TRAINER_LEVEL_OPTIONS: Options = [
   { label: '三星', value: 4 },
 ];
 export const TRAIN_PROJECT_NAME: Options<{ code: number }> = [
-  { label: '安全类培训', value: '安全类培训', other: { code: 116 }},
-  { label: '车间综合管理类培训', value: '车间综合管理类培训', other: { code: 117 }},
-  { label: '继续教育学时学分制培训', value: '继续教育学时学分制培训', other: { code: 118 }},
-  { label: '综合监控专业知识培训', value: '综合监控专业知识培训', other: { code: 119 }},
-  { label: '消防专业知识培训', value: '消防专业知识培训', other: { code: 120 }},
-  { label: '屏蔽门专业知识培训', value: '屏蔽门专业知识培训', other: { code: 121 }},
-  { label: '电扶梯专业知识培训', value: '电扶梯专业知识培训', other: { code: 122 }},
-  { label: '风水电专业知识培训', value: '风水电专业知识培训', other: { code: 123 }},
-  { label: 'AFC专业知识培训', value: 'AFC专业知识培训', other: { code: 124 }},
+  // { label: '安全类培训', value: '安全类培训', other: { code: 116 }},
+  // { label: '车间综合管理类培训', value: '车间综合管理类培训', other: { code: 117 }},
+  // { label: '继续教育学时学分制培训', value: '继续教育学时学分制培训', other: { code: 118 }},
+  // { label: '综合监控专业知识培训', value: '综合监控专业知识培训', other: { code: 119 }},
+  // { label: '消防专业知识培训', value: '消防专业知识培训', other: { code: 120 }},
+  // { label: '屏蔽门专业知识培训', value: '屏蔽门专业知识培训', other: { code: 121 }},
+  // { label: '电扶梯专业知识培训', value: '电扶梯专业知识培训', other: { code: 122 }},
+  // { label: '风水电专业知识培训', value: '风水电专业知识培训', other: { code: 123 }},
+  // { label: 'AFC专业知识培训', value: 'AFC专业知识培训', other: { code: 124 }},
+
+  // 2023 新课程序列
+  { label: '安全综合培训', value: '安全综合培训', other: { code: 123 }},
+  { label: '继续教育学时学分制培训', value: '继续教育学时学分制培训', other: { code: 124 }},
+  { label: '【必知必会】综合监控专业知识及技能培训', value: '【必知必会】综合监控专业知识及技能培训', other: { code: 125 }},
+  { label: '【核心技能】综合监控专业知识及技能培训', value: '【核心技能】综合监控专业知识及技能培训', other: { code: 126 }},
+  { label: '【必知必会】消防专业知识及技能培训', value: '【必知必会】消防专业知识及技能培训', other: { code: 127 }},
+  { label: '【核心技能】消防专业知识及技能培训', value: '【核心技能】消防专业知识及技能培训', other: { code: 128 }},
+  { label: '【必知必会】屏蔽门专业知识及技能培训', value: '【必知必会】屏蔽门专业知识及技能培训', other: { code: 129 }},
+  { label: '【核心技能】屏蔽门专业知识及技能培训', value: '【核心技能】屏蔽门专业知识及技能培训', other: { code: 130 }},
+  { label: '【必知必会】电扶梯专业知识及技能培训', value: '【必知必会】电扶梯专业知识及技能培训', other: { code: 131 }},
+  { label: '【核心技能】电扶梯专业知识及技能培训', value: '【核心技能】电扶梯专业知识及技能培训', other: { code: 132 }},
+  { label: '【必知必会】风水电专业知识及技能培训', value: '【必知必会】风水电专业知识及技能培训', other: { code: 133 }},
+  { label: '【核心技能】风水电专业知识及技能培训', value: '【核心技能】风水电专业知识及技能培训', other: { code: 134 }},
+  { label: '【必知必会】AFC专业知识及技能培训', value: '【必知必会】AFC专业知识及技能培训', other: { code: 135 }},
+  { label: '【核心技能】AFC专业知识及技能培训', value: '【核心技能】AFC专业知识及技能培训', other: { code: 136 }},
+  { label: '轨道设备脱落风险识别与处理', value: '轨道设备脱落风险识别与处理', other: { code: 137 }},
+  { label: '土建设备脱落风险识别与处理', value: '土建设备脱落风险识别与处理', other: { code: 138 }},
+  { label: '网络安全隐患排查处置培训', value: '网络安全隐患排查处置培训', other: { code: 139 }},
 ];
 
 export const STAFF_SEX_OPTIONS: Options = [
