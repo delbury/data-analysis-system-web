@@ -190,12 +190,12 @@ export default defineComponent({
   setup(props, ctx) {
     return {
       notEditable: computed(() => props.item.editable === false && props.status === 'edit'),
-      formItemDisabled: (itemDisabled: boolean | ((form: any) => boolean) = false) => {
+      formItemDisabled: (itemDisabled: boolean | ((form: any, stauts: DialogStatus) => boolean) = false) => {
         if(props.globalDisabled !== void 0) return props.globalDisabled;
 
         return typeof itemDisabled === 'boolean'
           ? itemDisabled
-          : itemDisabled(props.form ?? {});
+          : itemDisabled(props.form ?? {}, props.status);
       },
       handleChange: (val: any) => {
         ctx.emit('update:modelValue', val);

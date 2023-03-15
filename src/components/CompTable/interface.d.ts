@@ -88,7 +88,7 @@ export type FormItem = Omit<ElFormItemProps, 'rules'> & {
   // info，显示图标，hover显示
   info?: string | string[];
   readonly?: boolean;
-  disabled?: boolean | ((form: any) => boolean);
+  disabled?: boolean | ((form: any, status: DialogStatus) => boolean);
   // 编辑时，是否可修改，默认为 true
   editable?: boolean;
   // 字段规则，预设的规则

@@ -206,7 +206,7 @@ export const FORM_ITEMS: FormItemSection[] = [
           placeholder: '创建单据后自动生成',
         },
         importDefaultCol: 'G',
-        disabled: true,
+        disabled: (form, status) => status !== 'edit',
       },
       {
         label: '培训课程名称',
